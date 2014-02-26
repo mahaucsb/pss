@@ -1,4 +1,18 @@
-pss
-===
+Partition-based Similarity Search (PSS)
+=======================================
 
-Partition-based Similarity Search
+Quick start:
+------------
+
+
+
+Configurations:
+---------------
+
+
+Dataset:
+--------
+
+
+Solutions to common errors:
+----------------------------
