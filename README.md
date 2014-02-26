@@ -10,9 +10,26 @@ Installation:
 
 3) 
 
+Package overview:
+-----------------
+README
+src/:
+build/:
+conf/:
+target/:
+
 
 Quick start:
 ------------
+
+1) copy conf/ directory to src/main/resources using the command: cp -r conf src/main/resources
+2) setup the following environment variables:
+   - HADOOP_HOME:
+   - PROJECT_HOME:
+   - JAVA_HOME:
+   - 
+conf/lib:
+If you're using eClipse, all all the jar files inside this directory to your build path. Otherwise, if you're using the command line then the scripts will do the work to find them.
 
 
 
