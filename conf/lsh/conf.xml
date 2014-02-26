@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property>
+		<name>lsh.num.bits</name>
+  <value>9</value>
+		<description> number random projections each of size # features</description>
+	</property>
+	<property>
+		<name>lsh.num.features</name>
+		<value>439021</value>
+		<description>this should total number of features to know size of each random projection</description>
+	</property>
+	<property>
+		<name>lsh.num.permutations</name>
+  <value>20</value>
+		<description>Number of random permutations to be produced for each document signature</description>
+	</property>
+	<property> 
+		<name>sort.num.reducers</name>
+		<value>2</value> 
+	</property>
+<!-- <property>
+		<name>lsh.overlap.percentage</name>
+		<value>0.8</value>
+		<description> ratio of overlap between vector signatures within the same table .. 1 = 100 %</description> 
+	</property>  --> 
+</configuration>
