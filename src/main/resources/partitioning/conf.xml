@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property>
+		<name>partition.similarity.threshold</name>
+  <value>0.9</value>
+	</property>
+	<property> 
+		<name>partition.number.partitions</name>
+  <value>3</value>
+		<description> number of initial partitions</description>
+	</property>
+	<property> 
+		<name>partition.uniform.partitions</name>
+  <value>true</value>
+		<description>  uniform initial partitioning</description>
+	</property>
+	<!--  Sort configurations: document info from user -->
+		<property>
+		<name>sort.num.reducers</name>
+  <value>5</value>
+	</property>
+		<property>
+		<name>sort.p.norm</name>
+  <value>1</value>
+	</property>
+	<property>
+		<name>max.doc.length</name>
+  <value>1200</value>
+		<description>max expected document length to use for distributing the records among the sorting reducers.</description>
+	</property>
+	<property>
+		<name>max.doc.norm</name>
+  <value>10</value>
+		<description>max expected document 1-norm to use for distributing the records among the sorting reducers.</description>
+	</property>
+	<property>
+		<name>max.doc.weight</name>
+  <value>0.2</value>
+		<description>max expected document weight to use for distributing the records among the sorting reducers.</description>		
+	</property>
+		<!--  Statistics printing -->
+	<property>
+		<name>partition.print.distribution</name>
+		<value>false</value>
+		<description>Produces a file with vectors p-norm sorted to plot and find distribution.</description>		
+	</property>	
+        <property>
+                <name>partition.load.balancing</name>
+  <value>0</value>
+                <description>dummy moved to hybrid</description>
+        </property>
+</configuration>
