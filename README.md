@@ -21,7 +21,8 @@ target/:
 
 Quick start:
 ------------
-
+Command line:
+1) git clone 
 1) copy conf/ directory to src/main/resources using the command: cp -r conf src/main/resources
 2) setup the following environment variables:
    - HADOOP_HOME:
@@ -29,6 +30,8 @@ Quick start:
    - JAVA_HOME:
    - 
 conf/lib:
+eClipse:
+1) File>Import..>Git>Projects from Git>Clone URI>  type: "https://github.com/mahaucsb/pss" in the URI feild. 
 If you're using eClipse, all all the jar files inside this directory to your build path. Otherwise, if you're using the command line then the scripts will do the work to find them.
 
 
