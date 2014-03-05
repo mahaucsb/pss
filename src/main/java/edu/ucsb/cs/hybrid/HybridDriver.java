@@ -24,9 +24,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import modified.apache.hadoop.CustomSequenceFileInputFormat;
-import modified.apache.hadoop.NonSplitableSequenceInputFormat;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
@@ -44,6 +41,8 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.ucsb.cs.hadoop.CustomSequenceFileInputFormat;
+import edu.ucsb.cs.hadoop.NonSplitableSequenceInputFormat;
 import edu.ucsb.cs.hybrid.io.Loadbalancing;
 import edu.ucsb.cs.hybrid.io.Splitter;
 import edu.ucsb.cs.hybrid.mappers.MultipleS_Block0_Mapper;

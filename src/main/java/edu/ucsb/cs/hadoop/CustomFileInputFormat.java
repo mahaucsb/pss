@@ -18,7 +18,7 @@
  * @Since Oct 30, 2012
  */
 
-package modified.apache.hadoop;
+package edu.ucsb.cs.hadoop;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -48,6 +48,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+//import modified.apache.hadoop.MultiPathFilter;
+//import modified.apache.hadoop.NodeInfo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

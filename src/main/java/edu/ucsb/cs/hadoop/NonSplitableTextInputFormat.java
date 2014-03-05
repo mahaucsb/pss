@@ -18,7 +18,7 @@
  * @Since Nov 19, 2012
  */
 
-package modified.apache.hadoop;
+package edu.ucsb.cs.hadoop;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;

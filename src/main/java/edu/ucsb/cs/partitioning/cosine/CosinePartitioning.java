@@ -23,8 +23,6 @@ package edu.ucsb.cs.partitioning.cosine;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import modified.apache.hadoop.NonSplitableSequenceInputFormat;
-
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.JobConf;
@@ -33,6 +31,7 @@ import org.apache.hadoop.mapred.lib.IdentityReducer;
 import org.apache.hadoop.mapred.lib.MultipleSequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.ucsb.cs.hadoop.NonSplitableSequenceInputFormat;
 import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.hybrid.types.IntIntWritable;
 import edu.ucsb.cs.partitioning.PartDriver;

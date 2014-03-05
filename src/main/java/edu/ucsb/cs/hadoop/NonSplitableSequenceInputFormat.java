@@ -1,4 +1,4 @@
-package modified.apache.hadoop;
+package edu.ucsb.cs.hadoop;
 import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobConf;
