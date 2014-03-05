@@ -25,7 +25,7 @@ Command line:
 1) git clone 
 1) copy conf/ directory to src/main/resources using the command: cp -r conf src/main/resources
 2) setup the following environment variables:
-   - HADOOP_HOME:
+   - HADOOP_HOME:  eg. export HADOOP_HOME=/home/maha/hadoop-1.0.1
    - PROJECT_HOME:
    - JAVA_HOME:
    - 
