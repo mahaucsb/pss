@@ -58,7 +58,7 @@ import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.types.DocDocWritable;
 
 /*
- * Issue: block-1 doesn't have google dynamic.  
+ * IGNORE: block-1 doesn't have google dynamic.  
  */
 /**
  * The HybridDriver runs hybrid cosine similarity computations among records of
@@ -97,7 +97,7 @@ public class HybridDriver {
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(outputPath, true);
 
-		 job.setBoolean("fs.hdfs.impl.disable.cache", true); //xun 
+		job.setBoolean("fs.hdfs.impl.disable.cache", true); //xun 
 		if (job.getBoolean(Config.SPLITABLE_PROPERTY, Config.SPLITABLE_VALUE)) {
 			job.setInputFormat(CustomSequenceFileInputFormat.class);
 			Long splitMB = job.getLong(Config.SPLIT_MB_PROPERTY, Config.SPLIT_MB_VALUE) * 1024 * 1024;

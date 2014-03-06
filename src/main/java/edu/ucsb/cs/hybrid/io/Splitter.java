@@ -78,7 +78,7 @@ public class Splitter {
 		if (nVectors % initialS == 0)
 			return initialS;
 		else {
-			long nPartitions = nVectors / initialS;
+			long nPartitions = ((nVectors / initialS)== 0)? 1:(nVectors / initialS);
 			return (initialS + (long) Math.ceil((nVectors % initialS) / nPartitions));
 		}
 	}
