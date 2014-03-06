@@ -8,7 +8,7 @@ Installation:
 
 2) make sure 'ant','java','javac' are installed by typing them into the command line.
 
-3) 
+3) make sure you have hadoop setup following[ http://hadoop.apache.org/docs/r0.19.0/quickstart.html#Download ]
 
 Package overview:
 -----------------
