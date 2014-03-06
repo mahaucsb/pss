@@ -33,10 +33,10 @@ import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.statistics.Collector;
 import edu.ucsb.cs.sort.SortDriver;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * This class takes a length-based sorted input of records and produce "n"

@@ -31,7 +31,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * @author Maha Computes the Relative Standard Deviation for a binary input

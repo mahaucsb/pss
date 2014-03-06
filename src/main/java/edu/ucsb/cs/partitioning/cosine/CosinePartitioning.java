@@ -32,10 +32,10 @@ import org.apache.hadoop.mapred.lib.MultipleSequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.hadoop.NonSplitableSequenceInputFormat;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IntIntWritable;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.sort.SortDriver;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IntIntWritable;
 
 /**
  * Abstract class for all classes that produce cosine static partitions as a

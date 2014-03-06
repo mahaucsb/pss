@@ -31,9 +31,9 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.mapred.TextInputFormat;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.preprocessing.PreprocessDriver;
 import edu.ucsb.cs.preprocessing.hashing.HashPagesDriver;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 public class SeqDriver {
 

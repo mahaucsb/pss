@@ -39,8 +39,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * This class offers the following options:<br>

@@ -31,7 +31,7 @@ import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
+import edu.ucsb.cs.types.DocDocWritable;
 
 /**
  * This class opens the resulted sequence directories of paired values

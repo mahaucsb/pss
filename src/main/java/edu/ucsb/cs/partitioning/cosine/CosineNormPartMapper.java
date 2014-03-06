@@ -15,11 +15,11 @@ import org.apache.hadoop.mapred.Mapper;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IntIntWritable;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.sort.norm.NormSortMain;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IntIntWritable;
 
 /**
  * Reads in file "i" with a record per line . It emits <key> group folder name

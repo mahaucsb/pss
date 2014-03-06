@@ -34,12 +34,12 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.mapred.JobConf;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IntIntWritable;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.statistics.Collector;
 import edu.ucsb.cs.sort.norm.NormSortMain;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IntIntWritable;
 
 /**
  * Makes the final touch of removing the key: "i j" from the beginning of each
@@ -114,8 +114,11 @@ public class Organizer {
 	public static void readCombineCopy(Path input, String output, JobConf job) throws IOException {
 		boolean printDist = job.getBoolean(PartDriver.PRINT_DISTRIBUTION_PROPERTY,
 				PartDriver.PRINT_DISTRIBUTION_VALUE);
-		BufferedWriter distout = new BufferedWriter(new FileWriter("dist-" + output));
+		BufferedWriter distout = null;
 		SequenceFile.Writer out = null;
+		if (printDist)
+			distout = new BufferedWriter(new FileWriter("p-norm-distribution" + output));
+		
 		int pc = 0, pr = 0;
 		float pChoice = job.getFloat(NormSortMain.P_NORM_PROPERTY, NormSortMain.P_NORM_VALUE);
 		FileSystem hdfs = input.getFileSystem(new JobConf());

@@ -29,7 +29,7 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
+import edu.ucsb.cs.types.DocDocWritable;
 
 /**
  * @author Maha

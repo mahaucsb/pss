@@ -29,8 +29,8 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
-import edu.ucsb.cs.hybrid.types.DocWeight;
-import edu.ucsb.cs.hybrid.types.DocWeightArrayWritable;
+import edu.ucsb.cs.types.DocWeight;
+import edu.ucsb.cs.types.DocWeightArrayWritable;
 
 /**
  * @author Maha

@@ -34,7 +34,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /*
  * To combine sequence files and produce one file of the size specified residing in HDFS. 

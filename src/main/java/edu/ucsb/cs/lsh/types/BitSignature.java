@@ -29,7 +29,7 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.WritableComparable;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * @author Maha

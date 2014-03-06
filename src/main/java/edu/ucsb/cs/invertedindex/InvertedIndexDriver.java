@@ -11,13 +11,13 @@ import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.hybrid.HybridDriver;
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.DocWeight;
-import edu.ucsb.cs.hybrid.types.DocWeightArrayWritable;
 import edu.ucsb.cs.invertedindex.mappers.InvertedMapper;
 import edu.ucsb.cs.invertedindex.mappers.InvertedSimMapper;
 import edu.ucsb.cs.invertedindex.reducers.InvertedReducer;
 import edu.ucsb.cs.invertedindex.reducers.InvertedSimReducer;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.DocWeight;
+import edu.ucsb.cs.types.DocWeightArrayWritable;
 
 /**
  * This class performs the APSS using the inverted index format for inputs and

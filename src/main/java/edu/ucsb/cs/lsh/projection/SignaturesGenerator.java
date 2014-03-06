@@ -48,8 +48,8 @@ import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.bruteforce.mappers.ForwardMapper;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.lsh.types.BitSignature;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.utilities.JobSubmitter;
 import edu.ucsb.cs.utilities.Properties;
 import edu.umd.cloud9.io.SequenceFileUtils;

@@ -40,11 +40,11 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeight;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.cosine.Organizer;
 import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
+import edu.ucsb.cs.types.FeatureWeight;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * Produces statistics about the data and partitions including maximum, minimum
