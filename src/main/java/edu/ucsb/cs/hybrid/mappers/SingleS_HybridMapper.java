@@ -31,8 +31,8 @@ import org.apache.hadoop.mapred.Reporter;
 
 import edu.ucsb.cs.hybrid.Config;
 import edu.ucsb.cs.hybrid.io.Reader;
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.PostingDocWeight;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.PostingDocWeight;
 
 public abstract class SingleS_HybridMapper extends MapReduceBase implements IHybridMapper {
 

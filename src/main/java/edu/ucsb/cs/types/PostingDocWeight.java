@@ -18,48 +18,56 @@
  * @Since Jul 26, 2012
  */
 
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import edu.ucsb.cs.types.PostingDocWeight;
 
-import org.apache.hadoop.io.Writable;
 
-public class DocWeight implements Writable {
-	public long docId;
+public class PostingDocWeight {
+	public int doc;
 	public float weight;
 
-	public DocWeight() {}
+	PostingDocWeight() {}
 
-	public DocWeight(long l1, float f1) {
-		this.docId = l1;
-		this.weight = f1;
+	public PostingDocWeight(int d, float w) {
+		this.doc = d;
+		this.weight = w;
 	}
 
-	public long getdocId() {
-		return docId;
+	@Override
+	public String toString() {
+		return new String(this.doc + " " + this.weight + " ");
 	}
 
-	public float getWeigth() {
-		return weight;
+	public void addWeight(float w) {
+		weight += w;
 	}
 
-	public void setLong(long l1) {
-		this.docId = l1;
+	public int getDoc() {
+		return this.doc;
 	}
 
-	public void setFloat(float f1) {
-		this.weight = f1;
+	public float getWeight() {
+		return this.weight;
 	}
 
-	public void write(DataOutput out) throws IOException {
-		out.writeLong(docId);
-		out.writeFloat(weight);
+	public void setDoc(int d) {
+		this.doc = d;
 	}
 
-	public void readFields(DataInput in) throws IOException {
-		this.docId = in.readLong();
-		this.weight = in.readFloat();
+	public void setWeight(float f) {
+		this.weight = f;
 	}
+
+	public int compareTo(PostingDocWeight other) {
+
+		// return Integer.valueOf(doc).compareTo(other.doc);
+		if (other.doc < this.doc)
+			return -1;
+		else if (other.doc > this.doc)
+			return 1;
+		else
+			return 0;
+	}
+
 }

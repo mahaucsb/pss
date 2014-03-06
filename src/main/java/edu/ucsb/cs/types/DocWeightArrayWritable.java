@@ -1,10 +1,12 @@
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.Writable;
+
+import edu.ucsb.cs.types.DocWeight;
 
 public class DocWeightArrayWritable implements Writable {
 

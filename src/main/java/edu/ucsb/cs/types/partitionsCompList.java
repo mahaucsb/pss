@@ -18,7 +18,7 @@
  * @Since Sep 12, 2013
  */
 
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;

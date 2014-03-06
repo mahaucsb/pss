@@ -32,9 +32,9 @@ import org.apache.hadoop.mapred.SequenceFileInputFormat;
 import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.sort.SortDriver;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 
 /**
  * </p>

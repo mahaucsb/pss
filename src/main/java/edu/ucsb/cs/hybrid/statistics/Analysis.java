@@ -32,7 +32,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.mapred.JobConf;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * Functions to produce statistics from the contributed optimizations.

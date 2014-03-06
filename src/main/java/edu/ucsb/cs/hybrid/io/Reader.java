@@ -14,9 +14,9 @@ import org.apache.hadoop.mapred.JobConf;
 
 import edu.ucsb.cs.bruteforce.mappers.ForwardMapper;
 import edu.ucsb.cs.hybrid.Config;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.TextArrayWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.TextArrayWritable;
 
 /**
  * Note:Sept 17th 2013, disabled baraglia vector stuff.

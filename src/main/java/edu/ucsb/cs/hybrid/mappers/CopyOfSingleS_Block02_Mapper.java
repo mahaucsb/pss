@@ -29,10 +29,10 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputCollector;
 
 import edu.ucsb.cs.hybrid.Config;
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.FeatureWeight;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.PostingDocWeight;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.FeatureWeight;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.PostingDocWeight;
 
 /*
  * Google dynamic technique when: hybrid.google.skip is set

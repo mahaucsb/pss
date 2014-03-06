@@ -18,7 +18,10 @@
  * @Since Jul 26, 2012
  */
 
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
+
+import edu.ucsb.cs.types.FeatureWeight;
+import edu.ucsb.cs.types.IndexFeatureWeight;
 
 /**
  * @author Maha

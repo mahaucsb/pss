@@ -31,9 +31,9 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
 import edu.ucsb.cs.hybrid.io.Reader;
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.PostingDocWeight;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.PostingDocWeight;
 
 /**
  * not yet implemented.

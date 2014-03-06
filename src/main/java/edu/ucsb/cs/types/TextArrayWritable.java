@@ -18,7 +18,7 @@
  * @Since Sep 11, 2013
  */
 
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.Text;

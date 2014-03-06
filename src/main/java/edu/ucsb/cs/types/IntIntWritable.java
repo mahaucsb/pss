@@ -18,13 +18,15 @@
  * @Since Aug 1, 2012
  */
 
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.WritableComparable;
+
+import edu.ucsb.cs.types.IntIntWritable;
 
 public class IntIntWritable implements WritableComparable<IntIntWritable> {
 	public int x;

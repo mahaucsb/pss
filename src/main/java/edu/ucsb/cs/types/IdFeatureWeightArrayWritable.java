@@ -1,8 +1,11 @@
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+
+import edu.ucsb.cs.types.FeatureWeight;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 public class IdFeatureWeightArrayWritable extends FeatureWeightArrayWritable {
 

@@ -4,7 +4,7 @@ import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.Partitioner;
 
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 
 /**
  * The class partitions keys into ranges and distribute each range to a reducer,

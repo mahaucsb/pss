@@ -10,8 +10,8 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 
 /**
  * <p>

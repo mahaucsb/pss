@@ -31,9 +31,9 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.mapred.JobConf;
 
 import edu.ucsb.cs.hybrid.Config;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.partitioning.cosine.Partitioner;
 import edu.ucsb.cs.partitioning.statistics.Collector;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
  * @author Maha

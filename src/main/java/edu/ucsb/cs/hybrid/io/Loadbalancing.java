@@ -33,8 +33,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 
 import edu.ucsb.cs.hybrid.Config;
-import edu.ucsb.cs.hybrid.types.TextArrayWritable;
 import edu.ucsb.cs.partitioning.statistics.Collector;
+import edu.ucsb.cs.types.TextArrayWritable;
 
 /**
  * @author Maha Load balancing stages as described by WWW'14 error: should be

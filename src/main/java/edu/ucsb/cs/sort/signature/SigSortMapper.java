@@ -12,8 +12,8 @@ import org.apache.hadoop.mapred.Mapper;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
-import edu.ucsb.cs.hybrid.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.lsh.types.BitSignature;
+import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 
 /**
  * This Mapper reads in sequence files with <key> LongWritable as key and

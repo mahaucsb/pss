@@ -54,8 +54,8 @@ import edu.ucsb.cs.hybrid.mappers.SingleS_Block0_Mapper;
 import edu.ucsb.cs.hybrid.mappers.SingleS_Block1_Mapper;
 import edu.ucsb.cs.hybrid.mappers.SingleS_Block3_Mapper;
 import edu.ucsb.cs.hybrid.mappers.SingleS_HybridRunner;
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
 import edu.ucsb.cs.partitioning.PartDriver;
+import edu.ucsb.cs.types.DocDocWritable;
 
 /*
  * Issue: block-1 doesn't have google dynamic.  

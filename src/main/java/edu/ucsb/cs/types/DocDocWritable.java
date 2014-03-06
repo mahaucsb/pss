@@ -18,13 +18,15 @@
  * @Since Jul 26, 2012
  */
 
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
 import org.apache.hadoop.io.WritableComparable;
+
+import edu.ucsb.cs.types.DocDocWritable;
 
 public class DocDocWritable implements WritableComparable<DocDocWritable> {
 

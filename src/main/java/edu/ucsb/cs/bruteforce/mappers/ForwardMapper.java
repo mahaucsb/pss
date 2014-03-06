@@ -25,10 +25,10 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapred.MapReduceBase;
 import org.apache.hadoop.mapred.Mapper;
 
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.FeatureWeight;
-import edu.ucsb.cs.hybrid.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.lsh.projection.RandomVector;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.FeatureWeight;
+import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 public abstract class ForwardMapper extends MapReduceBase implements
 		Mapper<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritable> {

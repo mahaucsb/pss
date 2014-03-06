@@ -27,8 +27,8 @@ import java.util.HashMap;
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.mapred.OutputCollector;
 
-import edu.ucsb.cs.hybrid.types.DocDocWritable;
-import edu.ucsb.cs.hybrid.types.PostingDocWeight;
+import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.types.PostingDocWeight;
 
 public abstract class MultipleS_HybridMapper extends SingleS_HybridMapper {
 

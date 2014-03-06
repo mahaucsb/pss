@@ -1,4 +1,4 @@
-package edu.ucsb.cs.hybrid.types;
+package edu.ucsb.cs.types;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.Writable;
+
+import edu.ucsb.cs.types.FeatureWeight;
 
 public class FeatureWeightArrayWritable implements Writable {
 
