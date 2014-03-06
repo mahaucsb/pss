@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="partitioning" default="jar" basedir=".">
+<project name="hybrid" default="jar" basedir=".">
   <property name="version" value="0.1"/>
-  <property name="src.dir" value="../../src/main/java" />
+  <property name="src.dir" value="../../src/main/java/edu/ucsb/cs/hybrid" />
   <property name="lib.dir" value="../../conf/lib" />
   <property name="build.dir" value="../../target" />
   <property name="classes.dir" value="${build.dir}/classes" />
   <property name="jar.dir" value="${build.dir}" />
   <property name="jar.file" value="${ant.project.name}.jar" />
-  <property name="main.class" value="edu.ucsb.cs.partitioning.PartDriver" /> 
+  <property name="main.class" value="edu.ucsb.cs.hybrid.HybridDriver" />
   <property environment="env"/>
+
   <path id="classpath">
     <fileset dir="${lib.dir}" id="">
-      <include name="**" />
-      <exclude name="" />
+      <include name="*" />
     </fileset>
   </path>
   <fileset dir="${lib.dir}/.." id="lib">
@@ -20,34 +20,25 @@
     <exclude name="" />
   </fileset>
   <fileset dir="${classes.dir}" id="class">
-    <include name="edu/ucsb/cs/partitioning/**" />
-    <include name="edu/ucsb/cs/sort/**" />
-    <include name="edu/ucsb/cs/types/**" />
-    <include name="edu/ucsb/cs/preprocessing/**" />
-    <include name="edu/ucsb/cs/hadoop/**" />
+    <include name="edu/ucsb/cs/**" /> 
     <exclude name="" />
   </fileset>
   <!-- ================================= 
        target: clean              
        ================================= -->
   <target name="clean" depends="" description="">
-    <delete>
-      <fileset dir="${build.dir}">
-        <include name="${jar.file}"/>
-      </fileset>
-    </delete>
+    <delete file="${build.dir}/${jar.file}"/>
   </target>
   <!-- ================================= 
        target: compile              
        ================================= -->
   <target name="compile" depends="" description="">
     <mkdir dir="${classes.dir}" />
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" target="${env.JAVA_VERSION}" debug="true" includeantruntime="false">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" target="${env.JAVA_VERSION}" debug="true" includeantruntime="true">
       <include name="**/*.java"/>
     </javac>
   </target>
-  
-   <!-- ================================= 
+  <!-- ================================= 
        target: jar              
        ================================= -->
   <target name="jar" depends="compile" description="">

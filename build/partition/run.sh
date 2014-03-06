@@ -7,15 +7,15 @@ then
   exit 3
 fi
 
-############################################################
-# CHECK: Environment Variables Set
-############################################################
-if [ -z ${HADOOP_HOME} ]
+############################################################                                                                                                        
+# Environment Variables Set                                                                                                                                         
+############################################################                                                                                                        
+if [ -z ${HADOOP_HOME} ] || [ -z ${JAVA_VERSION} ]
 then
-    echo "ERROR: HADOOP_HOME is not set."
+    echo "ERROR: either HADOOP_HOME or JAVA_VERSION is not set."
+    exit 0
 fi
-############################################################
-
+############################################################                                                                                                        
 sign=$1
 numdocs=$2
 benchmark=$3
@@ -53,5 +53,5 @@ fi
 ############################################################
 cd ../partition
 ant
-$HADOOP jar $partjar cpartitionn -conf $xmlconf $sign 
+$run_hadoop jar $partjar cpartitionn -conf $xmlconf $sign 
 

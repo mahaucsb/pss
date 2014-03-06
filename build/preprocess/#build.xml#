@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="partitioning" default="jar" basedir=".">
+<project name="preprocessing" default="jar" basedir=".">
   <property name="version" value="0.1"/>
   <property name="src.dir" value="../../src/main/java" />
   <property name="lib.dir" value="../../conf/lib" />
@@ -7,7 +7,7 @@
   <property name="classes.dir" value="${build.dir}/classes" />
   <property name="jar.dir" value="${build.dir}" />
   <property name="jar.file" value="${ant.project.name}.jar" />
-  <property name="main.class" value="edu.ucsb.cs.partitioning.PartDriver" /> 
+  <property name="main.class" value="edu.ucsb.cs.preprocessing.PreprocessDriver" /> 
   <property environment="env"/>
   <path id="classpath">
     <fileset dir="${lib.dir}" id="">
@@ -20,11 +20,8 @@
     <exclude name="" />
   </fileset>
   <fileset dir="${classes.dir}" id="class">
-    <include name="edu/ucsb/cs/partitioning/**" />
-    <include name="edu/ucsb/cs/sort/**" />
-    <include name="edu/ucsb/cs/types/**" />
     <include name="edu/ucsb/cs/preprocessing/**" />
-    <include name="edu/ucsb/cs/hadoop/**" />
+    <include name="edu/ucsb/cs/types/**" />
     <exclude name="" />
   </fileset>
   <!-- ================================= 
@@ -42,7 +39,7 @@
        ================================= -->
   <target name="compile" depends="" description="">
     <mkdir dir="${classes.dir}" />
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" target="${env.JAVA_VERSION}" debug="true" includeantruntime="false">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" target="${JAVA_VERSION}" debug="true" includeantruntime="false">
       <include name="**/*.java"/>
     </javac>
   </target>
@@ -65,7 +62,7 @@
        ================================= -->
   <target name="build" depends="jar" description="" />
   <!-- ================================= 
-       target: main              
+       Target: main              
        ================================= -->
   <target name="main" depends="clean,jar" description="" />
 </project>

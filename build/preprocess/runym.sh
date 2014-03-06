@@ -7,6 +7,14 @@ then
   exit 2
 fi
 
+############################################################                                                                                                       
+# Environment Variables Set                                                                                                                                        ############################################################                                                                                                                                                                                                                                                                          
+if [ -z ${HADOOP_HOME} ] || [ -z ${JAVA_VERSION} ]
+then
+    echo "ERROR: either HADOOP_HOME or JAVA_VERSION is not set."
+    exit 0
+fi
+
 ############################################################
 # Configuration Set
 ############################################################
