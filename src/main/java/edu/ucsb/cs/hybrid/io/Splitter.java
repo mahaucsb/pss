@@ -54,8 +54,10 @@ public class Splitter {
 		int initS = job.getInt(Config.SPLIT_S_PROPERTY, Config.SPLIT_S_VALUE);
 		long nVectors = Collector.countDirVectors(hdfs, inputPath, job);
 		if (initS > nVectors)
+			try{
 			throw new UnsupportedEncodingException(
-					"Split size \"s\" is larger than number of input vectors! ");
+					"WARNING: Mapper's host partition \"S\" is larger than the total number of input vectors! ");
+			}catch(UnsupportedEncodingException e){;}
 
 		if (job.getBoolean(Config.SINGLE_MAP_PROPERTY, Config.SINGLE_MAP_VALUE)){
 		    prepareOneMap(job, inputPath, initS); 

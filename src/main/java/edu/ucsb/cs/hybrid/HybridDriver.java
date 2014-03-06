@@ -71,7 +71,6 @@ import edu.ucsb.cs.partitioning.PartDriver;
  */
 public class HybridDriver {
 
-	// .partition.dot.vector
 	private static String INPUT_DIR = PartDriver.OUTPUT_DIR;
 	private static String OUTPUT_DIR = "hybridSim-results";
 
@@ -105,11 +104,10 @@ public class HybridDriver {
 			job.setLong("mapred.max.split.size", splitMB);
 			job.setLong("dfs.block.size", splitMB);
 		} else {
-			// The following comment of splitter is for www experiments it assumes no splitting
+			//  Comment the following of splitter for www experiments it assumes no splitting
 			// of partitions for load balancing, should be fixed.
 			Splitter.configure(job, new Path(inputDir));// remove comment unless for www
 			job.setInputFormat(NonSplitableSequenceInputFormat.class); //remove comment
-		    ;
 		}
 		if (job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE) != 0) {
 			Loadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),

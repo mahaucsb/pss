@@ -34,7 +34,6 @@ import org.apache.hadoop.util.ProgramDriver;
 import edu.ucsb.cs.partitioning.cosine.CosineAllPartitionMain;
 import edu.ucsb.cs.partitioning.cosine.HolderCosinePartitionMain;
 import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
-import edu.ucsb.cs.partitioning.metwally.metwally;
 import edu.ucsb.cs.sort.SortDriver;
 
 /**
@@ -66,8 +65,6 @@ public class PartDriver {
 					"\tJaccard static partitioning");
 			pgd.addClass("cpartitionn", HolderCosinePartitionMain.class,
 					"\tCosine  static partitioning on p-norm sorted documents");
-			pgd.addClass("metwally", metwally.class,
-					"\tCosine  static partitioning following Metwally approach.");
 			// pgd.addClass("cpartitionw", CosineWeightPartitionMain.class,
 			// "\tCosine static partitioning on weight sorted documents");
 			pgd.addClass("cpartitiona", CosineAllPartitionMain.class,
