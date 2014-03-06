@@ -13,7 +13,7 @@ fi
 
 sign=$1
 numdocs=$2
-gnewsdata=../../data/google_news/100vectors
+gnewsdata=../../data/googlenews/500-gnews
 cluejar=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
 tmpdata=./data
@@ -24,7 +24,8 @@ run_hadoop=${HADOOP_HOME}/bin/hadoop
 ############################################################
 
 ant
-rm $tmpdata/*
+rm -r $tmpdata 2>/dev/null
+mkdir $tmpdata
 head -n $numdocs $gnewsdata > $tmpdata/input
 if [ $? -ne 0 ]
 then
@@ -35,6 +36,7 @@ fi
 # Run Preprocessing                                                                                                                                 
 ###########################################################                                                                                               
 
+echo "*****************************************************************************"
 echo "Load "$numdocs" vectors of Clueweb data into HDFS"
 $run_hadoop dfs -rmr textpages$sign
 $run_hadoop dfs -put $tmpdata textpages$sign

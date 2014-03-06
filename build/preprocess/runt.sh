@@ -12,10 +12,10 @@ fi
 
 sign=$1
 numdocs=$2
-twitterdata=../../data/twitter/100vectors
+twitterdata=../../data/twitter/500-twitter
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
-tmpdata=./data
+tmpdata=input_dir
 run_hadoop=${HADOOP_HOME}/bin/hadoop
 
 ############################################################
@@ -23,7 +23,8 @@ run_hadoop=${HADOOP_HOME}/bin/hadoop
 ############################################################
 
 ant
-rm $tmpdata/*
+rm -r $tmpdata 2>/dev/null
+mkdir $tmpdata
 head -n $numdocs $twitterdata > $tmpdata/input
 if [ $? -ne 0 ]
 then
@@ -35,6 +36,7 @@ fi
 # Run Preprocessing                                                                                                                                 
 ###########################################################                                                                                               
 
+echo "*****************************************************************************"
 echo "Load "$numdocs" vectors of Twitter data into HDFS"
 $run_hadoop dfs -rmr textpages$sign
 $run_hadoop dfs -put $tmpdata textpages$sign

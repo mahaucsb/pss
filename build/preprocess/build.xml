@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="preprocessing" default="jar" basedir=".">
+  <property name="version" value="0.1"/>
+  <property name="src.dir" value="../../src/main/java" />
+  <property name="lib.dir" value="../../conf/lib" />
+  <property name="build.dir" value="../../target" />
+  <property name="classes.dir" value="${build.dir}/classes" />
+  <property name="jar.dir" value="${build.dir}" />
+  <property name="jar.file" value="${ant.project.name}.jar" />
+  <property name="main.class" value="edu.ucsb.cs.preprocessing.PreprocessDriver" /> 
+
+  <path id="classpath">
+    <fileset dir="${lib.dir}" id="">
+      <include name="**" />
+      <exclude name="" />
+    </fileset>
+  </path>
+  <fileset dir="${lib.dir}/.." id="lib">
+    <include name="lib/**" />
+    <exclude name="" />
+  </fileset>
+  <fileset dir="${classes.dir}" id="class">
+    <include name="edu/ucsb/cs/preprocessing/**" />
+    <include name="edu/ucsb/cs/hybrid/types/**" />
+    <exclude name="" />
+  </fileset>
+  <!-- ================================= 
+       target: clean              
+       ================================= -->
+  <target name="clean" depends="" description="">
+    <delete>
+      <fileset dir="${build.dir}">
+        <include name="${jar.file}"/>
+      </fileset>
+    </delete>
+  </target>
+  <!-- ================================= 
+       target: compile              
+       ================================= -->
+  <target name="compile" depends="" description="">
+    <mkdir dir="${classes.dir}" />
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" target="1.6.0_65" debug="true" includeantruntime="false">
+      <include name="**/*.java"/>
+    </javac>
+  </target>
+  
+   <!-- ================================= 
+       target: jar              
+       ================================= -->
+  <target name="jar" depends="compile" description="">
+    <mkdir dir="${jar.dir}" />
+    <jar destfile="${jar.dir}/${jar.file}">
+      <fileset refid="class" />
+      <fileset refid="lib" />
+      <manifest>
+        <attribute name="Main-Class" value="${main.class}" />
+      </manifest>
+    </jar>
+  </target>
+  <!-- ================================= 
+       target: build             
+       ================================= -->
+  <target name="build" depends="jar" description="" />
+  <!-- ================================= 
+       target: main              
+       ================================= -->
+  <target name="main" depends="clean,jar" description="" />
+</project>
