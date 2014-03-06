@@ -7,7 +7,7 @@
 # Then run APSS. 
 #############################################
 
-INSTAL_PATH=~/cpc/cpc-apss #~/projects/cpc7
+INSTAL_PATH=~/projects/cpc7
 CONF_PATH=$INSTAL_PATH/src/main/resources
 
 
@@ -15,35 +15,36 @@ CONF_PATH=$INSTAL_PATH/src/main/resources
 pre_maxfreq_feature=1000
 pre_option_num=3  #(1)collect features (2) featureVectors (3) featureWeightVectors (5) bag of hashed words
 pre_binary_weights=false #ignore feature frequency
-pre_lonely_features=true
+pre_lonely_features=false
 pre_md5_hash=false
-pre_dfcut_ratio=0.05
+        pre_dfcut_ratio=0
 
 #PARTITIONING
-part_sim_threshold=1
+        part_sim_threshold=0.9
 part_num_partitions=3
-part_uniform=false
+part_uniform=true
 sort_num_reducers=5
 sort_p_norm=1
 max_doc_length=1200
 max_doc_norm=10
 max_doc_weight=0.2
-part_load_balance=12
+        part_load_balance=0 # 1, 2 , 12 or none=0
 
 #HYBRID
 similarity_threshold=$part_sim_threshold
 alg_number=0 #0,1,3
-hybrid_split_size=20000
+hybrid_split_size=1000
 hybrid_io_block_size=100
 hybrid_comp_block_size=100
 hybrid_multiple_s=false 
 hybrid_number_multiple_s=7 
 hybrid_enable_static_partition=true
-hybrid_circular_enabled=true
+hybrid_circular_enabled=false
 hybrid_exclude_myself=false
-hybrid_single_map=false
-hybrid_print_log=true
+hybrid_single_map=true
+hybrid_print_log=false
 hybrid_load_balance=$part_load_balance
+hybrid_debug_load_balance=false
 
 #PREPROCESSING
 xmlconf=$CONF_PATH/preprocess/conf.xml
@@ -115,4 +116,6 @@ sed -e '114 c\
   <value>'$hybrid_print_log'</value>' y > x
 sed -e '119 c\
   <value>'$hybrid_load_balance'</value>' x > y
-mv y $xmlconf
+sed -e '128 c\
+  <value>'$hybrid_debug_load_balance'</value>' y > x
+mv x $xmlconf

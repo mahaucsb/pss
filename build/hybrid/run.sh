@@ -1,35 +1,41 @@
 #!/bin/bash
 
-if [ $# -ne 4 ]
+if [ $# -ne 3 ]
 then
-  echo "Usage: `basename $0` <sign> <numDocuments> <numPartitions> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5>"
-  exit 4
+  echo "Usage: `basename $0` <sign> <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5>"
+  exit 3
 fi
 
 sign=$1
 numDocs=$2
-numPartitions=$3
-cluein=$4
+benchmark=$3
 
-xmlconf=../../src/main/resources/hybrid/conf.xml
-hybridjar=../../target/hybrid.jar
-HADOOP=$HADOOP_HOME/bin/hadoop
-RUN_HOME=`pwd`
+############################################################
+# CHECK: Environment Variables Set
+############################################################
+if [ -z ${HADOOP_HOME} ]
+then
+    echo "ERROR: HADOOP_HOME is not set."
+fi
+############################################################
 
+xmlconf=../../conf/hybrid/conf.xml
+hybridjar=../target/hybrid.jar
+run_hadoop=${HADOOP_HOME}/bin/hadoop
 
-#### hashing + sequencing + partitioning
-cd ../partitoining
-if [ $numPartitions -ne 0 ] 
-then 
-    cd ../partitoining
-    ./run.sh $sign $numDocs $numPartitions $cluein 4
+############################################################
+# Run Partitioning 
+############################################################
+cd ../partition
+if [ $numPartitions -ne 0 ] ; then 
+    ./run.sh $sign $numDocs $benchmark 
 fi
 
-finalpart="staticpartitions"$sign
-
-#### similarity computation
-cd $RUN_HOME
+############################################################
+# Run Similarity Comparison
+############################################################
+cd ../hybrid
 ant
-$HADOOP jar $hybridjar -conf $xmlconf $sign 
+$run_hadoop jar $hybridjar -conf $xmlconf $sign 
 
 

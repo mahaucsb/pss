@@ -1,46 +1,51 @@
 #!/bin/bash
 
 
-
 if [ $# -ne 2 ]
 then
   echo "Usage: `basename $0` <sign> <number of documents>"
   exit 2
 fi
 
-RUN_HOME=`pwd`
+############################################################
+# Configuration Set
+############################################################
 
 sign=$1
 numdocs=$2
-
-yahoodata=~/data/yahoomusic/trainIdx1-inverted-bag
-cluejar=../../target/preprocessing.jar
-
-xmlconf=../../src/main/resources/preprocess/conf.xml
+yahoomusicdata=~/data/yahoomusic/trainIdx1-inverted-bag #=../../data/clueweb/100vectors
+jarfile=../../target/preprocessing.jar
+xmlconf=../../conf/preprocess/conf.xml
 tmpdata=./data
-HADOOP=$HADOOP_HOME/bin/hadoop
+run_hadoop=${HADOOP_HOME}/bin/hadoop
 
+############################################################
+# Copy n Documents to Input Folder
+############################################################
 
 ant
-
 rm $tmpdata/*
-head -n $numdocs $yahoodata > $tmpdata/input
-
+head -n $numdocs $yahoomusicdata > $tmpdata/input
 if [ $? -ne 0 ]
 then
   exit 2
 fi
 
-##### echo "load textfile of the format vector = (word1 word2 word1 word3 ..) per line .."
-$HADOOP dfs -rmr textpages$sign
-$HADOOP dfs -put $tmpdata textpages$sign
+############################################################                                                                                        
+# Run Preprocessing                                                                                                                                 
+###########################################################                                                                                               
 
-##### echo "convert vectors into numeric text vectors as features/bag depending on option = (docid num1 num2 num3..)"
-$HADOOP jar $cluejar hashrecords -conf $xmlconf $sign
+echo "Load "$numdocs" vectors of Clueweb data into HDFS"
+$run_hadoop dfs -rmr textpages$sign
+$run_hadoop dfs -put $tmpdata textpages$sign
 
-##### echo "convert into hadoop sequence (Long id, FeatureWeight array)"
-$HADOOP jar $cluejar seqerecords $sign
+echo "convert vectors into numeric text vectors ie (docid num1 num2 num3..)" ###not sure
+$run_hadoop jar $jarfile hashrecords -conf $xmlconf $sign
 
-$HADOOP dfs -rmr hashedvectors$sign
-$HADOOP dfs -rmr features$sign
+echo "convert vectors into hadoop binray (ie.sequence) of class (Long id, FeatureWeight array)"
+$run_hadoop jar $jarfile seqerecords $sign
+
+echo "Optional: remove unecessary folders from HDFS."
+$run_hadoop dfs -rmr hashedvectors$sign
+$run_hadoop dfs -rmr features$sign
 
