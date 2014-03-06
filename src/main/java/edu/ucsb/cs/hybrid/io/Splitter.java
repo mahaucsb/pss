@@ -51,7 +51,7 @@ public class Splitter {
 	 */
 	public static void configure(JobConf job, Path inputPath) throws IOException {
 		hdfs = FileSystem.get(job);
-		int initS = job.getInt(Config.SPLIT_S_PROPERTY, Config.SPLIT_S_VALUE);
+		int initS = job.getInt(Config.MAP_S_PROPERTY, Config.MAP_S_VALUE);
 		long nVectors = Collector.countDirVectors(hdfs, inputPath, job);
 		if (initS > nVectors)
 			try{

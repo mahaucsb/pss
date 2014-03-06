@@ -51,7 +51,7 @@ public class MultipleS_HybridRunner extends SingleS_HybridRunner {
 		nSplits = conf.getInt(Config.NUMBER_SPLITS_PROPERTY, Config.NUMBER_SPLITS_VALUE);
 		// long splitSize = Collector.countFileVectors(FileSystem.get(job),
 		// new Path(job.get("map.input.file")), conf); //accepts different S.
-		long splitSize = job.getLong(Config.SPLIT_S_PROPERTY, Config.SPLIT_S_VALUE);
+		long splitSize = job.getLong(Config.MAP_S_PROPERTY, Config.MAP_S_VALUE);
 		splitsSize = (int) Math.ceil(splitSize / (float) nSplits);
 		mapper.IdMaps = new ArrayList<long[]>(nSplits);
 	}
