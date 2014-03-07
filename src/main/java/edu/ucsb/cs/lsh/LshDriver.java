@@ -52,6 +52,6 @@ public class LshDriver {
 	}
 
 	public static void run(JobConf job) {
-		JobSubmitter.run(job);
+		JobSubmitter.run(job,"LSH");
 	}
 }

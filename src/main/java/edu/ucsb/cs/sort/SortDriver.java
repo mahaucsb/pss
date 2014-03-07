@@ -31,7 +31,7 @@ import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.ProgramDriver;
 
-import edu.ucsb.cs.preprocessing.sequence.SeqDriver;
+import edu.ucsb.cs.preprocessing.sequence.SeqWriter;
 import edu.ucsb.cs.sort.length.LengthSortMain;
 import edu.ucsb.cs.sort.maxw.MaxwSortMain;
 import edu.ucsb.cs.sort.norm.NormSortMain;
@@ -46,7 +46,7 @@ public class SortDriver {
 	public static final String NUM_REDUCE_PROPERTY = NAMESPACE + ".num.reducers";
 	public static final int NUM_REDUCE_VALUE = 2;
 
-	public static String INPUT_DIR = SeqDriver.OUTPUT_DIR;
+	public static String INPUT_DIR = SeqWriter.OUTPUT_DIR;
 	public static String OUTPUT_DIR = "sortedvectors";
 
 	public static void main(String args[]) throws UnsupportedEncodingException {

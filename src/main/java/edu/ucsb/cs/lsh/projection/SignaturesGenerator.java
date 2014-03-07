@@ -99,7 +99,7 @@ public class SignaturesGenerator {
 		job.setOutputKeyClass(LongWritable.class);
 		job.setOutputValueClass(BitSignature.class);
 
-		JobSubmitter.run(job);
+		JobSubmitter.run(job,"LSH");
 	}
 
 	public static void prepareDistributedCache(JobConf job, FileSystem fs, Path path)

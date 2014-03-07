@@ -21,6 +21,7 @@
 package edu.ucsb.cs.utilities;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.FileInputFormat;
@@ -30,13 +31,12 @@ import org.apache.hadoop.mapred.JobConf;
 
 /**
  * @author Maha
- * 
  */
 public class JobSubmitter {
 
-	public static void run(JobConf job) {
+	public static void run(JobConf job,String title) {
 
-		String ret = stars() + "\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
+		String ret = stars() + "\n  ["+title+"]\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
 		Path inputs[] = FileInputFormat.getInputPaths(job);
 		for (int ctr = 0; ctr < inputs.length; ctr++) {
 			if (ctr > 0) {
@@ -46,13 +46,18 @@ public class JobSubmitter {
 		}
 		ret += "}\n";
 		ret += "  Output Path:  " + FileOutputFormat.getOutputPath(job) + "\n"
-				+ "  Number of mappers:  " + job.getNumMapTasks() + "\n"
-				+ "  Number of reducers:  " + job.getNumReduceTasks() + "\n";
-		for (int ctr = 0; ctr < Properties.requiredParameters.size(); ctr++)
-			ret += Properties.requiredParameters.get(ctr) + "\n";
+				+ "  Num. of mappers: " + job.getNumMapTasks() + "\n"
+				+ "  Num. of reducers: " + job.getNumReduceTasks() + "\n";
+//		for (int ctr = 0; ctr < Properties.requiredParameters.size(); ctr++)//check
+//			ret += Properties.requiredParameters.get(ctr) + "\n";
 		System.out.println(ret);
 		try {
+			Date startTime = new Date();
 			JobClient.runJob(job);
+			Date end_time = new Date();
+			System.err.println("Job took " + (end_time.getTime() - startTime.getTime())
+					/ (float) 1000.0 + " seconds.");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

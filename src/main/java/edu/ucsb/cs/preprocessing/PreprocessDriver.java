@@ -28,11 +28,13 @@ import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.ProgramDriver;
 
-import edu.ucsb.cs.preprocessing.cleaning.WarcFilesDriver;
+import edu.ucsb.cs.preprocessing.cleaning.CleanPagesDriver;
+import edu.ucsb.cs.preprocessing.cleaning.WarcFileCleaner;
 import edu.ucsb.cs.preprocessing.hashing.HashPagesDriver;
-import edu.ucsb.cs.preprocessing.sequence.CombineSeqFiles;
-import edu.ucsb.cs.preprocessing.sequence.SeqDriver;
+import edu.ucsb.cs.preprocessing.sequence.SeqFilesCombiner;
+import edu.ucsb.cs.preprocessing.sequence.SeqWriter;
 import edu.ucsb.cs.preprocessing.sequence.SeqReader;
+import edu.ucsb.cs.preprocessing.sequence.SequenceDriver;
 
 /**
  * Starts data preprocessing including: html cleaning, hashing, converting to
@@ -40,15 +42,12 @@ import edu.ucsb.cs.preprocessing.sequence.SeqReader;
  */
 public class PreprocessDriver {
 
-	// private static final Logger LOG =
-	// Logger.getLogger(BuildIntPostingsForwardIndex.class);
-	// LOG.info("Input file: " + file);
 	/**
 	 * Prints these options to chose from:<br>
 	 * - [Clean] html pages to produce bag of cleaned words. <br>
 	 * - [Hash] bag of words into bag of hashed tokens.<br>
 	 * - Produce [sequence] records [LongWritable,FeatureWeightArrayWritable] <br>
-	 * - [Read] sequence records.
+	 * - [Seq] deals with writing/reading/combining sequence files.
 	 * 
 	 * @param argv : command line inputs
 	 */
@@ -56,48 +55,18 @@ public class PreprocessDriver {
 		int exitCode = -1;
 		ProgramDriver pgd = new ProgramDriver();
 		try {
-			pgd.addClass("cleanhtml", WarcFilesDriver.class,
-					"A MapReduce job to clean .warc.gz webpages from html and weird characters into set of features.");
+			pgd.addClass("clean", CleanPagesDriver.class,
+					"A MapReduce job to clean input pages. See options.");
 			pgd.addClass(
-					"hashrecords",
-					HashPagesDriver.class,
+					"hash", HashPagesDriver.class,
 					"A MapReduce job to collect features then hash input data into [docId <features>] with associated weights if desired. ");
-			pgd.addClass("readseq", SeqReader.class,
-					"Read sequence pages of the format [id<feature,weight>].");
-			pgd.addClass("seqerecords", SeqDriver.class,
-					"A MapReduce job to convert pages of the format [id<feature,weight>] into sequence files.");
-			pgd.addClass("combineseqrec", CombineSeqFiles.class,
-					"A regular java program to combine sequence records from multiple files into one file in hdfs.");
+			pgd.addClass("seq", SequenceDriver.class,
+					"For writing/reading/merging sequence files. See optoins.\n\n");
 			pgd.driver(argv);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
 		System.exit(exitCode);
-	}
-
-	public static void run(JobConf job) throws IOException {
-
-		String ret = stars() + "\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
-		Path inputs[] = FileInputFormat.getInputPaths(job);
-		for (int ctr = 0; ctr < inputs.length; ctr++) {
-			if (ctr > 0) {
-				ret += "\n                ";
-			}
-			ret += inputs[ctr].toString();
-		}
-		ret += "}\n";
-		ret += "  Output Path:  " + FileOutputFormat.getOutputPath(job) + "\n";
-		System.err.println(ret);
-
-		Date startTime = new Date();
-		JobClient.runJob(job);
-		Date end_time = new Date();
-		System.err.println("Job took " + (end_time.getTime() - startTime.getTime())
-				/ (float) 1000.0 + " seconds.");
-	}
-
-	public static String stars() {
-		return new String(new char[77]).replace("\0", "*");
 	}
 }

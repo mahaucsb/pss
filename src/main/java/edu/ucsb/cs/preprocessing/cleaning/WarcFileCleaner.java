@@ -14,7 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
-public class WarcFilesDriver {
+public class WarcFileCleaner {
 
 	public static void printUsage() {
 		System.out.println("Usage: <inputDir of warc.gz files> <outputDir of cleaned files>");

@@ -39,16 +39,13 @@ import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 /*
  * To combine sequence files and produce one file of the size specified residing in HDFS. 
  */
-public class CombineSeqFiles {
+public class SeqFilesCombiner {
 	public static void main(String args[]) throws IOException {
-		if (args.length == 0) {
-			System.out.println("Usage:<inputDir> <outputFile> <nLines> to combine sequence files"
+		if (args.length != 3) {
+			System.out.println("Usage:preprocessing.jar seq combine <inputDir> <outputFile> <nLines> to combine sequence files"
 					+ " \n| <inputDir> to calcualte average vector size");
-		} else if (args.length == 3) {
+		} else 
 			readDirWriteFile(args[0], args[1], Integer.parseInt(args[2]));
-		} else if (args.length == 1) {
-			getAvgVectorSize(args[0]);
-		}
 	}
 
 	public static void readDirWriteFile(String inputDir, String outputFile, int nLines)
@@ -84,6 +81,7 @@ public class CombineSeqFiles {
 		System.out.println("Total lines copied: " + lineCount);
 	}
 
+	///This should be moved to read
 	public static void getAvgVectorSize(String inputDir) throws IOException {
 		long sumFeatures = 0, nLines = 0;
 		Configuration conf = new Configuration();

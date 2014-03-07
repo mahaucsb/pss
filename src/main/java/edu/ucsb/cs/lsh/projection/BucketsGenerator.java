@@ -88,7 +88,7 @@ public class BucketsGenerator {
 		DistributedCache.addCacheFile(new URI(randomPermFile), job);
 		setParameters(nBits, numOfPermutations);
 
-		JobSubmitter.run(job);
+		JobSubmitter.run(job,"LSH");
 	}
 
 	public static void setParameters(int nBits, int numOfPermutations) {

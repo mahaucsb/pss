@@ -109,7 +109,7 @@ public class ProjectionsGenerator {
 		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(RandomVector.class);
 
-		JobSubmitter.run(job);
+		JobSubmitter.run(job,"LSH");
 	}
 
 	public static int readCollectionFeatureCount(FileSystem hdfs, JobConf job) throws IOException {

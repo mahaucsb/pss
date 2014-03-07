@@ -56,6 +56,7 @@ import edu.ucsb.cs.hybrid.mappers.SingleS_Block3_Mapper;
 import edu.ucsb.cs.hybrid.mappers.SingleS_HybridRunner;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.types.DocDocWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /*
  * IGNORE: block-1 doesn't have google dynamic.  
@@ -114,7 +115,7 @@ public class HybridDriver {
 			Loadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),
 					new Path(PartDriver.OUTPUT_DIR), job);
 		}
-		run(job); 
+		JobSubmitter.run(job,"SIMILARITY"); 
 	}
 
 	public static JobConf prepareDistributedCache(JobConf job, String inputDir) {

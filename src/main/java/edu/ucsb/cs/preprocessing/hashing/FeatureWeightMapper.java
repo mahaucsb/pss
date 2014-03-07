@@ -12,8 +12,6 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
 /**
- * ## missing the removal of empty pages.
- * 
  * Reads in the file of features produced from the previous job into a HashMap
  * then it reads in page by page from the text input directory and output it
  * with hashed features values instead of the original words sorted along with

@@ -21,6 +21,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.preprocessing.Config;
 import edu.ucsb.cs.preprocessing.PreprocessDriver;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * Takes in a text files directory with each line representing a document as a
@@ -127,7 +128,7 @@ public class HashPagesDriver {
 		Path outputPath = new Path(FEATURES_FILE);
 		FileSystem.get(job).delete(outputPath, true);
 		FileOutputFormat.setOutputPath(job, outputPath);
-		PreprocessDriver.run(job);
+		JobSubmitter.run(job,"PREPROCESS");
 	}
 
 	/**
@@ -149,7 +150,7 @@ public class HashPagesDriver {
 		Path outputPath = new Path(OUTPUT_DIR);
 		FileSystem.get(job).delete(outputPath, true);
 		FileOutputFormat.setOutputPath(job, outputPath);
-		PreprocessDriver.run(job);
+		JobSubmitter.run(job,"PREPROCESS");
 	}
 
 	/**

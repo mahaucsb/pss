@@ -34,8 +34,9 @@ import org.apache.hadoop.mapred.TextInputFormat;
 import edu.ucsb.cs.preprocessing.PreprocessDriver;
 import edu.ucsb.cs.preprocessing.hashing.HashPagesDriver;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
-public class SeqDriver {
+public class SeqWriter {
 
 	private static String INPUT_DIR = HashPagesDriver.OUTPUT_DIR;
 	public static String OUTPUT_DIR = "seqvectors";
@@ -43,11 +44,11 @@ public class SeqDriver {
 	public static void main(String[] args) throws IOException, ParseException {
 
 		if (args.length != 1)
-			throw new UnsupportedEncodingException("Usage: seqrecords <unique symbol>");
+			throw new UnsupportedEncodingException("Usage: seq write <unique number>");
 		else {
 			INPUT_DIR += args[0];
 			OUTPUT_DIR += args[0];
-			writeSequence();
+			writeSequence(args[0]);
 		}
 	}
 
@@ -56,11 +57,11 @@ public class SeqDriver {
 	 * records to hadoop sequence format. It assumes a text input of format of
 	 * [id feature weight ..] to be the format of input.
 	 */
-	public static void writeSequence() throws IOException {
+	public static void writeSequence(String sign) throws IOException {
 
 		JobConf job = new JobConf();
 		job.setJobName("Convert text vectors to hadoop seqeunce ");
-		job.setJarByClass(SeqDriver.class);
+		job.setJarByClass(SeqWriter.class);
 
 		job.setMapperClass(SeqMapper.class);
 		job.setNumReduceTasks(0);
@@ -76,6 +77,6 @@ public class SeqDriver {
 		job.setOutputFormat(SequenceFileOutputFormat.class);
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 
-		PreprocessDriver.run(job);
+		JobSubmitter.run(job,"PREPROCESS");
 	}
 }
