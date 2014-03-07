@@ -3,6 +3,7 @@ package edu.ucsb.cs.preprocessing.hashing;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,6 +23,8 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.MapReduceBase;
 import org.apache.hadoop.mapred.Mapper;
 
+import edu.ucsb.cs.preprocessing.Config;
+
 /**
  * Reads in files of features produced from the previous job into a HashMap
  * sorted decreasingly by popularity to allow pruning of popular terms. It also
@@ -30,7 +33,7 @@ import org.apache.hadoop.mapred.Mapper;
  * @author Maha Alabduljalil
  */
 public abstract class HashMapper extends MapReduceBase implements
-		Mapper<Object, Text, Text, NullWritable> {
+Mapper<Object, Text, Text, NullWritable> {
 
 	/**
 	 * Sequential mapping of numbers to popularity-sorted features. Popularity
@@ -52,9 +55,9 @@ public abstract class HashMapper extends MapReduceBase implements
 
 	@Override
 	public void configure(JobConf job) {
-		maxFreq = job.getInt(HashPagesDriver.MAX_FEATURE_FREQ_PROPERTY,
-				HashPagesDriver.MAX_FEATURE_FREQ_VALUE);
-		dfCut = job.getFloat(HashPagesDriver.DF_CUT_PROPERTY, HashPagesDriver.DF_CUT_VALUE);
+		maxFreq = job.getInt(Config.MAX_FEATURE_FREQ_PROPERTY,
+				Config.MAX_FEATURE_FREQ_VALUE);
+		dfCut = job.getFloat(Config.DF_CUT_PROPERTY, Config.DF_CUT_VALUE);
 		pagePrefixID = job.get("mapred.task.partition");
 		readFeatures(job);
 		dfCutFeatures();
@@ -68,7 +71,7 @@ public abstract class HashMapper extends MapReduceBase implements
 					addFeatures(cachePath);
 				}
 			} else
-				System.out.println("No files in local cache!");
+				throw new UnsupportedEncodingException("ERROR: No files in local cache!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +81,7 @@ public abstract class HashMapper extends MapReduceBase implements
 	 * Reads in the features files produced in a previous job into memory along
 	 * with each feature's posting length.
 	 * 
-	 * @param cachePath : path to the file added to Hadoop distributed cache.
+	 * @param cachePath : path to the features file added to Hadoop distributed cache.
 	 * @throws IOException
 	 */
 	public void addFeatures(Path cachePath) throws IOException {
@@ -91,16 +94,18 @@ public abstract class HashMapper extends MapReduceBase implements
 				int df = Integer.parseInt(tkz.nextToken());
 				featuresPostingLen.put(feature, df);
 			}
+		}catch(NumberFormatException e){
+			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS.");
 		} finally {
 			wordReader.close();
 		}
 	}
 
 	/**
-	 * Prunes away most of popular features by sorting featuresPostingLen map
+	 * Prunes away fraction of the popular features after sorting featuresPostingLen 
 	 * based on value (ie.posting length allowing duplicates). Then cut off
 	 * popular features. Specifically (dfCut * totalNumberFeatures) are removed
-	 * where dfCut is the configured percentage. This idea is Jimmy Lin's.
+	 * where dfCut is a configured percentage. [Elsayed HLT'08].
 	 */
 	public void dfCutFeatures() {
 

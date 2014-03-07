@@ -12,6 +12,8 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
+import edu.ucsb.cs.preprocessing.Config;
+
 /**
  * Reads in a pair of feature and a list of document IDs it appeared in. Then
  * output features which have appeared in at least two vector along with its
@@ -40,8 +42,8 @@ public class InvertedIndexReducer extends MapReduceBase implements
 	@Override
 	public void configure(JobConf job) {
 		super.configure(job);
-		if (job.getBoolean(HashPagesDriver.LONELY_FEATURES_PROPERTY,
-				HashPagesDriver.LONELY_FEATURES_VALUE))
+		if (job.getBoolean(Config.LONELY_FEATURES_PROPERTY,
+				Config.LONELY_FEATURES_VALUE))
 			minPostingLength = 0;
 	}
 

@@ -33,6 +33,7 @@ import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.ucsb.cs.partitioning.Config;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.statistics.Collector;
 import edu.ucsb.cs.sort.SortDriver;
@@ -62,9 +63,9 @@ public class JaccardCoarsePartitionMain {
 		//
 		String inputDir = SortDriver.OUTPUT_DIR;
 		FileSystem.get(job).delete(new Path(PartDriver.OUTPUT_DIR), true);
-		float threshold = job.getFloat(PartDriver.THRESHOLD_PROPERTY, PartDriver.THRESHOLD_VALUE);
-		int nPartitions = job.getInt(PartDriver.NUM_PARTITIONS_PROPERTY,
-				PartDriver.NUM_PARTITIONS_VALUE);
+		float threshold = job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
+		int nPartitions = job.getInt(Config.NUM_PARTITIONS_PROPERTY,
+				Config.NUM_PARTITIONS_VALUE);
 		//
 		// run regular java program
 		//

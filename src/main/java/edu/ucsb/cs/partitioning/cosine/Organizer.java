@@ -34,6 +34,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.mapred.JobConf;
 
+import edu.ucsb.cs.partitioning.Config;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.statistics.Collector;
 import edu.ucsb.cs.sort.norm.NormSortMain;
@@ -112,8 +113,8 @@ public class Organizer {
 	}
 
 	public static void readCombineCopy(Path input, String output, JobConf job) throws IOException {
-		boolean printDist = job.getBoolean(PartDriver.PRINT_DISTRIBUTION_PROPERTY,
-				PartDriver.PRINT_DISTRIBUTION_VALUE);
+		boolean printDist = job.getBoolean(Config.PRINT_DISTRIBUTION_PROPERTY,
+				Config.PRINT_DISTRIBUTION_VALUE);
 		BufferedWriter distout = null;
 		SequenceFile.Writer out = null;
 		if (printDist)

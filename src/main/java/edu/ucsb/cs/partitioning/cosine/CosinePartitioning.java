@@ -32,6 +32,7 @@ import org.apache.hadoop.mapred.lib.MultipleSequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.hadoop.NonSplitableSequenceInputFormat;
+import edu.ucsb.cs.partitioning.Config;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.sort.SortDriver;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
@@ -96,8 +97,8 @@ public abstract class CosinePartitioning {
 		job.setMapperClass(mapper);
 		job.setMapOutputKeyClass(IntIntWritable.class);
 		job.setMapOutputValueClass(IdFeatureWeightArrayWritable.class);
-		job.setNumReduceTasks(job.getInt(PartDriver.NUM_PARTITIONS_PROPERTY,
-				PartDriver.NUM_PARTITIONS_VALUE));
+		job.setNumReduceTasks(job.getInt(Config.NUM_PARTITIONS_PROPERTY,
+				Config.NUM_PARTITIONS_VALUE));
 		job.setReducerClass(reducer);
 		job.setOutputKeyClass(IntIntWritable.class);
 		job.setOutputValueClass(IdFeatureWeightArrayWritable.class);

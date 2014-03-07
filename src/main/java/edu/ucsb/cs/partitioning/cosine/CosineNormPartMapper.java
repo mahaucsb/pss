@@ -15,6 +15,7 @@ import org.apache.hadoop.mapred.Mapper;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
+import edu.ucsb.cs.partitioning.Config;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.sort.norm.NormSortMain;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
@@ -45,7 +46,7 @@ public class CosineNormPartMapper extends MapReduceBase
 	@Override
 	public void configure(JobConf job) { // change it to read from cache +
 											// remove partition no
-		threshold = job.getFloat(PartDriver.THRESHOLD_PROPERTY, PartDriver.THRESHOLD_VALUE);
+		threshold = job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
 		partitionsMaxPNorm.add(0f);
 		rPrefix = Integer.parseInt((new Path(job.get("map.input.file"))).getName());
 		outputKey = new IntIntWritable(rPrefix);

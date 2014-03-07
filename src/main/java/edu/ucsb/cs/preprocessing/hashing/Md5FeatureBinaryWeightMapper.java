@@ -40,7 +40,7 @@ public class Md5FeatureBinaryWeightMapper extends Md5FeatureWeightMapper {
 
 		long feature;
 		pageCount++;
-		StringTokenizer words = new StringTokenizer(page.toString(), " ");
+		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 		IndexhashFreq.clear();
 

@@ -31,6 +31,7 @@ import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.ucsb.cs.partitioning.Config;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.statistics.Collector;
 import edu.ucsb.cs.partitioning.statistics.GijComparisons;
@@ -95,9 +96,9 @@ public class Partitioner {
 			throw new UnsupportedOperationException("ERROR: " + inputDir + " directory not set.");
 
 		job.set(MAX_DIR_PATH, maxDir);
-		job.set(PartDriver.NUM_PARTITIONS_PROPERTY, Integer.toString(produceStaticParitions(job,
+		job.set(Config.NUM_PARTITIONS_PROPERTY, Integer.toString(produceStaticParitions(job,
 				inputDir, OUTPUT_DIR, maxDir,
-				job.getInt(PartDriver.NUM_PARTITIONS_PROPERTY, PartDriver.NUM_PARTITIONS_VALUE),
+				job.getInt(Config.NUM_PARTITIONS_PROPERTY, Config.NUM_PARTITIONS_VALUE),
 				norm_weight_all)));
 		return job;
 	}
@@ -125,8 +126,8 @@ public class Partitioner {
 				return 0;
 
 			double partitionSize;
-			uniformPartitions = job.getBoolean(PartDriver.UNIFORM_PARTITIONING_PROPERTY,
-					PartDriver.UNIFORM_PARTITIONING_VALUE);
+			uniformPartitions = job.getBoolean(Config.UNIFORM_PARTITIONING_PROPERTY,
+					Config.UNIFORM_PARTITIONING_VALUE);
 			if (uniformPartitions)
 				partitionSize = Math.ceil(nDocuments / (double) nPartitions);
 			else

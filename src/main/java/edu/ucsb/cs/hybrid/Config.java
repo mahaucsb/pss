@@ -65,8 +65,8 @@ public class Config {
 	public static final Integer NUMBER_SPLITS_VALUE = 5;
 	public static final String LOAD_BALANCE_PROPERTY = NAMESPACE + ".load.balancing";
 	public static final Integer LOAD_BALANCE_VALUE = 0;
-	public static final String P_NORM_PROPERTY = NAMESPACE + ".p.norm";
-	public static final Integer P_NORM_VALUE = 1;
+//	public static final String P_NORM_PROPERTY = NAMESPACE + ".p.norm";
+//	public static final Integer P_NORM_VALUE = 1;
 	public static final String METWALLY_PROPERTY = NAMESPACE + ".metwally";
 	public static final boolean METWALLY_VALUE = true;
 	public static String DEBUG_STAGES_PROPERTY = "load.balance.debug";

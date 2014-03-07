@@ -44,15 +44,6 @@ import edu.ucsb.cs.sort.SortDriver;
  */
 public class PartDriver {
 
-	public static final String NAMESPACE = "partition";
-	public static final String THRESHOLD_PROPERTY = NAMESPACE + ".similarity.threshold";
-	public static final float THRESHOLD_VALUE = 0.7f;
-	public static final String NUM_PARTITIONS_PROPERTY = NAMESPACE + ".number.partitions";
-	public static final int NUM_PARTITIONS_VALUE = 5;
-	public static final String UNIFORM_PARTITIONING_PROPERTY = NAMESPACE + ".uniform.partitions";
-	public static final Boolean UNIFORM_PARTITIONING_VALUE = false;
-	public static final String PRINT_DISTRIBUTION_PROPERTY = NAMESPACE + ".print.distribution";
-	public static final Boolean PRINT_DISTRIBUTION_VALUE = false;
 	public static String INPUT_DIR = SortDriver.OUTPUT_DIR;
 	public static String OUTPUT_DIR = "staticpartitions";
 
@@ -98,7 +89,7 @@ public class PartDriver {
 		ret += "}\n";
 		ret += "  Output Path:  " + FileOutputFormat.getOutputPath(job) + "\n" + "  Map Tasks:    "
 				+ job.getNumMapTasks() + "\n" + "  Reduce Tasks: " + job.getNumReduceTasks()
-				+ "\n  Threshold:    " + job.getFloat(THRESHOLD_PROPERTY, THRESHOLD_VALUE);
+				+ "\n  Threshold:    " + job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
 		System.err.println(ret);
 
 		Date startTime = new Date();

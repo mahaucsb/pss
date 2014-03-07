@@ -14,6 +14,8 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
+import edu.ucsb.cs.preprocessing.Config;
+
 /**
  * This map class reads in page by page from the text input directory and output
  * it in text with sorted MD5 hashed features instead of the original words,
@@ -35,8 +37,8 @@ public class Md5FeatureWeightMapper extends FeatureWeightMapper {
 	@Override
 	public void configure(JobConf job) {
 		// this function required to skip the reading of "features" file
-		maxFreq = job.getInt(HashPagesDriver.MAX_FEATURE_FREQ_PROPERTY,
-				HashPagesDriver.MAX_FEATURE_FREQ_VALUE);
+		maxFreq = job.getInt(Config.MAX_FEATURE_FREQ_PROPERTY,
+				Config.MAX_FEATURE_FREQ_VALUE);
 		pagePrefixID = job.get("mapred.task.partition");
 	}
 
@@ -46,7 +48,7 @@ public class Md5FeatureWeightMapper extends FeatureWeightMapper {
 
 		long feature;
 		pageCount++;
-		StringTokenizer words = new StringTokenizer(page.toString(), " ");
+		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 		IndexhashFreq.clear();
 

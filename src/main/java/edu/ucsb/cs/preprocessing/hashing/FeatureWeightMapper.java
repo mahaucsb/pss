@@ -17,9 +17,9 @@ import org.apache.hadoop.mapred.Reporter;
  * Reads in the file of features produced from the previous job into a HashMap
  * then it reads in page by page from the text input directory and output it
  * with hashed features values instead of the original words sorted along with
- * each feature normalized weight. Notice, the weights are wrt. to the original
+ * each feature normalized weight. Notice, the weights are wrt the original
  * page features, but eliminates those pruned features such as those appearing
- * once in the corpse or cut off under dfCut. <br>
+ * once in the corpse and cutting off some under dfCut. <br>
  * <br>
  * 
  * <b>Example:</b><br>
@@ -48,7 +48,7 @@ public class FeatureWeightMapper extends HashMapper {
 
 		long feature;
 		pageCount++;
-		StringTokenizer words = new StringTokenizer(page.toString(), " ");
+		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 		IndexhashFreq.clear();
 		PrunedhashFreq.clear();
@@ -58,7 +58,7 @@ public class FeatureWeightMapper extends HashMapper {
 		Iterator<Long> features = (new TreeSet(IndexhashFreq.keySet())).iterator();
 		while (features.hasNext()) {
 			feature = features.next();
-			if (IndexhashFreq.get(feature) <= maxFreq) // remove high frequency
+			if (IndexhashFreq.get(feature) <= maxFreq) // remove high frequent features
 				hashPage.append(feature + " " + (float) (IndexhashFreq.get(feature) / sqrtSum)
 						+ " ");
 		}

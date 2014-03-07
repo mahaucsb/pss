@@ -34,7 +34,7 @@ public class FeatureMapper extends HashMapper {
 
 		pageCount++;
 		wordhashes.clear();
-		StringTokenizer words = new StringTokenizer(page.toString(), " ");
+		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 
 		while (words.hasMoreTokens()) {
