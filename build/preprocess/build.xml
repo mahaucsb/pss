@@ -22,6 +22,7 @@
   <fileset dir="${classes.dir}" id="class">
     <include name="edu/ucsb/cs/preprocessing/**" />
     <include name="edu/ucsb/cs/types/**" />
+    <include name="edu/ucsb/cs/utilities/**" />
     <exclude name="" />
   </fileset>
   <!-- ================================= 

@@ -25,6 +25,7 @@
     <include name="edu/ucsb/cs/types/**" />
     <include name="edu/ucsb/cs/preprocessing/**" />
     <include name="edu/ucsb/cs/hadoop/**" />
+    <include name="edu/ucsb/cs/utilities/**" />
     <exclude name="" />
   </fileset>
   <!-- ================================= 

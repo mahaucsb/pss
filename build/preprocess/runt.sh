@@ -48,15 +48,15 @@ echo "Load "$numdocs" vectors of Twitter data into HDFS"
 $run_hadoop dfs -rmr textpages$sign
 $run_hadoop dfs -put $tmpdata textpages$sign
 
-echo "convert vectors into numeric text vectors ie (docid num1 num2 num3..)" ###not sure
-$run_hadoop jar $jarfile hashrecords -conf $xmlconf $sign
+echo "convert vectors into numeric text vectors ie (docid num1 num2 num3..)" ###check
+$run_hadoop jar $jarfile hash -conf $xmlconf $sign
 
 echo "convert vectors into hadoop binray (ie.sequence) of class (Long id, FeatureWeight array)"
-$run_hadoop jar $jarfile seqerecords $sign
+$run_hadoop jar $jarfile seq  write $sign
 
 echo "Optional: remove unecessary folders from HDFS."
-$run_hadoop dfs -rmr hashedvectors$sign
-$run_hadoop dfs -rmr features$sign
+#$run_hadoop dfs -rmr hashedvectors$sign
+#$run_hadoop dfs -rmr features$sign
 
 
 

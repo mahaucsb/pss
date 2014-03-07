@@ -3,7 +3,7 @@
 
 if [ $# -ne 3 ]
 then
-  echo "Usage: `basename $0` <sign> <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5>"
+  echo "Usage: `basename $0` <sign> <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5,wiki=6>"
   exit 3
 fi
 
@@ -43,8 +43,11 @@ then
     elif [ $benchmark -eq 4 ]  ## ymusic
     then
 	./runym.sh $sign $numdocs 
+    elif [ $benchmark -eq 5 ]  ## gnew
+    then
+	./rung.sh $sign $numdocs  
     else 
-	./rung.sh $sign $numdocs  ##gnews
+	./runw.sh $sign $numdocs  ##wiki
     fi
 fi
 

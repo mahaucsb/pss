@@ -7,8 +7,9 @@ then
   exit 2
 fi
 
-############################################################                                                                                                       
-# Environment Variables Set                                                                                                                                        ############################################################                                                                                                                                                                                                                                                                          
+############################################################                                                                                                
+# Environment Variables Set
+############################################################                                                                                                      
 if [ -z ${HADOOP_HOME} ] || [ -z ${JAVA_VERSION} ]
 then
     echo "ERROR: either HADOOP_HOME or JAVA_VERSION is not set."
@@ -21,7 +22,7 @@ fi
 
 sign=$1
 numdocs=$2
-yahoomusicdata=../../data/yahoomusic/500-yahoomusic-music #trainIdx1-inverted-bag 
+wikidata=../../data/wiki/500-wiki
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
 tmpdata=./data
@@ -34,7 +35,7 @@ run_hadoop=${HADOOP_HOME}/bin/hadoop
 ant
 rm -r $tmpdata 2>/dev/null
 mkdir $tmpdata
-head -n $numdocs $yahoomusicdata > $tmpdata/input
+head -n $numdocs $wikidata > $tmpdata/input
 if [ $? -ne 0 ]
 then
   exit 2
