@@ -43,17 +43,17 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.hadoop.CustomSequenceFileInputFormat;
 import edu.ucsb.cs.hadoop.NonSplitableSequenceInputFormat;
-import edu.ucsb.cs.hybrid.io.Loadbalancing;
+import edu.ucsb.cs.hybrid.io.TwoStageLoadbalancing;
 import edu.ucsb.cs.hybrid.io.Splitter;
-import edu.ucsb.cs.hybrid.mappers.MultipleS_Block0_Mapper;
-import edu.ucsb.cs.hybrid.mappers.MultipleS_Block11_Mapper;
-import edu.ucsb.cs.hybrid.mappers.MultipleS_HybridRunner;
-import edu.ucsb.cs.hybrid.mappers.MultipleS_Threaded_Block0_Mapper;
-import edu.ucsb.cs.hybrid.mappers.SingleS_Block01_Mapper;
-import edu.ucsb.cs.hybrid.mappers.SingleS_Block0_Mapper;
-import edu.ucsb.cs.hybrid.mappers.SingleS_Block1_Mapper;
-import edu.ucsb.cs.hybrid.mappers.SingleS_Block3_Mapper;
-import edu.ucsb.cs.hybrid.mappers.SingleS_HybridRunner;
+import edu.ucsb.cs.hybrid.mappers.PSS1_Mapper;
+import edu.ucsb.cs.hybrid.mappers.PSS2_Mapper;
+import edu.ucsb.cs.hybrid.mappers.MultipleS_Runner;
+import edu.ucsb.cs.hybrid.mappers.PSS1_Threaded_Mapper;
+import edu.ucsb.cs.hybrid.mappers.PSS_Bayardo_Mapper;
+import edu.ucsb.cs.hybrid.mappers.PSS_Mapper;
+import edu.ucsb.cs.hybrid.mappers.PSS2_SingleS_Mapper;
+import edu.ucsb.cs.hybrid.mappers.PSS3_SingleS_Mapper;
+import edu.ucsb.cs.hybrid.mappers.SingleS_Runner;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.utilities.JobSubmitter;
@@ -62,10 +62,9 @@ import edu.ucsb.cs.utilities.JobSubmitter;
  * IGNORE: block-1 doesn't have google dynamic.  
  */
 /**
- * The HybridDriver runs hybrid cosine similarity computations among records of
- * the format: <code>KEY:docID , VALUE: feature weight</code>. It assumes
- * comparisons within same partition can be easily done, although in reality
- * this is hard with hadoop automatic splitting.(?) <br>
+ * The HybridDriver runs hybrid cosine similarity computations among documents of
+ * the format: <code>KEY:docID , VALUE: feature weight</code>. It performs
+ * comparisons within same the partition as if it was another partition. <br>
  * 
  * @see #run
  * 
@@ -98,7 +97,8 @@ public class HybridDriver {
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(outputPath, true);
 
-		job.setBoolean("fs.hdfs.impl.disable.cache", true); //xun 
+		job.setBoolean("fs.hdfs.impl.disable.cache", true); //xun not sure if needed
+
 		if (job.getBoolean(Config.SPLITABLE_PROPERTY, Config.SPLITABLE_VALUE)) {
 			job.setInputFormat(CustomSequenceFileInputFormat.class);
 			Long splitMB = job.getLong(Config.SPLIT_MB_PROPERTY, Config.SPLIT_MB_VALUE) * 1024 * 1024;
@@ -111,8 +111,9 @@ public class HybridDriver {
 			Splitter.configure(job, new Path(inputDir));// remove comment unless for www
 			job.setInputFormat(NonSplitableSequenceInputFormat.class); //remove comment
 		}
+		//SIGIR'14 two-stage balancing //not yet fully incorporated 
 		if (job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE) != 0) {
-			Loadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),
+			TwoStageLoadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),
 					new Path(PartDriver.OUTPUT_DIR), job);
 		}
 		JobSubmitter.run(job,"SIMILARITY"); 
@@ -135,34 +136,36 @@ public class HybridDriver {
 	 * @param job : passed by reference to set its mapper class.
 	 */
 	public static void setMapperAndRunner(JobConf job) {
-		Boolean multipleS = job.getBoolean(Config.MULTIPLE_S_PROPERTY, Config.MULTIPLE_S_VALUE);
-		int blockChoice = job.getInt(Config.BLOCK_CHOICE_PROPERTY, Config.BLOCK_CHOICE_VALUE);
-		String name = "block-" + blockChoice + "/";
-		if (multipleS) {
-			job.setMapRunnerClass(MultipleS_HybridRunner.class);
-			name += "multipleS-"
-					+ job.getInt(Config.NUMBER_SPLITS_PROPERTY, Config.NUMBER_SPLITS_VALUE);
-			if (job.getBoolean(Config.MULTI_THREADS_PROPERTY, Config.MULTI_THREADS_VALUE)) { // threads
-				job.setMapperClass(MultipleS_Threaded_Block0_Mapper.class);// threads
-			} else if (blockChoice == 0)
-				job.setMapperClass(MultipleS_Block0_Mapper.class);
-			else if (blockChoice == 1)
-				job.setMapperClass(MultipleS_Block11_Mapper.class);// MultipleS_Block1_Mapper
-			else
-				;
-		} else {// this should be removed
-			name += "singleS";
-			job.setMapRunnerClass(SingleS_HybridRunner.class);
-			if (job.getBoolean(Config.BAYADRO_SKIP_PROPERTY, Config.BAYADRO_SKIP_VALUE)) // late
-				job.setMapperClass(SingleS_Block01_Mapper.class);// late
-			else if (job.getBoolean(Config.MULTI_THREADS_PROPERTY, Config.MULTI_THREADS_VALUE)) // threads
-				throw new RuntimeException("Single S with multithreads ??!!!"); // threads
-			else if (blockChoice == 0)
-				job.setMapperClass(SingleS_Block0_Mapper.class);
-			else if (blockChoice == 1)
-				job.setMapperClass(SingleS_Block1_Mapper.class);// block11
-			else
-				job.setMapperClass(SingleS_Block3_Mapper.class);
+		int numSplits = job.getInt(Config.NUMBER_SPLITS_PROPERTY, Config.NUMBER_SPLITS_VALUE);
+		int PSSChoice = job.getInt(Config.BLOCK_CHOICE_PROPERTY, Config.BLOCK_CHOICE_VALUE);//1,2
+		String name = "PSS";
+		if (numSplits>1) {
+			job.setMapRunnerClass(MultipleS_Runner.class);
+			if (job.getBoolean(Config.MULTI_THREADS_PROPERTY, Config.MULTI_THREADS_VALUE)) { // threads testing
+				job.setMapperClass(PSS1_Threaded_Mapper.class);// naming
+			} else if (PSSChoice == 1){
+				name += "1";
+				job.setMapperClass(PSS1_Mapper.class);
+			}else if (PSSChoice == 2){
+				name += "2";
+				job.setMapperClass(PSS2_Mapper.class);// MultipleS_Block1_Mapper
+			}else
+				;//For future implementations 
+		} else {
+			job.setMapRunnerClass(SingleS_Runner.class);
+			if (job.getBoolean(Config.MULTI_THREADS_PROPERTY, Config.MULTI_THREADS_VALUE)) // threads
+				throw new RuntimeException("ERROR: Single S with multithreads! Set hybrid.threads.property to false."); 
+			if (PSSChoice == 1){
+				job.setMapperClass(PSS_Mapper.class);
+				if (job.getBoolean(Config.BAYADRO_SKIP_PROPERTY, Config.BAYADRO_SKIP_VALUE)){
+					name += "/Bayardo_Dynamic_filter";
+					job.setMapperClass(PSS_Bayardo_Mapper.class);//PSS+Bayardo WWW'07
+				}
+			}else if (PSSChoice == 2){
+				name += "2/SingleS";
+				job.setMapperClass(PSS2_SingleS_Mapper.class);
+			}else
+				job.setMapperClass(PSS3_SingleS_Mapper.class); //what is this?
 		}
 		job.setJobName(name);
 	}

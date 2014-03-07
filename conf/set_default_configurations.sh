@@ -1,15 +1,11 @@
 #!/bin/bash
 
-#############################################
-# To setup your configrations change the 
-# values in this file then run it as:
-# ./setConfigurations.sh
-# Then run APSS. 
-#############################################
+##################################################################
+# Set up the default configurations to run 500 documents for
+# any of the given datasets.
+##################################################################
 
-INSTAL_PATH=~/projects/cpc7
-CONF_PATH=$INSTAL_PATH/src/main/resources
-
+CONF_PATH=./
 
 #PREPROCESSING
 pre_maxfreq_feature=1000
@@ -17,23 +13,23 @@ pre_option_num=3  #(1)collect features (2) featureVectors (3) featureWeightVecto
 pre_binary_weights=false #ignore feature frequency
 pre_lonely_features=false
 pre_md5_hash=false
-        pre_dfcut_ratio=0
+pre_dfcut_ratio=0
 
 #PARTITIONING
-        part_sim_threshold=0.9
-part_num_partitions=3
+part_sim_threshold=0.9
+part_num_layers=3
 part_uniform=true
 sort_num_reducers=5
 sort_p_norm=1
 max_doc_length=1200
 max_doc_norm=10
 max_doc_weight=0.2
-        part_load_balance=0 # 1, 2 , 12 or none=0
+part_load_balance=0 # 1, 2 , 12 or none=0
 
 #HYBRID
 similarity_threshold=$part_sim_threshold
 alg_number=0 #0,1,3
-hybrid_split_size=1000
+hybrid_S_size=1000
 hybrid_io_block_size=100
 hybrid_comp_block_size=100
 hybrid_multiple_s=false 
@@ -46,8 +42,11 @@ hybrid_print_log=false
 hybrid_load_balance=$part_load_balance
 hybrid_debug_load_balance=false
 
+
+##################################################################
+
 #PREPROCESSING
-xmlconf=$CONF_PATH/preprocess/conf.xml
+xmlconf=./preprocess/conf.xml
 cp $xmlconf x
 sed -e '5 c\
   <value>'$pre_maxfreq_feature'</value>' x > y
@@ -64,7 +63,7 @@ sed -e '36 c\
 mv x $xmlconf
 
 #PARTITIONING
-xmlconf=$CONF_PATH/partitioning/conf.xml
+xmlconf=./partitioning/conf.xml
 cp $xmlconf x
 sed -e '5 c\
   <value>'$part_sim_threshold'</value>' x > y
@@ -86,16 +85,15 @@ sed -e '49 c\
   <value>'$part_load_balance'</value>' x > y
 mv y $xmlconf
 
-
 #Hybrid
-xmlconf=$CONF_PATH/hybrid/conf.xml
+xmlconf=./hybrid/conf.xml
 cp $xmlconf x
 sed -e '5 c\
   <value>'$similarity_threshold'</value>' x > y
 sed -e '11 c\
   <value>'$alg_number'</value>' y > x
 sed -e '29 c\
-  <value>'$hybrid_split_size'</value>' x > y
+  <value>'$hybrid_S_size'</value>' x > y
 sed -e '36 c\
   <value>'$hybrid_io_block_size'</value>' y > x
 sed -e '41 c\

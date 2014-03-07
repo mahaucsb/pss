@@ -1,130 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
 	<property>
-		<name>hybrid.sim.threshold</name>
-<value>0.99</value>
-		<description>this should be same as partitioning threshold
-		</description>
+	  <name>hybrid.sim.threshold</name>
+	  <value>0.99</value>
+	  <description>this should be same as partitioning threshold
+	  </description>
 	</property>
+
 	<property>
-		<name>hybrid.block.number</name>
-<value>0</value>
-		<description>Block-0, Block-1, Block-3</description>
+	  <name>hybrid.block.number</name>
+	  <value>1</value>
+	  <description>PSS1,PSS2 note: PSS is PSS1 with hybrid.number.splits=1 </description>
 	</property>
+
 	<!-- S properties -->
+
 	<property>
-		<name>hadoop.splitting.enabled</name>
-		<value>false</value>
-		<description>hadoop splitting files into mapred.min.split.size
-		</description>
+	  <name>hadoop.splitting.enabled</name>
+	  <value>false</value>
+	  <description>hadoop splitting files into mapred.min.split.size
+	  </description>
 	</property>
+
 	<property>
-		<name>hadoop.split.size</name>
-		<value>0</value>
-		<description>split size in MB per S if hybrid.hadoop.splitting is set
-		</description>
+	  <name>hadoop.split.size</name>
+	  <value>10</value>
+	  <description>split size in MB per map if hybrid.hadoop.splitting is true
+	  </description>
 	</property>
+
 	<property>
-		<name>hybrid.split.size</name>
-<value>5</value>
-		<description>number of vectors per partition (big S) if
-			hadoop.splitting.enabled = false</description>
+	  <name>hybrid.S.size</name>
+	  <value>5000</value>
+	  <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
 	</property>
+
+	<!-- Multiple splits s properties -->
+
+	<property>
+	  <name>hybrid.number.splits</name>
+	  <value>1</value>
+	  <description>Split S into this number of indexes (PSS1) otherwise 1=PSS.</description>
+	</property>
+
 	<!-- B properties -->
 	<property>
-		<name>hybrid.io.block</name>
-<value>100</value>
-		<description>read other block size into B</description>
+	  <name>hybrid.io.block</name>
+	  <value>100</value>
+	  <description>read other block size into B</description>
 	</property>
+
 	<property>
-		<name>hybrid.comp.block</name>
-<value>100</value>
-		<description>process this number of vectors less than or equal
-			hybrid.io.block</description>
+	  <name>hybrid.comp.block</name>
+	  <value>100</value>
+	  <description>process this number of vectors out of hybrid.io.block aka. b in SIGIR'13</description>
 	</property>
-	<!-- Multiple S properties -->
+	
+	<!--Load balancing -->
+
 	<property>
-		<name>hybrid.multiple.s</name>
-<value>false</value>
-		<description>split S into multiple inveted indexes</description>
+	  <name>hybrid.load.balancing</name>
+	  <value>0</value>
+	  <description>SIGIR'14 loadbalancing technique,0=none,1=step1,2=step2,3=step3,12=step1and2,13=step1and3,23=step2and3</description>
 	</property>
+	
 	<property>
-		<name>hybrid.number.splits</name>
-<value>7</value>
-		<description>split S into this number of indexes if hybrid.multiple.s
-			is true</description>
+	  <name>load.balance.debug</name>
+	  <value>false</value>
 	</property>
+
 	<!-- Filtering techniques -->
 	<property>
-<value>true</value>
-<value>false</value>
-		<description>static partitioning naming used to skip</description>
+	  <name>partition.number.partitions </name>
+	  <value>true</value>
+	  <description>Static partitioning used from WSDM'13</description>
 	</property>
+
 	<property>
-		<name>hybrid.dot.partitions</name>
-		<value>false</value>
-		<description>enable partitions level dot product.</description>
+	  <name>hybrid.dot.partitions</name>
+	  <value>false</value>
+	  <description>Enable partitions level dot product (not published)</description>
 	</property>
+
 	<property>
-		<name>hybrid.circular.enable</name>
-<value>true</value>
-		<description>enable load balacing through circular assignment
-		</description>
+	  <name>hybrid.circular.enable</name>
+	  <value>true</value>
+	  <description>enable load balacing through circular assignment (WSDM'13)</description>
 	</property>
+
 	<property>
-		<name>hybrid.google.skip</name>
-		<value>false</value>
-		<description>google dynamic skipping applied for only singleS/block-0 and change p.norm
-		</description>
+	  <name>hybrid.google.skip</name>
+	  <value>false</value>
+	  <description>google dynamic skipping applied for only singleS/block-0 and change p.norm check</description>
 	</property>
+	
 	<property>
-		<name>hybrid.partition.dot.vector</name>
-		<value>false</value>
-		<description>enable partition vs. vector dot check for candidates.
-		</description>
+	  <name>hybrid.partition.dot.vector</name>
+	  <value>false</value>
+	  <description>Enable partition vs. vector dot check for candidates.(not published)</description>
 	</property>
-	<!-- <property> <name>hybrid.id.compare</name> <value>true</value> <description>produce 
-		only id1 less id2 , opposite of above! </description> </property> -->
-	<!-- Alternatives -->
+
+	<!-- Properties for testing and debugging  -->
+
 	<property>
-		<name>hybrid.loops.loopb</name>
-		<value>true</value>
-		<description>Loop order for block-1 is loopS{loopB} when true
-			otherwise,
-			opposite if false.</description>
+	  <name>hybrid.loops.loopb</name>
+	  <value>true</value>
+	  <description>Loop order for block-1 is loopS{loopB} when true otherwise,opposite if false.</description>
 	</property>
+	
 	<property>
-		<name>hybrid.multi.threads</name>
-		<value>false</value>
-		<description>block-0 only, if multiple S is used then make it
-			multi-thread</description>
+	  <name>hybrid.multi.threads</name>
+	  <value>false</value>
+	  <description>block-0 only, if multiple S is used then make it multi-thread</description>
 	</property>
+
 	<property>
-		<name>hybrid.exclude.myself</name>
-<value>false</value>
-		<description>Do not compare with myself</description>
+	  <name>hybrid.exclude.myself</name>
+	  <value>false</value>
+	  <description>Each map does not compare with its own partition.</description>
 	</property>
+
 	<property>
-		<name>hybrid.single.map</name>
-<value>false</value>
-		<description>run single map for measurement purposes</description>
+	  <name>hybrid.single.map</name>
+	  <value>false</value>
+	  <description>run single map to compare its partition with the rest of the inputdata (ie. s-to-all)</description>
 	</property>
+	
 	<property>
-		<name>hybrid.log.enable</name>
-<value>true</value>
-		<description>print logging enabled</description>
+	  <name>hybrid.log.enable</name>
+	  <value>false</value>
+	  <description>Enables log priting for debugging</description>
 	</property>
-	<property>
-		<name>hybrid.load.balancing</name>
-<value>12</value>
-		<description>www loadbalancing technique,0=none,1=step1,2=step2,3=step3,12=step1and2,13=step1and3,23=step2and3</description>
-	</property>
-			<property>
-		<name>hybrid.p.norm</name>
-		<value>1</value>
-	</property>
-	<property>
-		<name>load.balance.debug</name>
-		<value>false</value>
-	</property>
+	
 </configuration>

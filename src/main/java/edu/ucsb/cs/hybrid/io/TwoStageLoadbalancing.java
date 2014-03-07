@@ -40,7 +40,7 @@ import edu.ucsb.cs.types.TextArrayWritable;
  * @author Maha Load balancing stages as described by WWW'14 error: should be
  *         applied after cutting partitions into s :( but it's not.
  */
-public class Loadbalancing {
+public class TwoStageLoadbalancing {
 
 	public static Path partitionComparisonList = new Path("partitionCompList");
 	private static ArrayList<String> partitionsNames = new ArrayList<String>();

@@ -34,7 +34,7 @@ import edu.ucsb.cs.hybrid.io.Reader;
 import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
-public abstract class SingleS_HybridMapper extends MapReduceBase implements IHybridMapper {
+public abstract class SingleS_Mapper extends MapReduceBase implements IHybridMapper {
 
 	/** inverted index of S with postings sorted increasingly by ID **/
 	HashMap<Long, PostingDocWeight[]> splitInvIndex;

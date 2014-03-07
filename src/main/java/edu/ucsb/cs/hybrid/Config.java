@@ -59,8 +59,8 @@ public class Config {
 	public static final Integer BLOCK_CHOICE_VALUE = 0;
 	public static final String SINGLE_MAP_PROPERTY = NAMESPACE + ".single.map";
 	public static final boolean SINGLE_MAP_VALUE = true;
-	public static final String MULTIPLE_S_PROPERTY = NAMESPACE + ".multiple.s";
-	public static final boolean MULTIPLE_S_VALUE = true;
+//	public static final String MULTIPLE_S_PROPERTY = NAMESPACE + ".multiple.s";
+//	public static final boolean MULTIPLE_S_VALUE = true;
 	public static final String NUMBER_SPLITS_PROPERTY = NAMESPACE + ".number.splits";
 	public static final Integer NUMBER_SPLITS_VALUE = 5;
 	public static final String LOAD_BALANCE_PROPERTY = NAMESPACE + ".load.balancing";

@@ -35,20 +35,15 @@ import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
 /*
- * limitation: metwally is only here
- *  - emphasize that positional/size based filtering are hard for weighted cosine. plus not 
- *  applicable here because we compare S vs. 1 which reduce effectiveness. 
- *
- * Change it to embed:
- *  - baraglia dummy not only max-weight of each feature but if that maxWeight appeared multiple times. 
- *  this is by saving top 5 maxWeights with count, then pick largest with count >=2.
- * 	- baraglia : each record is <# of pruned> <maxW-pruned> <prune> <indexed>
- *  - after indexed part is done, if flag is set check : maxW-pruned * norm1-remaining(S) < th skip
- *  - sort postings based on norm1 decreasingly. (don't know if worth using still).
- *  - else go over pruned. 
+ * BUG: oneMap(5) split into (2 or 3) and others (10)
+ * multiple S with 1 b at a time
  */
-public class SingleS_Block0_Mapper extends SingleS_HybridMapper {
-
+/**
+ * PSS1 from SIGIR'14 to improve PSS by splitting S into multiple splits of 
+ * size s. Then compare s vectors with vectors in B. 
+ * @author maha
+ */
+public class PSS1_Mapper extends MultipleS_Mapper {
 	@Override
 	public void compareWith(Reader reader, OutputCollector<DocDocWritable, FloatWritable> output,
 			Reporter reporter) throws IOException {
@@ -56,27 +51,21 @@ public class SingleS_Block0_Mapper extends SingleS_HybridMapper {
 		IdFeatureWeightArrayWritable[] block;
 		int bSize, recordNo;
 		IdFeatureWeightArrayWritable currentRecord;
+
 		while (fileNotEmpy) {
 			block = reader.getNextbVectors(blockSize);
 			bSize = reader.nbVectors;
 			if (bSize == 0)
 				break;
-
 			for (recordNo = 0; recordNo < bSize; recordNo++) {
 				currentRecord = block[recordNo];
-				processVector(currentRecord);
-				if (log) {
-					t = System.nanoTime();
-					flushAccumulator(output, currentRecord.id); 
-					oA += (System.nanoTime() - t);
-				} else{
-				    flushAccumulator(output, currentRecord.id); 
-				}
+				processRecord(currentRecord, output);
 			}
 		}
 	}
 
-	public void processVector(IdFeatureWeightArrayWritable currentRecord) {
+	public void processRecord(IdFeatureWeightArrayWritable currentRecord,
+			OutputCollector<DocDocWritable, FloatWritable> output) throws IOException {
 
 		int traverseSize, traverse, postingLen;
 		long minTerm;
@@ -86,26 +75,33 @@ public class SingleS_Block0_Mapper extends SingleS_HybridMapper {
 
 		traverseSize = currentRecord.vectorSize;
 		long currentId = currentRecord.id;
-		for (traverse = 0; traverse < traverseSize; traverse++) {
-			minTerm = (hold = currentRecord.vector[traverse]).feature;
-			posting = this.splitInvIndex.get(minTerm);// posting of minTerm
-			if (posting == null)
-				continue;
-			oWeight = hold.weight;
-			postingLen = posting.length;
-			for (k = 0; k < postingLen; k++)
-				if (idComparison) {
-					if (checkMultiply(posting[k], currentId, oWeight))
-						break;
-				} else
-					multiply(posting[k], oWeight);
+
+		for (currentS = 0; currentS < nSplits; currentS++) {
+			for (traverse = 0; traverse < traverseSize; traverse++) {
+				minTerm = (hold = currentRecord.vector[traverse]).feature;
+				posting = this.splitInvIndexes.get(currentS).get(minTerm);
+				if (posting == null)
+					continue;
+				oWeight = hold.weight;
+				postingLen = posting.length;
+				for (k = 0; k < postingLen; k++)
+					if (idComparison) {
+						if (checkMultiply(posting[k], currentId, oWeight))
+							break;
+					} else
+						multiply(posting[k], oWeight);
+			}
+			if (log) {
+				t = System.nanoTime();
+				flushAccumulator(output, currentRecord.id);
+				oA += (System.nanoTime() - t);
+			} else
+				flushAccumulator(output, currentRecord.id);
 		}
 	}
 
 	/**
-	 * Used when circular load balancing is enabled.
-	 * @param postingK : current (v,w) in posting of the feature inspected.
-	 * @param oWeight : weight of the feature from the vector in B.
+	 * {@link PSS_Mapper#multiply(PostingDocWeight, float)}
 	 */
 	public void multiply(PostingDocWeight postingK, float oWeight) {
 		opCount++;
@@ -114,17 +110,13 @@ public class SingleS_Block0_Mapper extends SingleS_HybridMapper {
 	}
 
 	/**
-	 * Used when circular load balancing is disabled.
-	 * @param postingK : current (v,w) in posting of the feature inspected.
-	 * @param oId : ID of the vector in B.
-	 * @param oWeight: weight of the feature from the vector in B.
-	 * @return true means skip rest of posting for block-0, else partial score
-	 *         is added to accumulator.
+	 * {@link PSS_Mapper#checkMultiply(PostingDocWeight, long, float)}
 	 */
 	public boolean checkMultiply(PostingDocWeight postingK, long oId, float oWeight) {
 		int kId = postingK.doc;
-		if (IdMap[kId] < oId) {
+		if (IdMaps.get(currentS)[kId] < oId) {
 			multiply(postingK, oWeight);
+			// accumulator[kId] += (postingK.weight * oWeight);
 			return false;
 		} else
 			return true;

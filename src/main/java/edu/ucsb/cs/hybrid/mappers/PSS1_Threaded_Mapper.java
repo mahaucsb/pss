@@ -35,9 +35,9 @@ import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
 /*
- * tested ... looks good
+ * Tested looks good.
  */
-public class MultipleS_Threaded_Block0_Mapper extends MultipleS_Block0_Mapper {
+public class PSS1_Threaded_Mapper extends PSS1_Mapper {
 
 	MapperThread[] threads;
 	Boolean keepWaiting = true;

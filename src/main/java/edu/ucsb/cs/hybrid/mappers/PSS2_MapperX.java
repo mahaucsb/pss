@@ -34,10 +34,12 @@ import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.IndexFeatureWeight;
 
 /**
- * Modified version of Block-1 to have b processed by splitting it into mini-b,
- * hence the accumulator is of size mini_s * mini_b re-used sequentially.
+ * Final version of PSS2 as described in SIGIR'14 which is a modified version
+ * of #PSS2_ioB_same_compB_Mapper to have others processed by splitting the read B
+ * vectors into blocks of size comp_b,then compare each block to a split (ie.compB x split s).
+ * Hence, the accumulator is of size split_s * comp_b re-used sequentially.
  */
-public class MultipleS_Block11_Mapper extends MultipleS_Block1_Mapper {
+public class PSS2_MapperX extends PSS2_Mapper {
 
 	int comp_b;
 
@@ -59,7 +61,7 @@ public class MultipleS_Block11_Mapper extends MultipleS_Block1_Mapper {
 
 		while (fileNotEmpy) {
 			block = reader.getNextbVectors(blockSize);
-			bSize = reader.nbVectors;
+			bSize = reader.nbVectors;//=block.size()
 			if (bSize == 0)
 				break;
 			for (currentS = 0; currentS < nSplits; currentS++) {

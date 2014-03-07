@@ -30,7 +30,7 @@ import org.apache.hadoop.mapred.OutputCollector;
 import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
-public abstract class MultipleS_HybridMapper extends SingleS_HybridMapper {
+public abstract class MultipleS_Mapper extends SingleS_Mapper {
 
 	ArrayList<HashMap<Long, PostingDocWeight[]>> splitInvIndexes;
 	ArrayList<long[]> IdMaps; // changed

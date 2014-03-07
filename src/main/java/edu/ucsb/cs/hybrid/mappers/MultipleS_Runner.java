@@ -40,9 +40,9 @@ import edu.ucsb.cs.types.PostingDocWeight;
  * Limitation: doesn't work when hadoop.splittable = true; to fix, un-comment the lines in configure.
  * Not sure about that though, mainly not sure if logical splits can be read via "map.input.file" thing.
  */
-public class MultipleS_HybridRunner extends SingleS_HybridRunner {
+public class MultipleS_Runner extends SingleS_Runner {
 
-	protected MultipleS_HybridMapper mapper;
+	protected MultipleS_Mapper mapper;
 	protected int nSplits, splitsSize, splitNum = 0;
 
 	@Override
@@ -61,7 +61,7 @@ public class MultipleS_HybridRunner extends SingleS_HybridRunner {
 		ClassLoader myClassLoader = ClassLoader.getSystemClassLoader();
 		try {
 			Class mapperClass = myClassLoader.loadClass(job.getMapperClass().getName());
-			mapper = (MultipleS_HybridMapper) mapperClass.newInstance();
+			mapper = (MultipleS_Mapper) mapperClass.newInstance();
 			mapper.configure(job);
 		} catch (Exception e) {
 			e.printStackTrace();

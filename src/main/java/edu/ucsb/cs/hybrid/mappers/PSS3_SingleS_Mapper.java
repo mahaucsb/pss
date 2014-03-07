@@ -34,10 +34,11 @@ import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
-/*
+/**
+ * PSS3 is a third implementation but didn't show any imporovmenet. Need explanation!
  * not tested yet
  */
-public class SingleS_Block3_Mapper extends SingleS_Block1_Mapper {
+public class PSS3_SingleS_Mapper extends PSS2_SingleS_Mapper {
 
 	int r = 32, range = 300;
 	long count = 0;

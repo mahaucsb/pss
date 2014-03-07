@@ -45,11 +45,11 @@ import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
-public class SingleS_HybridRunner extends
+public class SingleS_Runner extends
 		MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritable> {
 
 	protected JobConf conf;
-	protected SingleS_HybridMapper mapper;
+	protected SingleS_Mapper mapper;
 	/** Number of vectors in assigned split */
 	protected int splitSize = 0;
 	protected long totalTerms = 0;
@@ -57,7 +57,7 @@ public class SingleS_HybridRunner extends
 	ArrayList<Float> dynamicSmaxw = null; // late
 
 	RecordReader<LongWritable, FeatureWeightArrayWritable> input;
-	private static final Logger LOG = Logger.getLogger(SingleS_HybridRunner.class);
+	private static final Logger LOG = Logger.getLogger(SingleS_Runner.class);
 
 	/**
 	 * Responsible for instantiating and configuring a map class according to
@@ -73,7 +73,7 @@ public class SingleS_HybridRunner extends
 		ClassLoader myClassLoader = ClassLoader.getSystemClassLoader();
 		try {
 			Class mapperClass = myClassLoader.loadClass(job.getMapperClass().getName());
-			mapper = (SingleS_HybridMapper) mapperClass.newInstance();
+			mapper = (SingleS_Mapper) mapperClass.newInstance();
 			mapper.configure(job);
 		} catch (Exception e) {
 			e.printStackTrace();

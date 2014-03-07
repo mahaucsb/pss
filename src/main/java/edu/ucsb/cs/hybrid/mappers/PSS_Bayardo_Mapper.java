@@ -32,10 +32,12 @@ import edu.ucsb.cs.types.FeatureWeight;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
-/*
- * Try using Holder's inequality with Google's technique. not yet done.
+/**
+ * Another version of #SingleS_Block0_Mapper for testing
+ * Bayardo dynamic filtering [WWW'07] when "hybrid.google.skip" is set to true
+ * Conclusion: useless
  */
-public class SingleS_Block02_Mapper extends SingleS_Block0_Mapper {
+public class PSS_Bayardo_Mapper extends PSS_Mapper {
 
 	public BitSet skipSvec_i;// late
 	float currentVecNorm1 = 0; // late

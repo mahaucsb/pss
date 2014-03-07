@@ -36,7 +36,7 @@ public class JobSubmitter {
 
 	public static void run(JobConf job,String title) {
 
-		String ret = stars() + "\n  ["+title+"]\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
+		String ret = stars() + "\n ["+title+"]\n"+stars()+"\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
 		Path inputs[] = FileInputFormat.getInputPaths(job);
 		for (int ctr = 0; ctr < inputs.length; ctr++) {
 			if (ctr > 0) {

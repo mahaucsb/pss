@@ -98,7 +98,7 @@ public class Reader {
 		if (loadbalance != 0) {
 			loadbalanceFiles = new java.util.TreeSet<String>();
 			MapFile.Reader mapReader = new MapFile.Reader(hdfs,
-					Loadbalancing.partitionComparisonList.getName(), conf);
+					TwoStageLoadbalancing.partitionComparisonList.getName(), conf);
 			TextArrayWritable neighbors = new TextArrayWritable();
 			mapReader.get(new Text(inputPath.getName()), neighbors);
 			if (neighbors != null) {
@@ -273,16 +273,8 @@ public class Reader {
 		}
 	}
 
-	// // This disables the io_b vs. comp_b both are io_b .. otherwise
-	// // the one below
-	// public IdFeatureWeightArrayWritable[] getNextbVectors(int blockSize) {
-	// nbVectors = fetchNextioBlock();
-	// compBlock = ioBlock;
-	// return compBlock;
-	// }
-
 	/**
-	 * returns block of "blockSize" vectors from the ioBlock fetched.
+	 * returns a block of "blockSize" vectors from the ioBlock fetched.
 	 * @param blockSize: number of vectors to be processed at once from others.
 	 * @return a block of vectors.
 	 */
