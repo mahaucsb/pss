@@ -3,7 +3,7 @@
 
 	<property>
 	  <name>hybrid.sim.threshold</name>
-	  <value>0.99</value>
+	  <value>0.0</value>
 	  <description>this should be same as partitioning threshold
 	  </description>
 	</property>
@@ -32,7 +32,7 @@
 
 	<property>
 	  <name>hybrid.S.size</name>
-	  <value>5000</value>
+	  <value>10</value>
 	  <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
 	</property>
 
