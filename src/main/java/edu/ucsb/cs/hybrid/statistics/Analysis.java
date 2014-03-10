@@ -35,6 +35,7 @@ import org.apache.hadoop.mapred.JobConf;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 
 /**
+ * should be embedded as a configuration or function call
  * Functions to produce statistics from the contributed optimizations.
  * @author Maha
  * 

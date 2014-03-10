@@ -46,12 +46,12 @@ import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
 public class SingleS_Runner extends
-		MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritable> {
+MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritable> {
 
 	protected JobConf conf;
 	protected SingleS_Mapper mapper;
-	/** Number of vectors in assigned split */
-	protected int splitSize = 0;
+	/** Number of vectors assigned to each map task */
+	public int S_size = 0; //counted here while reading
 	protected long totalTerms = 0;
 	boolean googleDynSkip; // late
 	ArrayList<Float> dynamicSmaxw = null; // late
@@ -90,8 +90,8 @@ public class SingleS_Runner extends
 	@Override
 	public void run(RecordReader<LongWritable, FeatureWeightArrayWritable> input,
 			OutputCollector<DocDocWritable, FloatWritable> output, Reporter reporter)
-			throws IOException {
-		this.input = input;// new
+					throws IOException {
+		this.input = input;
 		boolean log = conf.getBoolean(Config.LOG_PROPERTY, Config.LOG_VALUE);
 		boolean origIdComp, idComparison = !conf.getBoolean(Config.CIRCULAR_PROPERTY,
 				Config.CIRCULAR_VALUE);
@@ -101,16 +101,19 @@ public class SingleS_Runner extends
 		//
 		// Phase1: Build Index
 		//
-		long startTime = System.nanoTime();
-		initMapper(buildInvertedIndex(log), log, idComparison);
-		System.out.println("Build II in millisec:" + (System.nanoTime() - startTime) / 1000000.0);
+		long startTime = System.currentTimeMillis();
+		Object II = buildInvertedIndex(log);
+		if (II == null)
+			return;
+		initMapper(II, log, idComparison);
+		System.out.println("LOG: Inverted index building time in millisec:" + (System.currentTimeMillis() - startTime));
 
 		//
 		// Phase2: Similarity Computations
 		//
 		Reader reader = getReader(conf);
 		if (log) {
-			System.out.println("Total files to compare with: " + reader.nFiles);
+			System.out.println("LOG: Total files to compare with: " + reader.nFiles);//check
 		}
 		startTime = System.nanoTime();
 
@@ -118,10 +121,7 @@ public class SingleS_Runner extends
 			if (!reader.setReader(currentFile))
 				continue;
 			else {
-				// if (log) {
-				// System.out.println("currentFile:" + currentFile);
-				// }
-				if (reader.readingMyPartition) {
+				if (reader.readMyPartition) {
 					origIdComp = idComparison;
 					idComparison = true;
 					comparePartition(reader, output, reporter);
@@ -131,14 +131,14 @@ public class SingleS_Runner extends
 				}
 			}
 		}
-		System.out.println("Similarity comparison time in millisec:"
-				+ (System.nanoTime() - startTime) / 1000000.0);
+		//		System.out.println("Similarity comparison time in millisec:"
+		//				+ (System.nanoTime() - startTime) / 1000000.0);
 		closeMapper();
 	}
 
 	public void comparePartition(Reader reader,
 			OutputCollector<DocDocWritable, FloatWritable> output, Reporter reporter)
-			throws IOException {
+					throws IOException {
 		mapper.compareWith(reader, output, reporter);
 	}
 
@@ -152,7 +152,7 @@ public class SingleS_Runner extends
 	}
 
 	protected void initMapper(Object split, boolean logV, boolean idComparisonV) {
-		mapper.initialize((HashMap<Long, PostingDocWeight[]>) split, logV, idComparisonV, splitSize);
+		mapper.initialize((HashMap<Long, PostingDocWeight[]>) split, logV, idComparisonV, S_size);
 	}
 
 	public boolean splitLimitReached(int nVectors) {
@@ -168,14 +168,14 @@ public class SingleS_Runner extends
 		int nVectors = 0;
 		dynamicIdMap = new ArrayList<Long>();
 
-		if (googleDynSkip) // late
+		if (googleDynSkip) 
 			dynamicSmaxw = new ArrayList<Float>();
 
-		long startTime = System.nanoTime();
+		long startTime = System.currentTimeMillis();
 		while (!splitLimitReached(nVectors) && input.next(doc, vector)) {
 			dynamicIdMap.add(doc.get()); // index 0,1,2...
 			if (googleDynSkip)
-				dynamicSmaxw.add(vector.getMaxWeight());// late
+				dynamicSmaxw.add(vector.getMaxWeight());
 			int numTerms = vector.getSize();
 			totalTerms += numTerms;
 			for (int i = 0; i < numTerms; i++) {
@@ -185,17 +185,20 @@ public class SingleS_Runner extends
 			}
 			nVectors++;
 		}
-		splitSize += nVectors;
+		S_size += nVectors;
 		if (log) {
 			long distinctTerms = dynSIndex.size();
-			System.out.println("Build inverted index time in millisec:"
-					+ ((System.nanoTime() - startTime) / 1000000.0)
-					+ "\nNumber of distict features:" + distinctTerms
-					+ "\nReduction in features storage:"
+			System.out.println("LOG: Build inverted index time in millisec:"
+					+ ((System.currentTimeMillis() - startTime))
+					+ "\nLOG: Number of distict features:" + distinctTerms
+					+ "\nLOG: Reduction in features storage:"
 					+ ((totalTerms - distinctTerms) / (float) totalTerms * 100)
 					+ "\nAvg posting length per feature:" + totalTerms / (float) distinctTerms);
 		}
-		return convertDynamicStatic(dynSIndex, dynamicIdMap);
+		if(S_size ==0)
+			return null;
+		else
+			return convertDynamicStatic(dynSIndex, dynamicIdMap);
 	}
 
 	public ArrayList<PostingDocWeight> getPosting(
@@ -226,6 +229,7 @@ public class SingleS_Runner extends
 
 	public HashMap<Long, PostingDocWeight[]> convertDynamicStatic(
 			HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex, ArrayList<Long> dynamicIdMap) {
+		//PART1: convert the dynamic list inverted index
 		int i = 0, s;
 		PostingDocWeight item;
 		long term;
@@ -237,9 +241,11 @@ public class SingleS_Runner extends
 		for (i = 0; i < terms_new.length; i++)
 			terms_new[i] = terms.next();
 
+		//PART2: convert the dynamic list of document IDs
+		System.err.println("errorr: converting idMap ");//remove
 		convertIdMap(dynamicIdMap);
 		if (googleDynSkip) {
-			convertSmaxw(dynamicSmaxw); // late
+			convertSmaxw(dynamicSmaxw); 
 		}
 		System.gc();
 
@@ -264,11 +270,17 @@ public class SingleS_Runner extends
 		return SplitIndex;
 	}
 
+	/**
+	 * Converts the dynamic lists into static arrays to reduce memory occupied
+	 * @param dynamicIdMap
+	 */
 	public void convertIdMap(ArrayList<Long> dynamicIdMap) {
 		int s = dynamicIdMap.size();
 		long[] idMap = initIdMap(s);
+		System.err.println("errorr:s= "+s);//remove
 		for (int i = 0; i < s; i++) {
 			idMap[i] = dynamicIdMap.get(0);
+			System.err.println("errorr: adding "+idMap[i]);//remove
 			dynamicIdMap.remove(0);
 		}
 		dynamicIdMap.clear();

@@ -34,7 +34,7 @@ import edu.ucsb.cs.hybrid.io.Reader;
 import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
-public abstract class SingleS_Mapper extends MapReduceBase implements IHybridMapper {
+public abstract class SingleS_Mapper extends MapReduceBase implements IMapper {
 
 	/** inverted index of S with postings sorted increasingly by ID **/
 	HashMap<Long, PostingDocWeight[]> splitInvIndex;
@@ -45,6 +45,11 @@ public abstract class SingleS_Mapper extends MapReduceBase implements IHybridMap
 	/* Google Dynamic */
 	public float[] maxwS;
 
+	/**
+	 * SIGIR'14 parameters for PSS1, PSS2
+	 * splitSize is s (may vary a little among maps)
+	 * blockSize is b
+	 */
 	int i, j, k, splitSize, blockSize, filesNo;
 	long opCount = 0, t, oA = 0, idskip = 0, idnotskip = 0;
 

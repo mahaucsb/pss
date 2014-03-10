@@ -36,12 +36,14 @@ import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.PostingDocWeight;
 
 /**
- * not yet implemented.
- * @author Maha This is to have one runner instead of two for Single vs.
- *         Multiple S.
+ * Interface for the PSS mappers. This is to have one runner instead of two for Single vs.
+ *         Multiple S ,but not yet done.
+ * @author Maha 
  */
-public interface IHybridMapper extends
+public interface IMapper extends
 		Mapper<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritable> {
+	
+
 	public void configure(JobConf job);
 
 	public void initialize(HashMap<Long, PostingDocWeight[]> split, boolean logV,

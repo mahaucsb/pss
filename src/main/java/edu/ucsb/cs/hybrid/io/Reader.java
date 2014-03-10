@@ -56,7 +56,7 @@ public class Reader {
 	FileSystem hdfs = null;
 	JobConf conf;
 	public FileStatus[] cachedFiles;
-	public boolean readingMyPartition;
+	public boolean readMyPartition;
 	public String myPath;
 	public SequenceFile.Reader reader = null;
 	public IdFeatureWeightArrayWritable[] ioBlock = null, compBlock = null;
@@ -176,9 +176,9 @@ public class Reader {
 			if (excludeMyself)
 				return false;
 			else
-				readingMyPartition = true;
+				readMyPartition = true;
 		else
-			readingMyPartition = false;
+			readMyPartition = false;
 		if (loadbalance != 0)
 			if (loadbalanceFiles.contains(otherPath.getName())) {
 				reader = new SequenceFile.Reader(hdfs, otherPath, conf);

@@ -140,6 +140,7 @@ public class HybridDriver {
 		int PSSChoice = job.getInt(Config.BLOCK_CHOICE_PROPERTY, Config.BLOCK_CHOICE_VALUE);//1,2
 		String name = "PSS";
 		if (numSplits>1) {
+			//check can I set # splits for runner here?
 			job.setMapRunnerClass(MultipleS_Runner.class);
 			if (job.getBoolean(Config.MULTI_THREADS_PROPERTY, Config.MULTI_THREADS_VALUE)) { // threads testing
 				job.setMapperClass(PSS1_Threaded_Mapper.class);// naming
@@ -207,5 +208,6 @@ public class HybridDriver {
 					"Usage: <className> -conf <confgs> <Unique Symbol>");
 		INPUT_DIR += args[0];
 		OUTPUT_DIR += args[0];
+		Splitter.OTHERS_INPUT += args[0]; 
 	}
 }

@@ -36,7 +36,7 @@ import edu.ucsb.cs.types.PostingDocWeight;
 
 /*
  * Errors corrected:
- * splitsSize = (int) Math.ceil(splitSize / nSplits); // wrong!
+ * splitsSize = (int) Math.ceil(S_size / nSplits); // wrong!
  * Limitation: doesn't work when hadoop.splittable = true; to fix, un-comment the lines in configure.
  * Not sure about that though, mainly not sure if logical splits can be read via "map.input.file" thing.
  */
@@ -49,10 +49,11 @@ public class MultipleS_Runner extends SingleS_Runner {
 	public void configure(JobConf job) {
 		super.configure(job);
 		nSplits = conf.getInt(Config.NUMBER_SPLITS_PROPERTY, Config.NUMBER_SPLITS_VALUE);
-		// long splitSize = Collector.countFileVectors(FileSystem.get(job),
+		nSplits = (nSplits <=0)? 1: nSplits;
+		// long S_size = Collector.countFileVectors(FileSystem.get(job),
 		// new Path(job.get("map.input.file")), conf); //accepts different S.
-		long splitSize = job.getLong(Config.MAP_S_PROPERTY, Config.MAP_S_VALUE);
-		splitsSize = (int) Math.ceil(splitSize / (float) nSplits);
+		long S_size = job.getLong(Config.MAP_S_PROPERTY, Config.MAP_S_VALUE);
+		splitsSize = (int) Math.ceil(S_size / (float) nSplits);
 		mapper.IdMaps = new ArrayList<long[]>(nSplits);
 	}
 
@@ -78,8 +79,7 @@ public class MultipleS_Runner extends SingleS_Runner {
 	}
 
 	/**
-	 * Builds multiple inverted indexes equal to "nSplits" which is specified by
-	 * configuration.
+	 * Builds "nSplits" inverted indexes specified by the configuration hybrid.number.splits.
 	 */
 	@Override
 	public Object buildInvertedIndex(boolean log) throws IOException {

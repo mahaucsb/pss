@@ -33,7 +33,7 @@ import edu.ucsb.cs.types.PostingDocWeight;
 public abstract class MultipleS_Mapper extends SingleS_Mapper {
 
 	ArrayList<HashMap<Long, PostingDocWeight[]>> splitInvIndexes;
-	ArrayList<long[]> IdMaps; // changed
+	ArrayList<long[]> IdMaps; 
 	int currentS, nSplits;
 
 	public void initialize(ArrayList<HashMap<Long, PostingDocWeight[]>> splits, boolean logV,
@@ -51,7 +51,8 @@ public abstract class MultipleS_Mapper extends SingleS_Mapper {
 			throws IOException {
 		for (i = 0; i < splitSize; i++) {
 			if ((th = accumulator[i]) >= this.threshold) {
-				placeD.doc1 = this.IdMaps.get(currentS)[i];
+				long[] list = this.IdMaps.get(currentS);
+				placeD.doc1 = list[i];
 				placeD.doc2 = id;
 				placeF.set(th);
 				out.collect(placeD, placeF);
