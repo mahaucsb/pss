@@ -12,7 +12,7 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 
-import edu.ucsb.cs.bruteforce.mappers.ForwardMapper;
+import edu.ucsb.cs.bruteforce.ForwardMapper;
 import edu.ucsb.cs.hybrid.Config;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;

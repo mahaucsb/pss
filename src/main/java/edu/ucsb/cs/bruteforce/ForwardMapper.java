@@ -18,7 +18,7 @@
  * @Since Jul 26, 2012
  */
 
-package edu.ucsb.cs.bruteforce.mappers;
+package edu.ucsb.cs.bruteforce;
 
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
