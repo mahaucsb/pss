@@ -28,7 +28,7 @@ run_hadoop=${HADOOP_HOME}/bin/hadoop
 ############################################################
 cd ../preprocess
 
-if [ $benchmark -ne 0 ] 
+if [[ $benchmark -ne 0 && $numdocs -ne 0 ]] 
 then 
 
     if [ $benchmark -eq 1 ] ##Clueweb
@@ -55,6 +55,6 @@ fi
 # Run Partitioning
 ############################################################
 cd ../partition
-#ant
-$run_hadoop jar $partjar cpartitionn -conf $xmlconf $sign 
+#$run_hadoop jar $partjar cpartitionn -conf $xmlconf $sign 
+$run_hadoop jar $partjar jpartition -conf $xmlconf $sign 
 

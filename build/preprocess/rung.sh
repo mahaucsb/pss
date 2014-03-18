@@ -30,7 +30,7 @@ run_hadoop=${HADOOP_HOME}/bin/hadoop
 # Copy n Documents to Input Folder
 ############################################################
 
-ant
+
 rm -r $tmpdata 2>/dev/null
 mkdir $tmpdata
 head -n $numdocs $gnewsdata > $tmpdata/input
