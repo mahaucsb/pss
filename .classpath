@@ -13,9 +13,6 @@
 	<classpathentry kind="lib" path="conf/lib/jsoup-0.3.1.jar"/>
 	<classpathentry kind="lib" path="conf/lib/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="conf/lib/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="target/hybrid.jar"/>
-	<classpathentry kind="lib" path="target/partitioning.jar"/>
-	<classpathentry kind="lib" path="target/preprocessing.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

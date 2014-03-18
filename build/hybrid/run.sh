@@ -45,7 +45,7 @@ fi
 # Run Similarity Comparison
 ############################################################
 cd ../hybrid
-ant
+#ant
 $run_hadoop jar $hybridjar -conf $xmlconf $sign 
 
 
