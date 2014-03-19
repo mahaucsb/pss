@@ -37,6 +37,7 @@ import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.sort.SortDriver;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.IntIntWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * Abstract class for all classes that produce cosine static partitions as a
@@ -73,7 +74,7 @@ public abstract class CosinePartitioning {
 		job.setJobName(Partitioner.class.getSimpleName() + " + " + jobSpawner.getSimpleName());
 		job = setMapReduce(job, mapper, IdentityReducer.class);
 		job = setInputOutput(job, new Path(Partitioner.OUTPUT_DIR), interPath);
-		PartDriver.run(job);
+		JobSubmitter.run(job,"Cosine Partitioning");
 		// FileSystem.get(job).delete(new Path(Partitioner.OUTPUT_DIR), true);
 	}
 
@@ -83,7 +84,7 @@ public abstract class CosinePartitioning {
 	public static void rewritePartitions(JobConf job) throws IOException {
 		Path outputPath = new Path(PartDriver.OUTPUT_DIR);
 		FileSystem.get(job).delete(outputPath, true);
-		System.out.println(PartDriver.stars()
+		System.out.println(JobSubmitter.stars()
 				+ "\n Running Organizer to remove unnecessary partitionins --> "
 				+ outputPath.getName());
 		Organizer.main(interPath, outputPath.getName(), job);

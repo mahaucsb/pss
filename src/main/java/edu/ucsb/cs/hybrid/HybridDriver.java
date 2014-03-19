@@ -72,7 +72,7 @@ import edu.ucsb.cs.utilities.JobSubmitter;
 public class HybridDriver {
 
 	private static String INPUT_DIR = PartDriver.OUTPUT_DIR;
-	private static String OUTPUT_DIR = "hybridSim-results";
+	private static String OUTPUT_DIR = "similarityscores";
 
 	public static void main(String args[]) throws ParseException, IOException {
 

@@ -35,6 +35,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import edu.ucsb.cs.sort.SortDriver;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * This class sorts sequence file input of the types:
@@ -85,6 +86,6 @@ public class LengthSortMain {
 		//
 		// run
 		//
-		SortDriver.run(job);
+		JobSubmitter.run(job, "Sort By Vector Lenghts");
 	}
 }

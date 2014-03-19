@@ -29,6 +29,7 @@ import org.apache.hadoop.mapred.lib.IdentityReducer;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.partitioning.PartDriver;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * This class is responsible for producing cosine static partitions as a
@@ -60,7 +61,7 @@ public class CosineAllPartitionMain extends CosinePartitioning {
 		job.setJarByClass(CosineAllPartitionMain.class);
 		job = setMapReduce(job, CosineAllPartMapper.class, IdentityReducer.class);
 		job = setInputOutput(job, new Path(Partitioner.OUTPUT_DIR), interPath);
-		PartDriver.run(job);
+		JobSubmitter.run(job,"Cosine Partitioning");
 		FileSystem.get(job).delete(new Path(Partitioner.OUTPUT_DIR), true);
 		return job;
 	}

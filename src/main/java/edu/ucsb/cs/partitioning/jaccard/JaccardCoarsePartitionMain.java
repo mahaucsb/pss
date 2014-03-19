@@ -35,17 +35,24 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.partitioning.Config;
 import edu.ucsb.cs.partitioning.PartDriver;
+import edu.ucsb.cs.partitioning.cosine.CosinePartitioning;
 import edu.ucsb.cs.partitioning.statistics.Collector;
 import edu.ucsb.cs.sort.SortDriver;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * This class takes a length-based sorted input of records and produce "n"
  * partitions (where "n" is specified by user) containing records exclusively.
  * Plus, it writes out a file called "skipList" to indicate which partition
  * skips which.
+ * 
+ *  * This class takes a length-based sorted input of records and produce "n"
+ * partitions depending on threshold set (ie. satisfy condition min-i/max-i <t).
+ * Plus, it writes out a file called "skipList" to indicate which partition
+ * skips which.
  */
-public class JaccardCoarsePartitionMain {
+public class JaccardCoarsePartitionMain extends CosinePartitioning{
 
 	private static int[] minPratitionRepresentors;
 	private static int[] maxPratitionRepresentors;
@@ -53,6 +60,7 @@ public class JaccardCoarsePartitionMain {
 
 	public static void main(String[] args) throws IOException {
 
+		runSort(args, "lengthsort"); 
 		JobConf job = new JobConf();
 		GenericOptionsParser gop = new GenericOptionsParser(job, args);
 		args = gop.getRemainingArgs();
@@ -61,7 +69,7 @@ public class JaccardCoarsePartitionMain {
 		//
 		// set input & output & threshold & numPartitions
 		//
-		String inputDir = SortDriver.OUTPUT_DIR;
+		String inputDir = PartDriver.INPUT_DIR; //String inputDir = SortDriver.OUTPUT_DIR;
 		FileSystem.get(job).delete(new Path(PartDriver.OUTPUT_DIR), true);
 		float threshold = job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
 		int nPartitions = job.getInt(Config.NUM_PARTITIONS_PROPERTY,
@@ -69,7 +77,7 @@ public class JaccardCoarsePartitionMain {
 		//
 		// run regular java program
 		//
-		System.out.println(PartDriver.stars()
+		System.out.println(JobSubmitter.stars()
 				+ "\n  Running Sequential Job:  jaccard coarse 1D partitioning "
 				+ "\n  Threshold:  " + threshold);
 

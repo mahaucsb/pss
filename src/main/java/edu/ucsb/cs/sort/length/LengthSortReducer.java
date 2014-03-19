@@ -1,6 +1,6 @@
 package edu.ucsb.cs.sort.length;
 
-import edu.ucsb.cs.sort.normx.NormSortReducer;
+import edu.ucsb.cs.sort.norm.NormSortReducer;
 
 /**
  * <p>

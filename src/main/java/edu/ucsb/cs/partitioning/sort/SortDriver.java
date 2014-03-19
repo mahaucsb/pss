@@ -15,10 +15,10 @@
  * the License.
  * 
  * Author: maha alabduljalil <maha (at) cs.ucsb.edu>
- * @Since Jul 13, 2012
+ * @Since Oct 18, 2012
  */
 
-package edu.ucsb.cs.partitioning;
+package edu.ucsb.cs.partitioning.sort;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -31,42 +31,45 @@ import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.ProgramDriver;
 
-import edu.ucsb.cs.partitioning.cosine.CosineAllPartitionMain;
-import edu.ucsb.cs.partitioning.cosine.HolderCosinePartitionMain;
-import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
-import edu.ucsb.cs.sort.SortDriver;
+import edu.ucsb.cs.preprocessing.sequence.SeqWriter;
+import edu.ucsb.cs.sort.length.LengthSortMain;
+import edu.ucsb.cs.sort.maxw.MaxwSortMain;
+import edu.ucsb.cs.sort.norm.NormSortMain;
+import edu.ucsb.cs.sort.signature.SigSortMain;
 
 /**
- * The class input is a sequence input with one record per line processed by
- * Clueweb project with:<br>
- * KEY:LongWritable as id and VALUE: FeatureWeightArrayWritable to be the set of
- * features.
+ * @author Maha
+ * 
  */
-public class PartDriver {
+public class SortDriver {
+	public static final String NAMESPACE = "sort";
+	public static final String NUM_REDUCE_PROPERTY = NAMESPACE + ".num.reducers";
+	public static final int NUM_REDUCE_VALUE = 2;
 
-	public static String INPUT_DIR = SortDriver.OUTPUT_DIR;
-	public static String OUTPUT_DIR = "staticpartitions";
+	public static String INPUT_DIR = SeqWriter.OUTPUT_DIR;
+	public static String OUTPUT_DIR = "sortedvectors";
 
 	public static void main(String args[]) throws UnsupportedEncodingException {
 
-		int exitCode = -1;
 		ProgramDriver pgd = new ProgramDriver();
 		try {
-			pgd.addClass("jpartition", JaccardCoarsePartitionMain.class,
-					"\tJaccard static partitioning");
-			pgd.addClass("cpartitionn", HolderCosinePartitionMain.class,
-					"\tCosine  static partitioning on p-norm sorted documents");
-			// pgd.addClass("cpartitionw", CosineWeightPartitionMain.class,
-			// "\tCosine static partitioning on weight sorted documents");
-			pgd.addClass("cpartitiona", CosineAllPartitionMain.class,
-					"\tCosine static partitioning on ALL sorted documents");
+			pgd.addClass("lengthsort", LengthSortMain.class, "\tSort documents based on length");
+			pgd.addClass("normsort", NormSortMain.class, "\tSort documents based on p-norm");
+			pgd.addClass("maxwsort", MaxwSortMain.class, "\tSort documents based on max weight");// del
+			pgd.addClass("sigsort", SigSortMain.class, "\tSort documents based on their signatures");
 			setup(args);
 			pgd.driver(args);
-			exitCode = 0;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		System.exit(exitCode);
+	}
+
+	public static void runJob(String choice, String[] args) throws UnsupportedEncodingException {
+		String[] argv = new String[4];
+		argv[0] = choice;
+		for (int i = 0; i < args.length; i++)
+			argv[i + 1] = args[i];
+		main(argv);
 	}
 
 	public static void setup(String[] args) throws UnsupportedEncodingException {

@@ -79,29 +79,4 @@ public class SortDriver {
 		INPUT_DIR += args[3];
 		OUTPUT_DIR += args[3];
 	}
-
-	public static void run(JobConf job) throws IOException {
-		String ret = stars() + "\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
-		Path inputs[] = FileInputFormat.getInputPaths(job);
-		for (int ctr = 0; ctr < inputs.length; ctr++) {
-			if (ctr > 0) {
-				ret += "\n                ";
-			}
-			ret += inputs[ctr].toString();
-		}
-		ret += "}\n";
-		ret += "  Output Path:  " + FileOutputFormat.getOutputPath(job) + "\n" + "  Map Tasks:    "
-				+ job.getNumMapTasks() + "\n" + "  Reduce Tasks: " + job.getNumReduceTasks();
-		System.err.println(ret);
-
-		Date startTime = new Date();
-		JobClient.runJob(job);
-		Date end_time = new Date();
-		System.err.println("The job took " + (end_time.getTime() - startTime.getTime())
-				/ (float) 1000.0 + " seconds.");
-	}
-
-	public static String stars() {
-		return new String(new char[77]).replace("\0", "*");
-	}
 }

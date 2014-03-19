@@ -66,5 +66,4 @@ public class JobSubmitter {
 	public static String stars() {
 		return new String(new char[77]).replace("\0", "*");
 	}
-
 }

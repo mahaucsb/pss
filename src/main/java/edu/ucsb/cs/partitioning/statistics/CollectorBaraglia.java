@@ -45,6 +45,7 @@ import edu.ucsb.cs.partitioning.cosine.Organizer;
 import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
 import edu.ucsb.cs.types.FeatureWeight;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * Produces statistics about the data and partitions including maximum, minimum
@@ -100,7 +101,7 @@ public class CollectorBaraglia {
 		System.out.println("  Number of unique skipped vector pairs: " + tkz.nextToken()
 				+ " out of " + tkz.nextToken()
 				+ "\n  Number of distinct partitions edges to skip: " + tkz.nextToken()
-				+ " out of " + tkz.nextToken() + "\n" + PartDriver.stars());
+				+ " out of " + tkz.nextToken() + "\n" + JobSubmitter.stars());
 	}
 
 	/**

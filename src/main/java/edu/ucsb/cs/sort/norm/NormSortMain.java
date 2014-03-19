@@ -35,6 +35,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import edu.ucsb.cs.sort.SortDriver;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * Produces partitions with sorted vectors based on their p-norm. The produced
@@ -83,6 +84,6 @@ public class NormSortMain {
 		//
 		// run
 		//
-		SortDriver.run(job);
+		JobSubmitter.run(job,"Sort By p-norm");
 	}
 }

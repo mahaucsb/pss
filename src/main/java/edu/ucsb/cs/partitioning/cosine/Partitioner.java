@@ -38,6 +38,7 @@ import edu.ucsb.cs.partitioning.statistics.GijComparisons;
 import edu.ucsb.cs.sort.SortDriver;
 import edu.ucsb.cs.sort.norm.NormSortMain;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * This class takes a norm/weight-based sorted input of records of the format:
@@ -80,17 +81,20 @@ public class Partitioner {
 		JobConf job = new JobConf();
 		new GenericOptionsParser(job, args);
 		job.setJarByClass(Partitioner.class);
-		System.out.println(PartDriver.stars()
+		System.out.println(JobSubmitter.stars()
 				+ "\n Running partitioner to prepare uniform partitionins (Single JVM) ");
 
 		String inputDir = SortDriver.OUTPUT_DIR, maxDir; // remove 1
 
 		if (norm_weight_all == 1)
-			maxDir = inputDir + "/maxpnorm";
+			maxDir = "/maxpnorm";
+		//		maxDir = inputDir + "/maxpnorm";
 		else if (norm_weight_all == 2)
-			maxDir = inputDir + "/maxweight";
+			maxDir = "/maxweight";
+		//		maxDir = inputDir + "/maxweight";
 		else
-			maxDir = inputDir + "/maxall";
+			maxDir = "/maxall";
+		//		maxDir = inputDir + "/maxall";
 
 		if (!(new Path(inputDir).getFileSystem(job)).exists(new Path(inputDir)))
 			throw new UnsupportedOperationException("ERROR: " + inputDir + " directory not set.");
@@ -201,7 +205,7 @@ public class Partitioner {
 	 */
 	public static SequenceFile.Writer writeMax(int norm_weight_all, SequenceFile.Writer partOut,
 			FSDataOutputStream maxOut, float max_pnorm, float max_weight, int max_size)
-			throws IOException {
+					throws IOException {
 		if (norm_weight_all == 1)
 			maxOut.writeChars(max_pnorm + "\n");
 		else if (norm_weight_all == 2)

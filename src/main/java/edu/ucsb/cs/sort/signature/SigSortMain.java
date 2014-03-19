@@ -34,6 +34,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import edu.ucsb.cs.lsh.projection.SignaturesGenerator;
 import edu.ucsb.cs.lsh.types.BitSignature;
 import edu.ucsb.cs.sort.SortDriver;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * This class sorts sequence file input of the types:
@@ -87,6 +88,6 @@ public class SigSortMain {
 		//
 		// run
 		//
-		SortDriver.run(job);
+		JobSubmitter.run(job,"Sort By Signature Bytes");
 	}
 }
