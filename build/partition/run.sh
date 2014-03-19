@@ -33,21 +33,21 @@ then
 
     if [ $benchmark -eq 1 ] ##Clueweb
     then 
-	./runc.sh $sign $numdocs 
+	bash runc.sh $sign $numdocs 
     elif [ $benchmark -eq 2 ] ##Twitter
     then
-	./runt.sh $sign $numdocs 
+	bash runt.sh $sign $numdocs 
     elif [ $benchmark -eq 3 ]   ## emails
     then 
-	./rune.sh $sign $numdocs 
+        bash rune.sh $sign $numdocs 
     elif [ $benchmark -eq 4 ]  ## ymusic
     then
-	./runym.sh $sign $numdocs 
+	bash runym.sh $sign $numdocs 
     elif [ $benchmark -eq 5 ]  ## gnew
     then
-	./rung.sh $sign $numdocs  
+	bash rung.sh $sign $numdocs  
     else 
-	./runw.sh $sign $numdocs  ##wiki
+	bash runw.sh $sign $numdocs  ##wiki
     fi
 fi
 
