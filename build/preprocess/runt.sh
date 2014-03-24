@@ -6,7 +6,10 @@ then
   exit 2
 fi
 
-############################################################                                                                                                       # Environment Variables Set                                                                                                                                        ############################################################                                                                                                        
+
+############################################################                                                                                                       
+# Enironment Variables Set
+############################################################
 if [ -z ${HADOOP_HOME} ] || [ -z ${JAVA_VERSION} ]
 then
     echo "ERROR: either HADOOP_HOME or JAVA_VERSION is not set."
@@ -19,7 +22,7 @@ fi
 
 sign=$1
 numdocs=$2
-twitterdata=../../data/twitter/500-twitter
+twitterdata=../../data/twitter/20m-tweets-bag #500-twitter
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
 tmpdata=input_dir
