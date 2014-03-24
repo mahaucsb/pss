@@ -52,6 +52,9 @@ public class PartDriver {
 		int exitCode = -1;
 		ProgramDriver pgd = new ProgramDriver();
 		try {
+//			JobConf job = new JobConf();
+//			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE);
+//			switch(metric){
 			pgd.addClass("jpartition", JaccardCoarsePartitionMain.class,
 					"\tJaccard static partitioning");
 			pgd.addClass("cpartitionn", HolderCosinePartitionMain.class,
@@ -75,5 +78,6 @@ public class PartDriver {
 					"Usage: <className> -conf <confgs> <Unique Symbol>");
 		INPUT_DIR += args[3];
 		OUTPUT_DIR += args[3];
+		JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+= args[3];
 	}
 }

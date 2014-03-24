@@ -28,7 +28,9 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -53,6 +55,8 @@ import edu.ucsb.cs.utilities.JobSubmitter;
  * skips which.
  */
 public class JaccardCoarsePartitionMain extends CosinePartitioning{
+
+	public static String JACCARD_SKIP_PARTITIONS="jaccard_skip_partitions";
 
 	private static int[] minPratitionRepresentors;
 	private static int[] maxPratitionRepresentors;
@@ -82,7 +86,7 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 				+ "\n  Threshold:  " + threshold);
 
 		FileSystem hdfs = produceStaticParitions(inputDir, PartDriver.OUTPUT_DIR, nPartitions);
-		produceSkipList(true, threshold, nPartitions, hdfs);
+		produceSkipList(true, threshold, nPartitions, hdfs,job);
 		Collector.printJaccardStatistics(job, PartDriver.OUTPUT_DIR);
 	}
 
@@ -161,7 +165,7 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 	 *            : write skip list to "skipfile" if true
 	 */
 	public static void produceSkipList(Boolean writeList, float threshold, int nPartitions,
-			FileSystem hdfs) throws IOException {
+			FileSystem hdfs,JobConf job) throws IOException {
 
 		for (int i = 0; i < nPartitions - 1; i++) {
 			for (int j = i + 1; j < nPartitions; j++) {
@@ -172,7 +176,7 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 			}
 		}
 		if (writeList)
-			writeSkipFile(hdfs, nPartitions);
+			writeSkipFile(hdfs, nPartitions,job);
 	}
 
 	/**
@@ -242,14 +246,25 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 			out.close();
 	}
 
-	public static void writeSkipFile(FileSystem hdfs, int nPartitions) throws IOException {
-		FSDataOutputStream out = hdfs.create(new Path("skipfile"));
+	public static void writeSkipFile(FileSystem hdfs, int nPartitions,JobConf job) throws IOException {
+		System.out.println("##jaccard L248"); //remove
+		if(hdfs.exists(new Path(JACCARD_SKIP_PARTITIONS)))
+			hdfs.delete(new Path(JACCARD_SKIP_PARTITIONS));
 
+		MapFile.Writer skipWriter;
+		skipWriter = new MapFile.Writer(job, hdfs, JACCARD_SKIP_PARTITIONS, Text.class,
+				Text.class);
+
+		//		FSDataOutputStream out = hdfs.create(new Path(JACCARD_SKIP_PARTITIONS));
+		String list="";
 		for (int i = 0; i < nPartitions; i++)
 			if (skipList.containsKey(i)) {
-				out.writeChars("\n" + i + ":");
+				//				out.writeChars("\n" + i + ":");
+				Text key = new Text(Integer.toString(i));
 				for (int j = 0; j < skipList.get(i).size(); j++)
-					out.writeChars(skipList.get(i).get(j) + " ");
+					//					out.writeChars(skipList.get(i).get(j) + " ");
+					list+=skipList.get(i).get(j)+" ";
+				skipWriter.append(key, new Text(list));
 			}
 	}
 

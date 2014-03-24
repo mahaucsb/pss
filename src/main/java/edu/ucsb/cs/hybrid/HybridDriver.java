@@ -55,6 +55,7 @@ import edu.ucsb.cs.hybrid.mappers.PSS2_SingleS_Mapper;
 import edu.ucsb.cs.hybrid.mappers.PSS3_SingleS_Mapper;
 import edu.ucsb.cs.hybrid.mappers.SingleS_Runner;
 import edu.ucsb.cs.partitioning.PartDriver;
+import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
 import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.utilities.JobSubmitter;
 
@@ -209,5 +210,6 @@ public class HybridDriver {
 		INPUT_DIR += args[0];
 		OUTPUT_DIR += args[0];
 		Splitter.OTHERS_INPUT += args[0]; 
+		//		JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+=args[0]; //didn'tw work
 	}
 }

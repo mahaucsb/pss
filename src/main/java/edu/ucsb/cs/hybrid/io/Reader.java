@@ -2,6 +2,7 @@ package edu.ucsb.cs.hybrid.io;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -14,6 +15,7 @@ import org.apache.hadoop.mapred.JobConf;
 
 import edu.ucsb.cs.bruteforce.ForwardMapper;
 import edu.ucsb.cs.hybrid.Config;
+import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.types.IdFeatureWeightArrayWritable;
 import edu.ucsb.cs.types.TextArrayWritable;
@@ -67,9 +69,11 @@ public class Reader {
 	public FeatureWeightArrayWritable myBaragliaVector;
 	public float threshold;
 	public int loadbalance;
+	public String metric;
 
 	public Reader(JobConf job, Path inputPath, int blockSize) throws IOException {
 		conf = job;
+		metric=job.get(Config.METRIC_PROPERTY, Config.METRIC_VALUE);
 		staticPart = job
 				.getBoolean(Config.STATIC_PARTITION_PROPERTY, Config.STATIC_PARTITION_VALUE);
 		circular = job.getBoolean(Config.CIRCULAR_PROPERTY, Config.CIRCULAR_VALUE);
@@ -108,11 +112,12 @@ public class Reader {
 			}
 			loadbalanceFiles.add(myPath);
 		} else {
-			if (staticPart) {
+			if ((staticPart)&&(metric.equalsIgnoreCase(Config.METRIC_VALUE))) {
 				myRow = getRow(inputPath.getName());
 				myCol = getCol(inputPath.getName());
 			}
-			if (circular) {
+			if (circular) { 
+				//Doesn't take into consideration static skipping
 				int mapId = 0, start = 0;
 				for (i = 0; i < cachedFiles.length; i++)
 					if (cachedFiles[i].getPath().getName().equalsIgnoreCase(inputPath.getName())) {
@@ -185,8 +190,14 @@ public class Reader {
 				return true;
 			} else
 				return false;
-		if ((staticPart) && (skipPartition(otherPath.getName()))) {
-			return false;
+		if (staticPart){
+			if(metric.equalsIgnoreCase(Config.METRIC_VALUE)){
+				if(CosineSkipPartition(otherPath.getName())) 
+					return false;
+			}else{
+				if(JaccardSkipPartition(otherPath.getName()))
+					return false;
+			}
 		}
 		if ((circular) && (!circularFiles.contains(fileNo))) {
 			return false;
@@ -202,15 +213,35 @@ public class Reader {
 	/**
 	 * @param otherFile
 	 * @return True if the otherFile partition name is skipped by this map
-	 *         partition according to the static partitioning naming system.
+	 *         partition according to the Cosine static partitioning naming system.
 	 */
-	public boolean skipPartition(String otherFile) {
+	public boolean CosineSkipPartition(String otherFile) {
 		int otherRow = getRow(otherFile);
 		int otherCol = getCol(otherFile);
 		if (((myRow != otherRow) || (myCol != otherCol))
 				&& ((otherCol != otherRow) && (otherCol >= myRow))
 				|| ((myCol != myRow) && ((myCol >= otherRow))))
 			return true;
+		return false;
+	}
+
+
+	/**
+	 * @param otherFile
+	 * @return True if the otherFile partition name is skipped by this map
+	 *         partition according to the Jaccard static partitioning.
+	 * @throws IOException 
+	 */
+	public boolean JaccardSkipPartition(String otherFile) throws IOException {
+		MapFile.Reader mapReader = new MapFile.Reader(hdfs,
+				JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS,
+				conf);
+		Text skipList = new Text();
+		mapReader.get(new Text(myPath.substring(0,myPath.indexOf('-'))),skipList);
+		StringTokenizer stk = new StringTokenizer(skipList.toString());
+		while(stk.hasMoreTokens())
+			if(stk.nextToken().contains(otherFile.substring(0,myPath.indexOf('-'))))
+				return true;	
 		return false;
 	}
 

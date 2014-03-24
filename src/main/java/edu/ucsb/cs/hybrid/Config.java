@@ -27,6 +27,8 @@ package edu.ucsb.cs.hybrid;
 public class Config {
 
 	public static final String NAMESPACE = "hybrid";
+	public static final String METRIC_PROPERTY = NAMESPACE + ".similarity.metric";
+	public static final String METRIC_VALUE = "cosine";
 	public static final String BLOCK_SIZE_PROPERTY = NAMESPACE + ".io.block";
 	public static final int BLOCK_SIZE_VALUE = 1000;
 	public static final String COMP_BLOCK_PROPERTY = NAMESPACE + ".comp.block";
@@ -34,7 +36,7 @@ public class Config {
 	public static final String THRESHOLD_PROPERTY = NAMESPACE + ".sim.threshold";
 	public static final float THRESHOLD_VALUE = 0.7f;
 	public static final String STATIC_PARTITION_PROPERTY = NAMESPACE + ".static.partition";
-	public static final boolean STATIC_PARTITION_VALUE = false;
+	public static final boolean STATIC_PARTITION_VALUE = true;
 	public static final String CIRCULAR_PROPERTY = NAMESPACE + ".circular.enable"; //check: if not enabled what happens?
 	public static final boolean CIRCULAR_VALUE = true;
 	public static final String PART_DOT_VECTOR_PROPERTY = NAMESPACE + ".partition.dot.vector";

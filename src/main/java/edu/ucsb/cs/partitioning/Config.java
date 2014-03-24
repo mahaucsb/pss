@@ -5,6 +5,8 @@ import edu.ucsb.cs.sort.SortDriver;
 public class Config {
 
 	public static final String NAMESPACE = "partition";
+	public static final String METRIC_PROPERTY = NAMESPACE + ".similarity.metric";
+	public static final String METRIC_VALUE = "cosine";
 	public static final String THRESHOLD_PROPERTY = NAMESPACE + ".similarity.threshold";
 	public static final float THRESHOLD_VALUE = 0.7f;
 	public static final String NUM_PARTITIONS_PROPERTY = NAMESPACE + ".number.partitions";
