@@ -17,22 +17,19 @@ src/:
 build/:
 conf/:
 target/:
+conf/lib:
 
 
 Quick start:
 ------------
-Command line:
-1) git clone 
-1) copy conf/ directory to src/main/resources using the command: cp -r conf src/main/resources
-2) setup the following environment variables:
-   - HADOOP_HOME:  eg. export HADOOP_HOME=/home/maha/hadoop-1.0.1
-   - JAVA_HOME:
-   - 
-conf/lib:
-eClipse:
-1) File>Import..>Git>Projects from Git>Clone URI>  type: "https://github.com/mahaucsb/pss" in the URI feild. 
-If you're using eClipse, all all the jar files inside this directory to your build path. Otherwise, if you're using the command line then the scripts will do the work to find them.
 
+1) Copy the project: git clone git@github.com:mahaucsb/pss.git
+2) Setup the following environment variables:
+   - HADOOP_HOME: to the location of your hadoop directory. Eg.$ export HADOOP_HOME=/home/maha/hadoop-1.0.1
+   - JAVA_HOME: 
+      For MAC: export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home
+   - JAVA_VERSION: export JAVA_VERSION=`java -version 2>&1 | head -n 1 | cut -d\" -f 2 | cut -f1 -f2 -d"."`
+3)  
 
 
 Configurations:
