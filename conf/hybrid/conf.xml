@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+        <property>
+                <name>hybrid.similarity.metric</name>
+                <value>jaccard</value>
+                <description> either "jaccard" or "cosine" </description>
+        </property>
+
 	<property>
 	  <name>hybrid.sim.threshold</name>
-	  <value>0.0</value>
+	  <value>0.3</value>
 	  <description>this should be same as partitioning threshold
 	  </description>
 	</property>
@@ -32,7 +38,7 @@
 
 	<property>
 	  <name>hybrid.S.size</name>
-	  <value>10</value>
+	  <value>5</value>
 	  <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
 	</property>
 
@@ -71,7 +77,7 @@
 	</property>
 
 	<!-- Filtering techniques -->
-	<property>
+	<property> <!--this is wrong-->
 	  <name>partition.number.partitions </name>
 	  <value>true</value>
 	  <description>Static partitioning used from WSDM'13</description>
@@ -86,7 +92,7 @@
 	<property>
 	  <name>hybrid.circular.enable</name>
 	  <value>true</value>
-	  <description>enable load balacing through circular assignment (WSDM'13)</description>
+	  <description>enable load balacing through circular assignment (WSDM'13) does it work with partitioning?</description>
 	</property>
 
 	<property>
