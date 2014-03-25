@@ -27,6 +27,7 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
@@ -247,25 +248,30 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 	}
 
 	public static void writeSkipFile(FileSystem hdfs, int nPartitions,JobConf job) throws IOException {
-		System.out.println("##jaccard L248"); //remove
 		if(hdfs.exists(new Path(JACCARD_SKIP_PARTITIONS)))
 			hdfs.delete(new Path(JACCARD_SKIP_PARTITIONS));
 
-		MapFile.Writer skipWriter;
-		skipWriter = new MapFile.Writer(job, hdfs, JACCARD_SKIP_PARTITIONS, Text.class,
-				Text.class);
+		if(hdfs.exists(new Path(JACCARD_SKIP_PARTITIONS+".txt")))
+			hdfs.delete(new Path(JACCARD_SKIP_PARTITIONS+".txt"));
 
-		//		FSDataOutputStream out = hdfs.create(new Path(JACCARD_SKIP_PARTITIONS));
+		MapFile.Writer skipWriter;
+		skipWriter = new MapFile.Writer(job, hdfs, JACCARD_SKIP_PARTITIONS, IntWritable.class,
+				Text.class);
+		FSDataOutputStream out = hdfs.create(new Path(JACCARD_SKIP_PARTITIONS+".txt"));
+		
 		String list="";
 		for (int i = 0; i < nPartitions; i++)
 			if (skipList.containsKey(i)) {
-				//				out.writeChars("\n" + i + ":");
-				Text key = new Text(Integer.toString(i));
-				for (int j = 0; j < skipList.get(i).size(); j++)
-					//					out.writeChars(skipList.get(i).get(j) + " ");
+				out.writeChars("\n" + i + ":");
+				int key = i;
+				for (int j = 0; j < skipList.get(i).size(); j++){
+					out.writeChars(skipList.get(i).get(j) + " ");
 					list+=skipList.get(i).get(j)+" ";
-				skipWriter.append(key, new Text(list));
+				}
+				skipWriter.append(new IntWritable(key), new Text(list));
 			}
+		out.close();
+		skipWriter.close();
 	}
 
 	public static FileStatus[] setFiles(FileSystem hdfs, Path inputPath) throws IOException {

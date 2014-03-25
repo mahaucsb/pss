@@ -78,6 +78,6 @@ public class PartDriver {
 					"Usage: <className> -conf <confgs> <Unique Symbol>");
 		INPUT_DIR += args[3];
 		OUTPUT_DIR += args[3];
-		JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+= args[3];
+		//JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+= args[3];
 	}
 }
