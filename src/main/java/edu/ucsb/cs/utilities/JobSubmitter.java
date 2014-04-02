@@ -59,6 +59,7 @@ public class JobSubmitter {
 					/ (float) 1000.0 + " seconds.");
 
 		} catch (IOException e) {
+			System.err.println("ERROR: While submitting the job :(");
 			e.printStackTrace();
 		}
 	}

@@ -68,7 +68,7 @@ public class Splitter {
 		if (job.getBoolean(Config.SINGLE_MAP_PROPERTY, Config.SINGLE_MAP_VALUE)){
 			prepareOneMap(job, inputPath, initial_S); 
 		}else {
-			long S_size = get_max_S_size(nVectors, initial_S);
+			long S_size =  initial_S; //get_max_S_size(nVectors, initial_S);
 			Path splitsDir = splitAll(job, S_size, inputPath);
 			hdfs.delete(inputPath, true);
 			hdfs.rename(splitsDir, inputPath);
@@ -92,107 +92,107 @@ public class Splitter {
 	 * @param initial_S : initial number of vectors per map tasks.
 	 * @return modified S such that it is distributed equally among the maps.
 	 */		
-	public static long get_max_S_size(long nVectors, long initial_S) { //check this should be the split size
-		//		if (nVectors % initial_S == 0)
-		//			return initial_S;
-		//		else {
-		//			long nPartitions = ((nVectors / initial_S)== 0)? 1:(nVectors / initial_S); //precaution
-		//			return (initial_S + (long) Math.ceil((nVectors % initial_S) / nPartitions)); }
-		return (int) Math.ceil(nVectors / (float) initial_S);
+	public static long get_max_S_size(long nVectors, long initial_S) { 
+		if (nVectors % initial_S == 0)
+			return initial_S;
+		else {
+			long nPartitions = ((nVectors / initial_S)== 0)? 1:(nVectors / initial_S); //precaution
+			return (initial_S + (long) Math.ceil((nVectors % initial_S) / nPartitions)); }
+//		return (int) Math.ceil(nVectors / (float) initial_S);
 	}
 
-/**
- * @param inputPath: path is moved to "others" path and left with one file
- *        of size "S_size" in it as input to one map task.
- * @param S_size: s vectors per map task.
- */
-public static void prepareOneMap(JobConf job, Path inputPath, long S_size)
-		throws IOException {
-	Path othersPath = new Path(OTHERS_INPUT);
-	hdfs.delete(othersPath, true);
-	hdfs.rename(inputPath, new Path(OTHERS_INPUT));
-	hdfs.delete(inputPath, true);
-	hdfs.mkdirs(inputPath);
-	createOneMapFile(job, inputPath, othersPath, S_size);
-}
-
-/**
- * Checks input files and picks one with the requested S_size.
- * @param job : job configuration.
- * @param inputPath: path to contain the one map file.
- * @param othersPath: other path that contains the whole input.
- * @param S_size: s vectors put into one map file.
- */
-public static void createOneMapFile(JobConf job, Path inputPath, Path othersPath, long S_size)
-		throws IOException {
-	FileStatus[] files = hdfs.listStatus(othersPath);
-	for (int i = 0; i < files.length; i++) {
-		if (Collector.countFileVectors(hdfs, files[i].getPath(), job) >= S_size) {
-			SequenceFile.Reader reader = new SequenceFile.Reader(hdfs, files[i].getPath(), job);
-			SequenceFile.Writer writer = SequenceFile.createWriter(hdfs, job, new Path(
-					inputPath.getName() + "/" + files[i].getPath().getName()),
-					LongWritable.class, FeatureWeightArrayWritable.class,
-					SequenceFile.CompressionType.NONE);
-
-			long vCount = -1;
-			while (reader.next(key, value) && (++vCount) < S_size)
-				writer.append(key, value);
-			writer.close();
-			return;
-		}
+	/**
+	 * @param inputPath: path is moved to "others" path and left with one file
+	 *        of size "S_size" in it as input to one map task.
+	 * @param S_size: s vectors per map task.
+	 */
+	public static void prepareOneMap(JobConf job, Path inputPath, long S_size)
+			throws IOException {
+		Path othersPath = new Path(OTHERS_INPUT);
+		hdfs.delete(othersPath, true);
+		hdfs.rename(inputPath, new Path(OTHERS_INPUT));
+		hdfs.delete(inputPath, true);
+		hdfs.mkdirs(inputPath);
+		createOneMapFile(job, inputPath, othersPath, S_size);
 	}
-	throw new UnsupportedEncodingException("S_size requested is larger than each file !");
-}
 
-/**
- * splits the files in the passed input directory into at most s vectors
- * each. It does not combine the vectors from two different partitions.
- * @param job : configurations.
- * @param S_size : split files into at most this size of vectors.
- * @param inputPath : path of the directory of the input files.
- * @return path of the splitted files with each at most s vectors.
- */
-public static Path splitAll(JobConf job, long S_size, Path inputPath) throws IOException {
-
-	System.out.println("Splitter.splitAll() from " + inputPath.getName());
-	LongWritable key = new LongWritable();
-	FeatureWeightArrayWritable value = new FeatureWeightArrayWritable();
-	SequenceFile.Writer writer = null;
-
-	String tmpDir = "splits-tmp";
-	hdfs.delete(new Path(tmpDir), true);
-	hdfs.mkdirs(new Path(tmpDir));
-
-	FileStatus[] files = Partitioner.setFiles(hdfs, inputPath);
-	for (int i = 0; i < files.length; i++) {
-		if ((hdfs.isDirectory(files[i].getPath()) || files[i].getPath().getName()
-				.startsWith("_")))
-			continue;
-		SequenceFile.Reader reader = new SequenceFile.Reader(hdfs, files[i].getPath(), job);
-		long subpartition = 0, vecCount = 0;
-
-		while (reader.next(key, value)) {
-			vecCount++;
-			if (vecCount == 1) {
-				if (writer != null)
-					writer.close();
-				subpartition++;
-				writer = SequenceFile.createWriter(hdfs, job, new Path(tmpDir + "/"
-						+ files[i].getPath().getName() + "-" + subpartition),
+	/**
+	 * Checks input files and picks one with the requested S_size.
+	 * @param job : job configuration.
+	 * @param inputPath: path to contain the one map file.
+	 * @param othersPath: other path that contains the whole input.
+	 * @param S_size: s vectors put into one map file.
+	 */
+	public static void createOneMapFile(JobConf job, Path inputPath, Path othersPath, long S_size)
+			throws IOException {
+		FileStatus[] files = hdfs.listStatus(othersPath);
+		for (int i = 0; i < files.length; i++) {
+			if (Collector.countFileVectors(hdfs, files[i].getPath(), job) >= S_size) {
+				SequenceFile.Reader reader = new SequenceFile.Reader(hdfs, files[i].getPath(), job);
+				SequenceFile.Writer writer = SequenceFile.createWriter(hdfs, job, new Path(
+						inputPath.getName() + "/" + files[i].getPath().getName()),
 						LongWritable.class, FeatureWeightArrayWritable.class,
 						SequenceFile.CompressionType.NONE);
 
+				long vCount = -1;
+				while (reader.next(key, value) && (++vCount) < S_size)
+					writer.append(key, value);
+				writer.close();
+				return;
 			}
-			writer.append(key, value);
-			if (vecCount == S_size)
-				vecCount = 0;
 		}
+		throw new UnsupportedEncodingException("S_size requested is larger than each file !");
 	}
-	writer.close();
-	return new Path(tmpDir);
-}
 
-public void produceBalagriaVectors() {
+	/**
+	 * splits the files in the passed input directory into at most s vectors
+	 * each. It does not combine the vectors from two different partitions.
+	 * @param job : configurations.
+	 * @param S_size : split files into at most this size of vectors.
+	 * @param inputPath : path of the directory of the input files.
+	 * @return path of the splitted files with each at most s vectors.
+	 */
+	public static Path splitAll(JobConf job, long S_size, Path inputPath) throws IOException {
 
-}
+		System.out.println("Splitter.splitAll() from " + inputPath.getName());
+		LongWritable key = new LongWritable();
+		FeatureWeightArrayWritable value = new FeatureWeightArrayWritable();
+		SequenceFile.Writer writer = null;
+
+		String tmpDir = "splits-tmp";
+		hdfs.delete(new Path(tmpDir), true);
+		hdfs.mkdirs(new Path(tmpDir));
+
+		FileStatus[] files = Partitioner.setFiles(hdfs, inputPath);
+		for (int i = 0; i < files.length; i++) {
+			if ((hdfs.isDirectory(files[i].getPath()) || files[i].getPath().getName()
+					.startsWith("_")))
+				continue;
+			SequenceFile.Reader reader = new SequenceFile.Reader(hdfs, files[i].getPath(), job);
+			long subpartition = 0, vecCount = 0;
+
+			while (reader.next(key, value)) {
+				vecCount++;
+				if (vecCount == 1) {
+					if (writer != null)
+						writer.close();
+					subpartition++;
+					writer = SequenceFile.createWriter(hdfs, job, new Path(tmpDir + "/"
+							+ files[i].getPath().getName() + "-" + subpartition),
+							LongWritable.class, FeatureWeightArrayWritable.class,
+							SequenceFile.CompressionType.NONE);
+
+				}
+				writer.append(key, value);
+				if (vecCount == S_size)
+					vecCount = 0;
+			}
+		}
+		writer.close();
+		return new Path(tmpDir);
+	}
+
+	public void produceBalagriaVectors() {
+
+	}
 }
