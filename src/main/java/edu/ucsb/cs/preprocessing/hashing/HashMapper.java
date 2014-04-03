@@ -26,7 +26,7 @@ import org.apache.hadoop.mapred.Mapper;
 import edu.ucsb.cs.preprocessing.Config;
 
 /**
- * Reads in files of features produced from the previous job into a HashMap
+ * Reads in files of [id:features] produced from the previous job into a HashMap
  * sorted decreasingly by popularity to allow pruning of popular terms. It also
  * assignes each term a number as hashing value.
  * 
@@ -59,16 +59,16 @@ Mapper<Object, Text, Text, NullWritable> {
 				Config.MAX_FEATURE_FREQ_VALUE);
 		dfCut = job.getFloat(Config.DF_CUT_PROPERTY, Config.DF_CUT_VALUE);
 		pagePrefixID = job.get("mapred.task.partition");
-		readFeatures(job);
+		readFeaturesIntoMemory(job);
 		dfCutFeatures();
 	}
 
-	public void readFeatures(JobConf job) {
+	public void readFeaturesIntoMemory(JobConf job) {
 		try {
 			Path[] localFiles = DistributedCache.getLocalCacheFiles(job);
 			if (null != localFiles && localFiles.length > 0) {
 				for (Path cachePath : localFiles) {
-					addFeatures(cachePath);
+					addFeaturesIntoIndex(cachePath);
 				}
 			} else
 				throw new UnsupportedEncodingException("ERROR: No files in local cache!");
@@ -84,11 +84,11 @@ Mapper<Object, Text, Text, NullWritable> {
 	 * @param cachePath : path to the features file added to Hadoop distributed cache.
 	 * @throws IOException
 	 */
-	public void addFeatures(Path cachePath) throws IOException {
-		BufferedReader wordReader = new BufferedReader(new FileReader(cachePath.toString()));
+	public void addFeaturesIntoIndex(Path cachePath) throws IOException {
+		BufferedReader featuresReader = new BufferedReader(new FileReader(cachePath.toString()));
 		try {
 			String feature_postingLen;
-			while ((feature_postingLen = wordReader.readLine()) != null) {
+			while ((feature_postingLen = featuresReader.readLine()) != null) {
 				StringTokenizer tkz = new StringTokenizer(feature_postingLen);
 				String feature = tkz.nextToken();
 				int df = Integer.parseInt(tkz.nextToken());
@@ -97,7 +97,7 @@ Mapper<Object, Text, Text, NullWritable> {
 		}catch(NumberFormatException e){
 			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS.");
 		} finally {
-			wordReader.close();
+			featuresReader.close();
 		}
 	}
 

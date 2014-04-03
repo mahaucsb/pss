@@ -108,7 +108,7 @@ public class HashPagesDriver {
 
 	/**
 	 * Runs a MapReduce job to collect features of the input data but only those
-	 * with frequency greater than 1.
+	 * with frequency greater than 1 if @see Config.LONELY_FEATURES_PROPERTY is enabled.
 	 */
 	public static void collectFeatures(JobConf job) throws IOException {
 

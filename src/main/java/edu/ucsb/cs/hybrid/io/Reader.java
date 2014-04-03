@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
@@ -237,7 +238,7 @@ public class Reader {
 				JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS,
 				conf);
 		Text skipList = new Text();
-		mapReader.get(new Text(myPath.substring(0,myPath.indexOf('-'))),skipList);
+		mapReader.get(new IntWritable(Integer.parseInt(myPath.substring(0,myPath.indexOf('-')))),skipList);
 		StringTokenizer stk = new StringTokenizer(skipList.toString());
 		while(stk.hasMoreTokens())
 			if(stk.nextToken().contains(otherFile.substring(0,myPath.indexOf('-'))))

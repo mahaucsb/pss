@@ -19,16 +19,17 @@ import org.apache.hadoop.mapred.Reporter;
  * <br>
  * 
  * <b>Example:</b><br>
- * Input: www.amazon.com hadoop filesystem <br>
- * Output: 1 2 3 <br>
- * where 1=filesystem, 2=hadoop, 3=www.amazon.com
+ * Input: www.amazon.com : hadoop filesystem <br>
+ * Output: 001 : 1 2  <br>
+ * where 1=filesystem, 2=hadoop
  * 
  * @author Maha Alabduljalil
  */
 public class FeatureMapper extends HashMapper {
 
 	private HashSet<Long> wordhashes = new HashSet<Long>();
-
+	private long id ;
+	/** page is of the format ID: word1 word2 ... word1 .. word10..*/
 	public void map(Object unused, Text page, OutputCollector<Text, NullWritable> output,
 			Reporter reporter) throws IOException {
 
@@ -36,13 +37,16 @@ public class FeatureMapper extends HashMapper {
 		wordhashes.clear();
 		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
-
+		if(words.hasMoreTokens())
+			id = Long.parseLong(words.nextToken());
+		// write it to mapFile id to <-->
 		while (words.hasMoreTokens()) {
 			String word = words.nextToken();
 			if (featureHash.containsKey(word))
 				wordhashes.add(featureHash.get(word));
 		}
 		Iterator<Long> itr = (new TreeSet(wordhashes)).iterator();
+		hashPage.append(id+" : ");
 		while (itr.hasNext())
 			hashPage.append(itr.next() + " ");
 

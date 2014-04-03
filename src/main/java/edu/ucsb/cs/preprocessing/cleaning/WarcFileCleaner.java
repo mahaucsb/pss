@@ -47,6 +47,12 @@ public class WarcFileCleaner {
 
 	static long outFileNo = 0;
 
+	/**
+	 * Unzips Warc folders and cleans body from wierd characters and html 
+	 * symbols and output text file with ID : <bag of words>
+	 * @param inputWarcFile
+	 * @param outDir
+	 */
 	public static void cleanWarcFiles(File inputWarcFile, String outDir) {
 		BufferedWriter outFile = createFile(outDir + "/" + (++outFileNo));
 		// open our gzip input stream
@@ -62,8 +68,9 @@ public class WarcFileCleaner {
 				if (thisWarcRecord.getHeaderRecordType().equals("response")) {
 					// it is - create a WarcHTML record
 					WarcHTMLResponseRecord htmlRecord = new WarcHTMLResponseRecord(thisWarcRecord);
+					String id= htmlRecord.getTargetTrecID();
 					String content = htmlRecord.getRawRecord().getContentUTF8();
-					outFile.write(HtmlpageCleaner.startProcess(content) + "\n");
+					outFile.write(id+" : "+PageCleaner.startProcess(content) + "\n");
 				}
 			}
 			inStream.close();

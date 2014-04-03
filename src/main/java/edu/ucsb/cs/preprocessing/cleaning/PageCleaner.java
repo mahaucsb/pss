@@ -7,13 +7,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
- * This class contains functions to clean html pages from stopwords and words
+ * This class contains functions to clean pages (eg.html) from stopwords and words
  * with weird characters or even those which are alphanumeric. It produces this
  * cleaned version of the page after converting letters to lower case.
  * 
  * @author Maha Alabduljalil
  */
-public class HtmlpageCleaner {
+public class PageCleaner {
 
 	private static HashSet<String> stopWords;
 
@@ -22,7 +22,7 @@ public class HtmlpageCleaner {
 	 * clean html pages.
 	 * 
 	 * @param page
-	 *            :text of the html page
+	 *            :text of document body (eg. html pages).
 	 * @return A cleaned text of the input page with no stopwords and weird
 	 *         characters.
 	 */

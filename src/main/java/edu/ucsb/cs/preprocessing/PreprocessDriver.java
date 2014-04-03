@@ -44,10 +44,10 @@ public class PreprocessDriver {
 
 	/**
 	 * Prints these options to chose from:<br>
-	 * - [Clean] html pages to produce bag of cleaned words. <br>
-	 * - [Hash] bag of words into bag of hashed tokens.<br>
+	 * - [clean] documents to produce document ID: bag of cleaned words. <br>
+	 * - [hash] bag of words into bag of hashed tokens.<br>
 	 * - Produce [sequence] records [LongWritable,FeatureWeightArrayWritable] <br>
-	 * - [Seq] deals with writing/reading/combining sequence files.
+	 * - [seq] deals with writing/reading/combining sequence files.
 	 * 
 	 * @param argv : command line inputs
 	 */

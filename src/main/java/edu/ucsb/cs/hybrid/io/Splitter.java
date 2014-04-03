@@ -61,7 +61,7 @@ public class Splitter {
 			try{
 				throw new UnsupportedEncodingException(
 						"WARNING: Mapper's host partition \"S\" is larger than the total number of input vectors!\n"+
-								"         hybrid.split.size is set to "+nVectors);
+								         Config.MAP_S_PROPERTY +" is set to "+nVectors);
 
 			}catch(UnsupportedEncodingException e){initial_S = nVectors;}
 
@@ -145,7 +145,7 @@ public class Splitter {
 	}
 
 	/**
-	 * splits the files in the passed input directory into at most s vectors
+	 * splits the files in the input directory into at most s vectors
 	 * each. It does not combine the vectors from two different partitions.
 	 * @param job : configurations.
 	 * @param S_size : split files into at most this size of vectors.
@@ -154,7 +154,7 @@ public class Splitter {
 	 */
 	public static Path splitAll(JobConf job, long S_size, Path inputPath) throws IOException {
 
-		System.out.println("Splitter.splitAll() from " + inputPath.getName());
+		System.out.println("Splitter.splitAll() from " + inputPath.getName()+" into partitions of size at most "+S_size);
 		LongWritable key = new LongWritable();
 		FeatureWeightArrayWritable value = new FeatureWeightArrayWritable();
 		SequenceFile.Writer writer = null;

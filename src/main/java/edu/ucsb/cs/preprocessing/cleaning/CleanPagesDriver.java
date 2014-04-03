@@ -26,7 +26,7 @@ public class CleanPagesDriver {
 					"A MapReduce job to clean .warc.gz webpages from html and weird characters into set of features.");
 			pgd.addClass(
 					"html",
-					HtmlpageCleaner.class,
+					PageCleaner.class,
 					"A MapReduce job to clean html pages from stopwords, weird characters even alphanumerics. It further convert letters into lowercase. ");
 			pgd.driver(argv);
 		} catch (Throwable e) {
