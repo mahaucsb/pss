@@ -51,6 +51,9 @@ public class FeatureWeightMapper extends HashMapper {
 		IndexhashFreq.clear();
 		PrunedhashFreq.clear();
 
+		if(words.hasMoreTokens()){
+			idHash.put(pagePrefixID + pageCount,words.nextToken());
+		}
 		double sqrtSum = fillHashFreq(words);
 
 		Iterator<Long> features = (new TreeSet(IndexhashFreq.keySet())).iterator();

@@ -1,13 +1,18 @@
 package edu.ucsb.cs.preprocessing.hashing;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reporter;
 
@@ -28,7 +33,6 @@ import org.apache.hadoop.mapred.Reporter;
 public class FeatureMapper extends HashMapper {
 
 	private HashSet<Long> wordhashes = new HashSet<Long>();
-	private long id ;
 	/** page is of the format ID: word1 word2 ... word1 .. word10..*/
 	public void map(Object unused, Text page, OutputCollector<Text, NullWritable> output,
 			Reporter reporter) throws IOException {
@@ -37,8 +41,10 @@ public class FeatureMapper extends HashMapper {
 		wordhashes.clear();
 		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
-		if(words.hasMoreTokens())
-			id = Long.parseLong(words.nextToken());
+
+		if(words.hasMoreTokens()){
+			idHash.put(pagePrefixID + pageCount,words.nextToken());
+		}
 		// write it to mapFile id to <-->
 		while (words.hasMoreTokens()) {
 			String word = words.nextToken();
@@ -46,11 +52,11 @@ public class FeatureMapper extends HashMapper {
 				wordhashes.add(featureHash.get(word));
 		}
 		Iterator<Long> itr = (new TreeSet(wordhashes)).iterator();
-		hashPage.append(id+" : ");
 		while (itr.hasNext())
 			hashPage.append(itr.next() + " ");
 
 		this.hashedPageKey.set(hashPage.toString());
 		output.collect(hashedPageKey, nullValue);
 	}
+
 }

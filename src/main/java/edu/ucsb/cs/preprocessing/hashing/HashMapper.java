@@ -1,8 +1,11 @@
 package edu.ucsb.cs.preprocessing.hashing;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +18,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.filecache.DistributedCache;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -28,7 +33,7 @@ import edu.ucsb.cs.preprocessing.Config;
 /**
  * Reads in files of [id:features] produced from the previous job into a HashMap
  * sorted decreasingly by popularity to allow pruning of popular terms. It also
- * assignes each term a number as hashing value.
+ * assigns each term a number as hashing value. map function needs to be implemented. 
  * 
  * @author Maha Alabduljalil
  */
@@ -41,6 +46,8 @@ Mapper<Object, Text, Text, NullWritable> {
 	 * contributing 1.
 	 **/
 	public HashMap<String, Long> featureHash = new HashMap<String, Long>();
+	/** Actual IDs to serial numbers mapping */
+	public HashMap<String,String> idHash = new HashMap<String, String>();
 	/** Number of pages processed by this mapper **/
 	public long pageCount = 0;
 
@@ -52,7 +59,10 @@ Mapper<Object, Text, Text, NullWritable> {
 	/** Used to do the df-cut described by Jimmy Lin */
 	private HashMap<String, Integer> featuresPostingLen = new HashMap<String, Integer>();
 	private float dfCut;
-
+	
+	/** This is used to convert back the hashed ids to actual in Hybrid */
+	public static String IDS_FILE = HashPagesDriver.IDS_FILE;
+	
 	@Override
 	public void configure(JobConf job) {
 		maxFreq = job.getInt(Config.MAX_FEATURE_FREQ_PROPERTY,
@@ -133,4 +143,38 @@ Mapper<Object, Text, Text, NullWritable> {
 			featureHash.put(itr.next(), (++featureCount));
 		}
 	}
+	
+	/**
+	 * This is called automatically via Hadoop code after Configure and map.
+	 */
+	public void close() throws IOException {
+		writeIdsMapping(IDS_FILE);
+	}
+	
+	/**
+	 * Writes a text file of serial number "::" actual IDs per line to be used
+	 * for converting back to original IDs
+	 * @param job
+	 * @param outputfile
+	 */
+	public  void writeIdsMapping( String outputfile){
+		try{
+			
+            Path pt=new Path(outputfile);
+            FileSystem fs = FileSystem.get(new Configuration()); //or job
+			if(fs.exists(pt))
+				fs.delete(pt, true);
+            BufferedWriter br=new BufferedWriter(new OutputStreamWriter(fs.create(pt,true)));
+
+			Iterator <String> keys = idHash.keySet().iterator();
+			while(keys.hasNext()){
+				String serialNo = keys.next();
+				br.write(serialNo+" :: "+idHash.get(serialNo)+"\n");
+			}
+			br.close();
+		}catch (IOException e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
 }

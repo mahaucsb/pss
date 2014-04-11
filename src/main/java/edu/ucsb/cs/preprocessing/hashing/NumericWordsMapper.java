@@ -27,7 +27,10 @@ public class NumericWordsMapper extends HashMapper {
 		pageCount++;
 		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
-
+		
+		if(words.hasMoreTokens()){
+			idHash.put(pagePrefixID + pageCount,words.nextToken());
+		}
 		while (words.hasMoreTokens()) {
 			word = words.nextToken();
 			if (featureHash.get(word) != null)

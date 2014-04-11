@@ -34,17 +34,21 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.FloatWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.SequenceFileInputFormat;
 import org.apache.hadoop.mapred.SequenceFileOutputFormat;
+import org.apache.hadoop.mapred.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import edu.ucsb.cs.hadoop.CustomSequenceFileInputFormat;
 import edu.ucsb.cs.hadoop.NonSplitableSequenceInputFormat;
 import edu.ucsb.cs.hybrid.io.TwoStageLoadbalancing;
 import edu.ucsb.cs.hybrid.io.Splitter;
+import edu.ucsb.cs.hybrid.mappers.IDMapper;
 import edu.ucsb.cs.hybrid.mappers.PSS1_Mapper;
 import edu.ucsb.cs.hybrid.mappers.PSS2_Mapper;
 import edu.ucsb.cs.hybrid.mappers.MultipleS_Runner;
@@ -117,7 +121,9 @@ public class HybridDriver {
 			TwoStageLoadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),
 					new Path(PartDriver.OUTPUT_DIR), job);
 		}
-		JobSubmitter.run(job,"SIMILARITY"); 
+		//JobSubmitter.run(job,"SIMILARITY"); 
+		if(job.getBoolean(Config.CONVERT_TEXT_PROPERTY, Config.CONVERT_TEXT_VALUE))
+			IDMappingJob(job);
 	}
 
 	public static JobConf prepareDistributedCache(JobConf job, String inputDir) {
@@ -211,5 +217,29 @@ public class HybridDriver {
 		OUTPUT_DIR += args[0];
 		Splitter.OTHERS_INPUT += args[0]; 
 		//		JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+=args[0]; //didn'tw work
+	}
+
+	public static String IDS_FILE = "ids"; //this is alos copied to hybrid
+
+	public static void IDMappingJob(JobConf job) throws  IOException {
+
+		job.setJarByClass(HybridDriver.class);
+		job.setJobName("Converting binary to text");
+		job.setMapperClass(IDMapper.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+		job.setNumReduceTasks(0);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+
+		String inputDir = OUTPUT_DIR;
+		job.setInputFormat(SequenceFileInputFormat.class);
+		SequenceFileInputFormat.addInputPath(job, new Path(inputDir));
+		Path outputPath = new Path("READIT"); //CHANGE
+		job.setOutputFormat(TextOutputFormat.class);
+		SequenceFileOutputFormat.setOutputPath(job, outputPath);
+		FileSystem.get(job).delete(outputPath, true);
+
+		JobSubmitter.run(job,"BINARY TO TEXT"); 
 	}
 }

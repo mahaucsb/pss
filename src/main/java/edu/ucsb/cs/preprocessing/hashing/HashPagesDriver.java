@@ -3,6 +3,8 @@ package edu.ucsb.cs.preprocessing.hashing;
 /*
  * need to embed tf-idf weighting system if possible and only keep those bteween 0.2-0.85 like spotsig
  */
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -41,6 +43,7 @@ public class HashPagesDriver {
 
 	public static String INPUT_DIR = "textpages";
 	private static String FEATURES_FILE = "features";
+	public static String IDS_FILE = "ids-mappings";
 	public static String OUTPUT_DIR = "hashedvectors";
 
 	public static void main(String[] args) throws IOException, ParseException {
@@ -49,35 +52,36 @@ public class HashPagesDriver {
 
 		//Different ways to hash input but (3) is default for PSS.
 		switch (configure(job, args)) {
-			case 1:// collect corpse features
-				collectFeatures(job);
-				break;
-			case 2:// hash features of vectors
-				collectFeatures(job);
-				hashFeatures(job, FeatureMapper.class);
-				break;
-			case 3:// hash features and assign weights.
-				collectFeatures(job);
-				hashFeatures(job, FeatureWeightMapper.class);
-				break;
-			case 4:// hash features and assign binary weights.
-				collectFeatures(job);
-				hashFeatures(job, FeatureBinaryWeightMapper.class);
-				break;
-			case 5:// hash words per vectors.
-				collectFeatures(job);
-				hashFeatures(job, NumericWordsMapper.class);
-				break;
-			case 6:// MD5 hash features with weights.
-				hashFeatures(job, Md5FeatureWeightMapper.class);
-				break;
-			case 7:// MD5 hash features with binary weights.
-				hashFeatures(job, Md5FeatureBinaryWeightMapper.class);
-				break;
-			default:
-				break;
+		case 1:// collect corpse features
+			collectFeatures(job);
+			break;
+		case 2:// hash features of vectors
+			collectFeatures(job);
+			hashFeatures(job, FeatureMapper.class);
+			break;
+		case 3:// hash features and assign weights.
+			collectFeatures(job);
+			hashFeatures(job, FeatureWeightMapper.class);
+			break;
+		case 4:// hash features and assign binary weights.
+			collectFeatures(job);
+			hashFeatures(job, FeatureBinaryWeightMapper.class);
+			break;
+		case 5:// hash words per vectors.
+			collectFeatures(job);
+			hashFeatures(job, NumericWordsMapper.class);
+			break;
+		case 6:// MD5 hash features with weights.
+			hashFeatures(job, Md5FeatureWeightMapper.class);
+			break;
+		case 7:// MD5 hash features with binary weights.
+			hashFeatures(job, Md5FeatureBinaryWeightMapper.class);
+			break;
+		default:
+			break;
 		}
 	}
+
 
 	/**
 	 * Assigns a &ltunique symbol&gt to this job files in order to avoid
@@ -94,6 +98,8 @@ public class HashPagesDriver {
 		INPUT_DIR = INPUT_DIR + args[0];
 		OUTPUT_DIR = OUTPUT_DIR + args[0];
 		FEATURES_FILE = FEATURES_FILE + args[0];
+//		HashMapper.IDS_FILE = HashMapper.IDS_FILE + args[0];
+
 		if (job.getBoolean(Config.BINARY_WEIGHTS_PROPERTY, Config.BINARY_WEIGHTS_VALUE)
 				&& !job.getBoolean(Config.MD5_HASH_PROPERTY, Config.MD5_HASH_VALUE))
 			return 4;
@@ -152,6 +158,7 @@ public class HashPagesDriver {
 		FileOutputFormat.setOutputPath(job, outputPath);
 		JobSubmitter.run(job,"PREPROCESS");
 	}
+
 
 	/**
 	 * Adds all the files from the parameter directory to this job

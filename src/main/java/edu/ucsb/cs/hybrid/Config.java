@@ -73,5 +73,7 @@ public class Config {
 	public static final boolean METWALLY_VALUE = true;
 	public static String DEBUG_STAGES_PROPERTY = "load.balance.debug";
 	public static boolean DEBUG_STAGES_VALUE = true;
+	public static final String CONVERT_TEXT_PROPERTY = NAMESPACE + ".text.back";
+	public static final boolean CONVERT_TEXT_VALUE = true;
 
 }
