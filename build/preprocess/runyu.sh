@@ -23,7 +23,7 @@ numdocs=$1
 yahoouserdata=../../data/yahoomusic/500-yahoomusic-users
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
-tmpdata=./data
+tmpdata=input_dir
 run_hadoop=${HADOOP_HOME}/bin/hadoop
 
 ############################################################

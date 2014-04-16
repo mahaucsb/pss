@@ -24,7 +24,7 @@ numdocs=$1
 cluedata=../../data/clueweb/500-clueweb
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
-tmpdata=./data
+tmpdata=input_dir
 run_hadoop=${HADOOP_HOME}/bin/hadoop
 
 ############################################################

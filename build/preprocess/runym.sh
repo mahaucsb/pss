@@ -23,7 +23,7 @@ numdocs=$1
 yahoomusicdata=../../data/yahoomusic/500-yahoomusic-music #trainIdx1-inverted-bag 
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
-tmpdata=./data
+tmpdata=input_dir
 run_hadoop=${HADOOP_HOME}/bin/hadoop
 
 ############################################################

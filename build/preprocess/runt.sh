@@ -21,7 +21,7 @@ fi
 ############################################################
 
 numdocs=$1
-twitterdata=../../data/twitter/10-twitter #20m-tweets-bag #500-twitter #remove 
+twitterdata=../../data/twitter/500-twitter
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
 tmpdata=input_dir

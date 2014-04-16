@@ -24,7 +24,7 @@ numdocs=$1
 wikidata=../../data/wiki/500-wiki
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
-tmpdata=./data
+tmpdata=input_dir
 run_hadoop=${HADOOP_HOME}/bin/hadoop
 
 ############################################################

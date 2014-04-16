@@ -22,7 +22,7 @@ numdocs=$1
 gnewsdata=../../data/googlenews/500-gnews
 cluejar=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
-tmpdata=./data
+tmpdata=input_dir
 run_hadoop=${HADOOP_HOME}/bin/hadoop
 
 ############################################################
