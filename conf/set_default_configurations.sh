@@ -32,7 +32,6 @@ alg_number=0 #0,1,3
 hybrid_S_size=1000
 hybrid_io_block_size=100
 hybrid_comp_block_size=100
-hybrid_multiple_s=false 
 hybrid_number_multiple_s=7 
 hybrid_enable_static_partition=true
 hybrid_circular_enabled=false
@@ -98,8 +97,6 @@ sed -e '36 c\
   <value>'$hybrid_io_block_size'</value>' y > x
 sed -e '41 c\
   <value>'$hybrid_comp_block_size'</value>' x > y
-sed -e '48 c\
-  <value>'$hybrid_multiple_s'</value>' y > x
 sed -e '53 c\
   <value>'$hybrid_number_multiple_s'</value>' x > y
 sed -e '59 c\

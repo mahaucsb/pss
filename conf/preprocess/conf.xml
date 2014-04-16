@@ -15,7 +15,7 @@
 
   <property>
     <name>hashing.lonely.features</name>
-    <value>false</value>
+    <value>true</value>
     <description>Hash features appearing in one document across the corpse (but keep its weight effect on that document).</description>
   </property>
 
@@ -27,7 +27,7 @@
 
   <property>
     <name>hashing.df.cut</name>
-    <value>0.05</value>
+    <value>0.0</value>
     <description>fraction removed from popular features after sorting by popularity in HashMapper.java (eg.0.05 is top 5% popular features) [Elsayed ACL'08].</description>
   </property>
 

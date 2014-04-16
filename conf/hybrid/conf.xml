@@ -3,13 +3,13 @@
 
         <property>
                 <name>hybrid.similarity.metric</name>
-                <value>jaccard</value>
-                <description> either "jaccard" or "cosine" </description>
+                <value>cosine</value>
+                <description> either "jaccard" which is only for partitioning or "cosine" </description>
         </property>
 
 	<property>
 	  <name>hybrid.sim.threshold</name>
-	  <value>0.3</value>
+	  <value>0.01</value>
 	  <description>this should be same as partitioning threshold
 	  </description>
 	</property>
@@ -38,7 +38,7 @@
 
 	<property>
 	  <name>hybrid.S.size</name>
-	  <value>5</value>
+	  <value>2</value>
 	  <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
 	</property>
 
@@ -68,7 +68,7 @@
 	<property>
 	  <name>hybrid.load.balancing</name>
 	  <value>0</value>
-	  <description>SIGIR'14 loadbalancing technique,0=none,1=step1,2=step2,3=step3,12=step1and2,13=step1and3,23=step2and3</description>
+	  <description>SIGIR'14 loadbalancing technique,0=none(ie.circular if set),1=step1,2=step2,3=step3,12=step1and2,13=step1and3,23=step2and3</description>
 	</property>
 	
 	<property>
@@ -92,7 +92,7 @@
 	<property>
 	  <name>hybrid.circular.enable</name>
 	  <value>true</value>
-	  <description>enable load balacing through circular assignment (WSDM'13) does it work with partitioning?</description>
+	  <description>enable load balacing through circular assignment (WSDM'13) applied before static partitioning skip</description>
 	</property>
 
 	<property>
@@ -132,11 +132,17 @@
 	  <value>false</value>
 	  <description>run single map to compare its partition with the rest of the inputdata (ie. s-to-all)</description>
 	</property>
+
+	<property>
+	  <name>hybrid.text.back</name>
+	  <value>true</value>
+	  <description>Convert binary final similarity results to readable text</description>
+	</property>
 	
 	<property>
 	  <name>hybrid.log.enable</name>
 	  <value>false</value>
 	  <description>Enables log priting for debugging</description>
 	</property>
-	
+
 </configuration>
