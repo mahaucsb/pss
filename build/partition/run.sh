@@ -3,7 +3,7 @@
 
 if [ $# -ne 2 ]
 then
-  echo "Usage: `basename $0` <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5,wiki=6>"
+  echo "Usage: `basename $0` <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5,wiki=6,disease=7>"
   exit 3
 fi
 
@@ -45,8 +45,11 @@ then
     elif [ $benchmark -eq 5 ]  ## gnew
     then
 	bash rung.sh $numdocs  
+    elif [ $benchmark -eq 6 ]  ## wiki
+    then
+	bash runw.sh $numdocs 
     else 
-	bash runw.sh $numdocs  ##wiki
+	bash rund.sh $numdocs  ##disease
     fi
 fi
 
