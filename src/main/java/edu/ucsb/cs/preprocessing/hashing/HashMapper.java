@@ -46,8 +46,6 @@ Mapper<Object, Text, Text, NullWritable> {
 	 * contributing 1.
 	 **/
 	public HashMap<String, Long> featureHash = new HashMap<String, Long>();
-	/** Actual IDs to serial numbers mapping */
-	public HashMap<String,String> idHash = new HashMap<String, String>();
 	/** Number of pages processed by this mapper **/
 	public long pageCount = 0;
 
@@ -61,7 +59,7 @@ Mapper<Object, Text, Text, NullWritable> {
 	private float dfCut;
 	
 	/** This is used to convert back the hashed ids to actual in Hybrid */
-	public static String IDS_FILE = HashPagesDriver.IDS_FILE;
+	protected BufferedWriter br=null;
 	
 	@Override
 	public void configure(JobConf job) {
@@ -71,6 +69,7 @@ Mapper<Object, Text, Text, NullWritable> {
 		pagePrefixID = job.get("mapred.task.partition");
 		readFeaturesIntoMemory(job);
 		dfCutFeatures();
+		openIdsMapping(HashPagesDriver.IDS_FILE1+"/"+pagePrefixID);
 	}
 
 	public void readFeaturesIntoMemory(JobConf job) {
@@ -142,39 +141,56 @@ Mapper<Object, Text, Text, NullWritable> {
 		while (itr.hasNext()) {
 			featureHash.put(itr.next(), (++featureCount));
 		}
-	}
+	}	
 	
 	/**
-	 * This is called automatically via Hadoop code after Configure and map.
-	 */
-	public void close() throws IOException {
-		writeIdsMapping(IDS_FILE);
-	}
-	
-	/**
-	 * Writes a text file of serial number "::" actual IDs per line to be used
+	 * Opens a text file to hold the mapping serial number "::" actual IDs per line to be used
 	 * for converting back to original IDs
 	 * @param job
 	 * @param outputfile
 	 */
-	public  void writeIdsMapping( String outputfile){
+	public void openIdsMapping(String outputfile){
 		try{
-			
-            Path pt=new Path(outputfile);
-            FileSystem fs = FileSystem.get(new Configuration()); //or job
-			if(fs.exists(pt))
-				fs.delete(pt, true);
-            BufferedWriter br=new BufferedWriter(new OutputStreamWriter(fs.create(pt,true)));
+			Path pt=new Path(outputfile);
+			FileSystem fs = FileSystem.get(new Configuration()); //or job
+			br=new BufferedWriter(new OutputStreamWriter(fs.create(pt,true)));
+		}catch (IOException e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+	
+	public void close(){
+		closeIdsMapping();
+	}
 
-			Iterator <String> keys = idHash.keySet().iterator();
-			while(keys.hasNext()){
-				String serialNo = keys.next();
-				br.write(serialNo+" :: "+idHash.get(serialNo)+"\n");
-			}
+	/**
+	 * Closes the text file holding the mapping serial number "::" actual IDs per line to be used
+	 * for converting back to original IDs
+	 * @param job
+	 * @param outputfile
+	 */
+	public void closeIdsMapping(){
+		try{
 			br.close();
 		}catch (IOException e){
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
+
+
+	/**
+	 * Writes to the text file one mapping. Ie. serial number "::" actual IDs per line to be used
+	 * for converting back to original IDs
+	 * @param job
+	 * @param outputfile
+	 */
+	public void writeIdsMapping(String mapping){
+		try{
+			br.write(mapping+"\n");
+		}catch (IOException e){
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+
 
 }

@@ -177,7 +177,7 @@ public class PSS2_Mapper extends MultipleS_Mapper {
 			if (IdMap[postingS.doc] < block[cb].id)
 				accumulator[postingS.doc][cb] += (postingS.weight * bWeight);
 		} else
-			accumulator[postingS.doc][cb] += (postingS.weight * bWeight);
+			accumulator[postingS.doc][cb] += (postingS.weight * bWeight);//check remove duplicates and following
 	}
 
 	/**
@@ -204,8 +204,9 @@ public class PSS2_Mapper extends MultipleS_Mapper {
 				if ((th = oneS[j]) >= this.threshold) {
 					placeD.doc1 = IdMap[i];
 					placeD.doc2 = block[j].id;
+					if(placeD.doc1!=placeD.doc2){
 					placeF.set(th);
-					out.collect(placeD, placeF);
+					out.collect(placeD, placeF);}
 				}
 				oneS[j] = 0.0f;
 			}

@@ -89,7 +89,7 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 						if (checkMultiply(posting[k], currentId, oWeight))
 							break;
 					} else
-						multiply(posting[k], oWeight);
+						multiply(posting[k],currentId, oWeight);
 			}
 			if (log) {
 				t = System.nanoTime();
@@ -100,10 +100,12 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 		}
 	}
 
+
 	/**
 	 * {@link PSS_Mapper#multiply(PostingDocWeight, float)}
 	 */
-	public void multiply(PostingDocWeight postingK, float oWeight) {
+	public void multiply(PostingDocWeight postingK,long oId, float oWeight) {
+		if (IdMap[postingK.doc] == oId) return;
 		opCount++;
 		int kId = postingK.doc;
 		accumulator[kId] += (postingK.weight * oWeight);
@@ -115,7 +117,7 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 	public boolean checkMultiply(PostingDocWeight postingK, long oId, float oWeight) {
 		int kId = postingK.doc;
 		if (IdMaps.get(currentS)[kId] < oId) {
-			multiply(postingK, oWeight);
+			multiply(postingK,oId, oWeight);
 			// accumulator[kId] += (postingK.weight * oWeight);
 			return false;
 		} else
@@ -124,5 +126,5 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 
 	public void map(LongWritable key, FeatureWeightArrayWritable value,
 			OutputCollector<DocDocWritable, FloatWritable> output, Reporter reporter)
-			throws IOException {}
+					throws IOException {}
 }

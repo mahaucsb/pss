@@ -57,7 +57,6 @@ public class SortDriver {
 			pgd.addClass("normsort", NormSortMain.class, "\tSort documents based on p-norm");
 			pgd.addClass("maxwsort", MaxwSortMain.class, "\tSort documents based on max weight");// del
 			pgd.addClass("sigsort", SigSortMain.class, "\tSort documents based on their signatures");
-			setup(args);
 			pgd.driver(args);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -65,18 +64,10 @@ public class SortDriver {
 	}
 
 	public static void runJob(String choice, String[] args) throws UnsupportedEncodingException {
-		String[] argv = new String[4];
+		String[] argv = new String[args.length+1];
 		argv[0] = choice;
 		for (int i = 0; i < args.length; i++)
 			argv[i + 1] = args[i];
 		main(argv);
-	}
-
-	public static void setup(String[] args) throws UnsupportedEncodingException {
-		if (args.length != 4)
-			throw new UnsupportedEncodingException(
-					"Usage: <className> -conf <confgs> <Unique Symbol>");
-		INPUT_DIR += args[3];
-		OUTPUT_DIR += args[3];
 	}
 }

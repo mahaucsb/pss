@@ -6,9 +6,13 @@ package edu.ucsb.cs.preprocessing.hashing;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.commons.cli.ParseException;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -43,8 +47,12 @@ public class HashPagesDriver {
 
 	public static String INPUT_DIR = "textpages";
 	private static String FEATURES_FILE = "features";
-	public static String IDS_FILE = "ids-mappings";
+	public static String IDS_FILE1 = "serial-ids-mappings";
+	public static String IDS_FILE2 = "md5-ids-mappings";
 	public static String OUTPUT_DIR = "hashedvectors";
+
+	/** Actual IDs to serial numbers mapping */
+	public static HashMap<String,String> idHash = new HashMap<String, String>();
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -60,7 +68,7 @@ public class HashPagesDriver {
 			hashFeatures(job, FeatureMapper.class);
 			break;
 		case 3:// hash features and assign weights.
-			collectFeatures(job);
+			collectFeatures(job); //remove comment
 			hashFeatures(job, FeatureWeightMapper.class);
 			break;
 		case 4:// hash features and assign binary weights.
@@ -91,14 +99,6 @@ public class HashPagesDriver {
 	 */
 	public static int configure(JobConf job, String[] args) throws IOException {
 		GenericOptionsParser gop = new GenericOptionsParser(job, args);
-		args = gop.getRemainingArgs();
-		if (args.length != 1)
-			throw new UnsupportedEncodingException(
-					"Please insert any unique <symbol> to avoid erasing old data.");
-		INPUT_DIR = INPUT_DIR + args[0];
-		OUTPUT_DIR = OUTPUT_DIR + args[0];
-		FEATURES_FILE = FEATURES_FILE + args[0];
-//		HashMapper.IDS_FILE = HashMapper.IDS_FILE + args[0];
 
 		if (job.getBoolean(Config.BINARY_WEIGHTS_PROPERTY, Config.BINARY_WEIGHTS_VALUE)
 				&& !job.getBoolean(Config.MD5_HASH_PROPERTY, Config.MD5_HASH_VALUE))
@@ -156,6 +156,7 @@ public class HashPagesDriver {
 		Path outputPath = new Path(OUTPUT_DIR);
 		FileSystem.get(job).delete(outputPath, true);
 		FileOutputFormat.setOutputPath(job, outputPath);
+		FileSystem.get(job).delete(new Path(IDS_FILE1), true);
 		JobSubmitter.run(job,"PREPROCESS");
 	}
 
@@ -176,4 +177,5 @@ public class HashPagesDriver {
 			e.printStackTrace();
 		}
 	}
+
 }

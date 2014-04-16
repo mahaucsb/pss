@@ -52,32 +52,23 @@ public class PartDriver {
 		int exitCode = -1;
 		ProgramDriver pgd = new ProgramDriver();
 		try {
-//			JobConf job = new JobConf();
-//			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE);
-//			switch(metric){
-			pgd.addClass("jpartition", JaccardCoarsePartitionMain.class,
-					"\tJaccard static partitioning");
-			pgd.addClass("cpartitionn", HolderCosinePartitionMain.class,
-					"\tCosine  static partitioning on p-norm sorted documents");
-			// pgd.addClass("cpartitionw", CosineWeightPartitionMain.class,
-			// "\tCosine static partitioning on weight sorted documents");
-			pgd.addClass("cpartitiona", CosineAllPartitionMain.class,
-					"\tCosine static partitioning on ALL sorted documents");
-			setup(args);
+			JobConf job = new JobConf();
+			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE).toLowerCase();
+			if(metric.contains("jaccard"))
+				pgd.addClass("partition", JaccardCoarsePartitionMain.class,
+						"\tJaccard static partitioning");
+			else 
+				pgd.addClass("partition", HolderCosinePartitionMain.class,
+						"\tCosine  static partitioning on p-norm sorted documents");
+			//			// pgd.addClass("cpartitionw", CosineWeightPartitionMain.class,
+			//			// "\tCosine static partitioning on weight sorted documents");
+			//			pgd.addClass("cpartitiona", CosineAllPartitionMain.class,
+			//					"\tCosine static partitioning on ALL sorted documents");
 			pgd.driver(args);
 			exitCode = 0;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		System.exit(exitCode);
-	}
-
-	public static void setup(String[] args) throws UnsupportedEncodingException {
-		if (args.length != 4)
-			throw new UnsupportedEncodingException(
-					"Usage: <className> -conf <confgs> <Unique Symbol>");
-		INPUT_DIR += args[3];
-		OUTPUT_DIR += args[3];
-		//JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+= args[3];
 	}
 }

@@ -77,7 +77,7 @@ public class PSS_Bayardo_Mapper extends PSS_Mapper {
 							if (checkMultiply(posting[k], currentId, oWeight))
 								break; // skip rest of posting
 						} else
-							multiply(posting[k], oWeight);
+							multiply(posting[k],currentId, oWeight);
 			}
 			currentVecNorm1 -= oWeight; // late
 			if (skipSvec_i.nextClearBit(0) >= splitSize)

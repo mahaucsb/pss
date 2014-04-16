@@ -55,6 +55,7 @@ public class PSS_Mapper extends SingleS_Mapper {
 	@Override
 	public void compareWith(Reader reader, OutputCollector<DocDocWritable, FloatWritable> output,
 			Reporter reporter) throws IOException {
+		System.out.println("check: idComparison="+idComparison); //remove
 		Boolean fileNotEmpy = true;
 		IdFeatureWeightArrayWritable[] block;
 		int bSize, recordNo;
@@ -68,13 +69,7 @@ public class PSS_Mapper extends SingleS_Mapper {
 			for (recordNo = 0; recordNo < bSize; recordNo++) {
 				currentRecord = block[recordNo];
 				processVector(currentRecord);
-				if (log) {
-					t = System.nanoTime();
-					flushAccumulator(output, currentRecord.id); 
-					oA += (System.nanoTime() - t);
-				} else{
-				    flushAccumulator(output, currentRecord.id); 
-				}
+				flushAccumulator(output, currentRecord.id); 
 			}
 		}
 	}
@@ -96,12 +91,14 @@ public class PSS_Mapper extends SingleS_Mapper {
 				continue;
 			oWeight = hold.weight;
 			postingLen = posting.length;
-			for (k = 0; k < postingLen; k++)
+			for (k = 0; k < postingLen; k++){
+				System.out.println("check: idComparison = "+idComparison); //remove
 				if (idComparison) {
 					if (checkMultiply(posting[k], currentId, oWeight))
 						break;
 				} else
-					multiply(posting[k], oWeight);
+					multiply(posting[k],currentId, oWeight);
+			}
 		}
 	}
 
@@ -110,24 +107,28 @@ public class PSS_Mapper extends SingleS_Mapper {
 	 * @param postingK : current (v,w) in posting of the feature inspected.
 	 * @param oWeight : weight of the feature from the vector in B.
 	 */
-	public void multiply(PostingDocWeight postingK, float oWeight) {
+	public void multiply(PostingDocWeight postingK,long oId, float oWeight) {
+		if (IdMap[postingK.doc] == oId) return;
 		opCount++;
 		int kId = postingK.doc;
+		System.out.println("check: Multiply "+IdMap[kId]+" and "+oId); //remove
 		accumulator[kId] += (postingK.weight * oWeight);
 	}
 
 	/**
-	 * Used when circular load balancing is disabled.
+	 * Used when circular load balancing is disabled or when comparing with map's 
+	 * own partition.
 	 * @param postingK : current (v,w) in posting of the feature inspected.
 	 * @param oId : ID of the vector in B.
 	 * @param oWeight: weight of the feature from the vector in B.
-	 * @return true means skip rest of posting for block-0, else partial score
+	 * @return true means skip rest of posting since ids are sorted, else partial score
 	 *         is added to accumulator.
 	 */
 	public boolean checkMultiply(PostingDocWeight postingK, long oId, float oWeight) {
 		int kId = postingK.doc;
+		System.out.println("check: checkMultiply "+IdMap[kId]+" and "+oId); //remove
 		if (IdMap[kId] < oId) {
-			multiply(postingK, oWeight);
+			multiply(postingK,oId, oWeight);
 			return false;
 		} else
 			return true;
@@ -135,5 +136,5 @@ public class PSS_Mapper extends SingleS_Mapper {
 
 	public void map(LongWritable key, FeatureWeightArrayWritable value,
 			OutputCollector<DocDocWritable, FloatWritable> output, Reporter reporter)
-			throws IOException {}
+					throws IOException {}
 }

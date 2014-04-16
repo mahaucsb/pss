@@ -60,6 +60,7 @@ import edu.ucsb.cs.hybrid.mappers.PSS3_SingleS_Mapper;
 import edu.ucsb.cs.hybrid.mappers.SingleS_Runner;
 import edu.ucsb.cs.partitioning.PartDriver;
 import edu.ucsb.cs.partitioning.jaccard.JaccardCoarsePartitionMain;
+import edu.ucsb.cs.preprocessing.hashing.HashPagesDriver;
 import edu.ucsb.cs.types.DocDocWritable;
 import edu.ucsb.cs.utilities.JobSubmitter;
 
@@ -86,8 +87,7 @@ public class HybridDriver {
 
 		JobConf job = new JobConf();
 		job.setJarByClass(HybridDriver.class);
-		unique((new GenericOptionsParser(job, args)).getRemainingArgs());
-
+		new GenericOptionsParser(job, args);
 		setMapperAndRunner(job);
 		job.setMapOutputKeyClass(DocDocWritable.class);
 		job.setMapOutputValueClass(FloatWritable.class);
@@ -95,8 +95,8 @@ public class HybridDriver {
 		job.setOutputKeyClass(DocDocWritable.class);
 		job.setOutputValueClass(FloatWritable.class);
 
-		String inputDir = INPUT_DIR;
-		CustomSequenceFileInputFormat.addInputPath(job, new Path(inputDir));
+		Path inputPath = new Path(INPUT_DIR);
+		CustomSequenceFileInputFormat.addInputPath(job, inputPath);
 		Path outputPath = new Path(OUTPUT_DIR);
 		job.setOutputFormat(SequenceFileOutputFormat.class);
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
@@ -113,7 +113,7 @@ public class HybridDriver {
 		} else {
 			//  Comment the following of splitter for www experiments it assumes no splitting
 			// of partitions for load balancing, should be fixed.
-			Splitter.configure(job, new Path(inputDir));// remove comment unless for www
+			Splitter.configure(job, inputPath);// remove comment unless for www
 			job.setInputFormat(NonSplitableSequenceInputFormat.class); //remove comment
 		}
 		//SIGIR'14 two-stage balancing //not yet fully incorporated 
@@ -121,22 +121,9 @@ public class HybridDriver {
 			TwoStageLoadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),
 					new Path(PartDriver.OUTPUT_DIR), job);
 		}
-		//JobSubmitter.run(job,"SIMILARITY"); 
+		JobSubmitter.run(job,"SIMILARITY");//remove comment 
 		if(job.getBoolean(Config.CONVERT_TEXT_PROPERTY, Config.CONVERT_TEXT_VALUE))
-			IDMappingJob(job);
-	}
-
-	public static JobConf prepareDistributedCache(JobConf job, String inputDir) {
-		try {
-			FileSystem hdfs = (new Path(inputDir)).getFileSystem(job);
-			for (FileStatus path : hdfs.listStatus(new Path(inputDir)))
-				if (hdfs.isFile(path.getPath()))
-					DistributedCache.addCacheFile(path.getPath().toUri(), job);
-			return job;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+			IDMappingJob(args);
 	}
 
 	/**
@@ -178,10 +165,10 @@ public class HybridDriver {
 		job.setJobName(name);
 	}
 
-	public static CommandLine setParser(Options options, String[] args) throws ParseException {
-		CommandLineParser parser = new PosixParser();
-		return (parser.parse(options, args));
-	}
+//	public static CommandLine setParser(Options options, String[] args) throws ParseException {
+//		CommandLineParser parser = new PosixParser();
+//		return (parser.parse(options, args));
+//	}
 
 	public static void run(JobConf job) throws IOException {
 		String ret = stars() + "\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
@@ -209,22 +196,14 @@ public class HybridDriver {
 		return new String(new char[77]).replace("\0", "*");
 	}
 
-	public static void unique(String[] args) throws UnsupportedEncodingException {
-		if (args.length != 1)
-			throw new UnsupportedEncodingException(
-					"Usage: <className> -conf <confgs> <Unique Symbol>");
-		INPUT_DIR += args[0];
-		OUTPUT_DIR += args[0];
-		Splitter.OTHERS_INPUT += args[0]; 
-		//		JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS+=args[0]; //didn'tw work
-	}
-
 	public static String IDS_FILE = "ids"; //this is alos copied to hybrid
 
-	public static void IDMappingJob(JobConf job) throws  IOException {
+	public static void IDMappingJob(String[] args) throws  IOException {
 
+		JobConf job = new JobConf();
+		new GenericOptionsParser(job, args);
 		job.setJarByClass(HybridDriver.class);
-		job.setJobName("Converting binary to text");
+		job.setJobName("Converting binary similarity scores to text");
 		job.setMapperClass(IDMapper.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
@@ -232,14 +211,14 @@ public class HybridDriver {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 
-		String inputDir = OUTPUT_DIR;
+		Path inputPath = new Path(OUTPUT_DIR);
 		job.setInputFormat(SequenceFileInputFormat.class);
-		SequenceFileInputFormat.addInputPath(job, new Path(inputDir));
+		SequenceFileInputFormat.setInputPaths(job, inputPath);
 		Path outputPath = new Path("READIT"); //CHANGE
 		job.setOutputFormat(TextOutputFormat.class);
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(outputPath, true);
-
+		HashPagesDriver.prepareDistribCache(job, HashPagesDriver.IDS_FILE2); //remove not sure
 		JobSubmitter.run(job,"BINARY TO TEXT"); 
 	}
 }

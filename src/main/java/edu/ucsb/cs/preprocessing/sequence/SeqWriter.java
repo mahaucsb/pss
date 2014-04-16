@@ -42,14 +42,7 @@ public class SeqWriter {
 	public static String OUTPUT_DIR = "seqvectors";
 
 	public static void main(String[] args) throws IOException, ParseException {
-
-		if (args.length != 1)
-			throw new UnsupportedEncodingException("Usage: seq write <unique number>");
-		else {
-			INPUT_DIR += args[0];
-			OUTPUT_DIR += args[0];
-			writeSequence(args[0]);
-		}
+		writeSequence();
 	}
 
 	/**
@@ -57,7 +50,7 @@ public class SeqWriter {
 	 * records to hadoop sequence format. It assumes a text input of format of
 	 * [id feature weight ..] to be the format of input.
 	 */
-	public static void writeSequence(String sign) throws IOException {
+	public static void writeSequence() throws IOException {
 
 		JobConf job = new JobConf();
 		job.setJobName("Convert text vectors to hadoop seqeunce ");
@@ -72,6 +65,7 @@ public class SeqWriter {
 
 		job.setInputFormat(TextInputFormat.class);
 		TextInputFormat.addInputPath(job, new Path(INPUT_DIR));
+		FileSystem.get(job).delete(new Path(HashPagesDriver.IDS_FILE2), true);
 		Path outputPath = new Path(OUTPUT_DIR);
 		FileSystem.get(job).delete(outputPath, true);
 		job.setOutputFormat(SequenceFileOutputFormat.class);

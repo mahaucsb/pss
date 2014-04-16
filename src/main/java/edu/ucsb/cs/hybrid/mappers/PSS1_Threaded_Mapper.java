@@ -169,7 +169,7 @@ public class PSS1_Threaded_Mapper extends PSS1_Mapper {
 							if (checkMultiply(posting[k], currentId, oWeight))
 								break;
 						} else
-							multiply(posting[k], oWeight);
+							multiply(posting[k],currentId, oWeight);
 				}
 				if (log) {
 					t = System.nanoTime();
@@ -180,16 +180,17 @@ public class PSS1_Threaded_Mapper extends PSS1_Mapper {
 			}
 		}
 
-		public void multiply(PostingDocWeight postingK, float oWeight) {
+		public void multiply(PostingDocWeight postingK,long oId, float oWeight) {
 			// opCount++; //this is global should be synch
 			int kId = postingK.doc;
+			if (IdMap[kId] == oId) return;
 			threadAccum[kId] += (postingK.weight * oWeight);
 		}
 
 		public boolean checkMultiply(PostingDocWeight postingK, long oId, float oWeight) {
 			int kId = postingK.doc;
 			if (this.threadSId[kId] < oId) {
-				multiply(postingK, oWeight);
+				multiply(postingK,oId, oWeight);
 				return false;
 			} else
 				return true;

@@ -118,14 +118,14 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		startTime = System.nanoTime();
 
 		for (int currentFile = 0; currentFile < reader.nFiles; currentFile++) {
-			if (!reader.setReader(currentFile))
+			if (!reader.setReader(currentFile)){
 				continue;
-			else {
+			}else {
 				if (reader.readMyPartition) {
 					origIdComp = idComparison;
-					idComparison = true;
+					mapper.idComparison = true;
 					comparePartition(reader, output, reporter);
-					idComparison = origIdComp;
+					mapper.idComparison = origIdComp;
 				} else {
 					comparePartition(reader, output, reporter);
 				}
@@ -242,7 +242,6 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 			terms_new[i] = terms.next();
 
 		//PART2: convert the dynamic list of document IDs
-		System.err.println("errorr: converting idMap ");//remove
 		convertIdMap(dynamicIdMap);
 		if (googleDynSkip) {
 			convertSmaxw(dynamicSmaxw); 
@@ -277,10 +276,8 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 	public void convertIdMap(ArrayList<Long> dynamicIdMap) {
 		int s = dynamicIdMap.size();
 		long[] idMap = initIdMap(s);
-		System.err.println("errorr:s= "+s);//remove
 		for (int i = 0; i < s; i++) {
 			idMap[i] = dynamicIdMap.get(0);
-			System.err.println("errorr: adding "+idMap[i]);//remove
 			dynamicIdMap.remove(0);
 		}
 		dynamicIdMap.clear();

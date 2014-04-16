@@ -54,8 +54,9 @@ public abstract class MultipleS_Mapper extends SingleS_Mapper {
 				long[] list = this.IdMaps.get(currentS);
 				placeD.doc1 = list[i];
 				placeD.doc2 = id;
+				if(placeD.doc1!=placeD.doc2){
 				placeF.set(th);
-				out.collect(placeD, placeF);
+				out.collect(placeD, placeF);}
 			}
 			accumulator[i] = 0.0f;
 		}

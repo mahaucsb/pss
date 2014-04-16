@@ -77,7 +77,7 @@ public abstract class SingleS_Mapper extends MapReduceBase implements IMapper {
 
 	public abstract void compareWith(Reader reader,
 			OutputCollector<DocDocWritable, FloatWritable> output, Reporter reporter)
-			throws IOException;
+					throws IOException;
 
 	@Override
 	public void close() throws IOException {
@@ -101,8 +101,10 @@ public abstract class SingleS_Mapper extends MapReduceBase implements IMapper {
 			if ((th = accumulator[i]) >= this.threshold) {
 				placeD.doc1 = this.IdMap[i];
 				placeD.doc2 = id;
-				placeF.set(th);
-				out.collect(placeD, placeF);
+				if(placeD.doc1 != placeD.doc2){
+					placeF.set(th);
+					out.collect(placeD, placeF);
+				}
 			}
 			accumulator[i] = 0.0f;
 		}

@@ -52,7 +52,9 @@ import edu.ucsb.cs.types.TextArrayWritable;
  * comparison. Finally, if desired then each fetched vector is dot product with
  * this partition dummmy vector to check for possible candidates availability.
  */
-
+/*
+ * circular isn't working right !
+ */
 public class Reader {
 
 	public int nFiles, nBVectors = 0, nbVectors, ioBlockSize, ioBlockStart = 0;
@@ -81,20 +83,20 @@ public class Reader {
 		partitionsDot = job.getBoolean(Config.PARTITIONS_DOT_PROPERTY, Config.PARTITIONS_DOT_VALUE);
 		partVecDot = job.getBoolean(Config.PART_DOT_VECTOR_PROPERTY, Config.PART_DOT_VECTOR_VALUE);
 		excludeMyself = job.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE);
-		loadbalance = job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE);// not
+		loadbalance = job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE);// not fully implemneted
 
 		ioBlockSize = job.getInt(Config.BLOCK_SIZE_PROPERTY, Config.BLOCK_SIZE_VALUE);
 		ioBlock = new IdFeatureWeightArrayWritable[ioBlockSize];
 		compBlock = new IdFeatureWeightArrayWritable[blockSize];
 		getFiles(job, inputPath.getParent()); // this should be circular's else
-		myPath = inputPath.getName(); // needed?
-		distributePartitions(job, inputPath);
+		myPath = inputPath.getName();
+		distributePartitions(job, inputPath); //setup
 	}
 
 	/**
 	 * Set up configurations to help find the other partitions to compare with,
 	 * for each mapper task based on static partitioning check, load balancing
-	 * and other configurations if they are set.
+	 * and other configurations if they are set (SIGIR'14).
 	 * @param job: to be run and contains configurations.
 	 * @param inputPath: input directory of this job.
 	 * @throws IOException
@@ -113,7 +115,7 @@ public class Reader {
 			}
 			loadbalanceFiles.add(myPath);
 		} else {
-			if ((staticPart)&&(metric.equalsIgnoreCase(Config.METRIC_VALUE))) {
+			if ((staticPart)&&(metric.equalsIgnoreCase("cosine"))) {
 				myRow = getRow(inputPath.getName());
 				myCol = getCol(inputPath.getName());
 			}
@@ -184,15 +186,16 @@ public class Reader {
 			else
 				readMyPartition = true;
 		else
-			readMyPartition = false;
-		if (loadbalance != 0)
+			readMyPartition = false; 
+		if (loadbalance != 0) //check:this should be combind with preparePartitions!
 			if (loadbalanceFiles.contains(otherPath.getName())) {
 				reader = new SequenceFile.Reader(hdfs, otherPath, conf);
 				return true;
-			} else
+			} 
+			else
 				return false;
 		if (staticPart){
-			if(metric.equalsIgnoreCase(Config.METRIC_VALUE)){
+			if(metric.equalsIgnoreCase("cosine")){
 				if(CosineSkipPartition(otherPath.getName())) 
 					return false;
 			}else{

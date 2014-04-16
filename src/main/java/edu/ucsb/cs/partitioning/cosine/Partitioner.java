@@ -84,7 +84,7 @@ public class Partitioner {
 		System.out.println(JobSubmitter.stars()
 				+ "\n Running partitioner to prepare uniform partitionins (Single JVM) ");
 
-		String inputDir = SortDriver.OUTPUT_DIR, maxDir; // remove 1
+		String inputDir = SortDriver.OUTPUT_DIR, maxDir;
 
 		if (norm_weight_all == 1)
 			maxDir = "/maxpnorm";
@@ -107,6 +107,16 @@ public class Partitioner {
 		return job;
 	}
 
+	/**
+	 * 
+	 * @param job
+	 * @param inputDir
+	 * @param interDir
+	 * @param maxDir
+	 * @param nPartitions
+	 * @param norm_weight_all
+	 * @return number of partitions actaully produced
+	 */
 	public static int produceStaticParitions(JobConf job, String inputDir, String interDir,
 			String maxDir, int nPartitions, int norm_weight_all) {
 		SequenceFile.Writer partOut = null;

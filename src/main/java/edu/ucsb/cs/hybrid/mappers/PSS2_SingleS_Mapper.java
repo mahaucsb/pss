@@ -191,8 +191,9 @@ public class PSS2_SingleS_Mapper extends SingleS_Mapper {
 				if ((th = oneS[j]) >= this.threshold) {
 					placeD.doc1 = this.IdMap[i];
 					placeD.doc2 = block[j].id;
+					if(placeD.doc1!=placeD.doc2){
 					placeF.set(th);
-					out.collect(placeD, placeF);
+					out.collect(placeD, placeF);}
 				}
 				oneS[j] = 0.0f;
 			}

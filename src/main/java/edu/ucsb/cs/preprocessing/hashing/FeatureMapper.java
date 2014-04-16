@@ -42,10 +42,9 @@ public class FeatureMapper extends HashMapper {
 		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 
-		if(words.hasMoreTokens()){
-			idHash.put(pagePrefixID + pageCount,words.nextToken());
+		if(words.hasMoreTokens()){ 
+			writeIdsMapping(pagePrefixID + pageCount+" :: "+words.nextToken());
 		}
-		// write it to mapFile id to <-->
 		while (words.hasMoreTokens()) {
 			String word = words.nextToken();
 			if (featureHash.containsKey(word))

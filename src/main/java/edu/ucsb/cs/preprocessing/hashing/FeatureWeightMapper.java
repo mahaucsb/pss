@@ -46,13 +46,13 @@ public class FeatureWeightMapper extends HashMapper {
 
 		long feature;
 		pageCount++;
-		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
+		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f:");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 		IndexhashFreq.clear();
 		PrunedhashFreq.clear();
 
-		if(words.hasMoreTokens()){
-			idHash.put(pagePrefixID + pageCount,words.nextToken());
+		if(words.hasMoreTokens()){ 
+			writeIdsMapping(pagePrefixID + pageCount+" :: "+words.nextToken());
 		}
 		double sqrtSum = fillHashFreq(words);
 
@@ -68,6 +68,7 @@ public class FeatureWeightMapper extends HashMapper {
 		output.collect(hashedPageKey, nullValue);
 	}
 
+	
 	public double fillHashFreq(StringTokenizer words) {
 		long feature;
 		String word;

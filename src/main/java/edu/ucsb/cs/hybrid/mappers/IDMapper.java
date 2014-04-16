@@ -22,10 +22,22 @@
  */
 package edu.ucsb.cs.hybrid.mappers;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -45,16 +57,34 @@ import edu.ucsb.cs.types.FeatureWeightArrayWritable;
  *
  */
 public class IDMapper implements Mapper<DocDocWritable, FloatWritable, Text, Text> {
-		
+
 	/** Serial numbers mapping to Actual IDs */
-	public HashMap<String,String> idHash = new HashMap<String, String>();
-	
+	public HashMap<String,String> md5ToIdMap = new HashMap<String, String>();
+
 	@Override
 	public void configure(JobConf job) {
+		readIdMappings(job,new Path(HashPagesDriver.IDS_FILE2)) ;
+	}
+	public void readIdMappings(JobConf job, Path inputDir) {
+		String strLine = null;
 		try {
 			FileSystem hdfs = FileSystem.get(job);
-//			HashPagesDriver.IDS_FILE;
-			//read id file into memory then use mappers to convert to actual IDs
+			if (!hdfs.exists(inputDir)) {
+				throw new UnsupportedEncodingException("ERROR: "+inputDir.getName()+" doesn't exists in hdfs !");
+			}
+			FileStatus[] cachedFiles = hdfs.listStatus(inputDir);
+			for(int i=0;i<cachedFiles.length;i++)
+			{
+				Path pt=  cachedFiles[i].getPath();
+				BufferedReader br=new BufferedReader(new InputStreamReader(hdfs.open(pt)));
+				while ((strLine = br.readLine()) != null)   {
+					StringTokenizer tkz = new StringTokenizer(strLine,": ");
+					String key = tkz.nextToken();
+					String value = tkz.nextToken();
+					md5ToIdMap.put(key.replace(" ", ""), value.replace(" ", ""));
+				}
+				br.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -70,7 +100,8 @@ public class IDMapper implements Mapper<DocDocWritable, FloatWritable, Text, Tex
 	@Override
 	public void map(DocDocWritable key, FloatWritable value,
 			OutputCollector<Text, Text> output, Reporter reporter)
-			throws IOException {
-		
+					throws IOException {
+		StringBuilder bd = new StringBuilder(md5ToIdMap.get(String.valueOf(key.getDoc1()))+" "+md5ToIdMap.get(String.valueOf(key.getDoc2())));
+		output.collect(new Text(bd.toString()), new Text(value.get()+""));
 	}
 }

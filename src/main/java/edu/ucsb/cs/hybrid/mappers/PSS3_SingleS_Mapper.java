@@ -250,8 +250,9 @@ public class PSS3_SingleS_Mapper extends PSS2_SingleS_Mapper {
 				if ((th = scores[j]) > this.threshold) {
 					placeD.doc1 = this.IdMap[i]; // Original Id
 					placeD.doc2 = block[j].id;
+					if(placeD.doc1!=placeD.doc2){
 					placeF.set(th);
-					o.collect(placeD, placeF);
+					o.collect(placeD, placeF);}
 				}
 				scores[j] = 0.0f;
 			}

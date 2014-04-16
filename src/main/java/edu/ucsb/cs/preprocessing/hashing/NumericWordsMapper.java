@@ -25,18 +25,17 @@ public class NumericWordsMapper extends HashMapper {
 		String word;
 
 		pageCount++;
-		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f");
+		StringTokenizer words = new StringTokenizer(page.toString(), " \t\n\r\f:");
 		StringBuilder hashPage = new StringBuilder(pagePrefixID + pageCount + " ");
 		
-		if(words.hasMoreTokens()){
-			idHash.put(pagePrefixID + pageCount,words.nextToken());
+		if(words.hasMoreTokens()){ 
+			writeIdsMapping(pagePrefixID + pageCount+" :: "+words.nextToken());
 		}
 		while (words.hasMoreTokens()) {
 			word = words.nextToken();
 			if (featureHash.get(word) != null)
 				hashPage.append(featureHash.get(word) + " ");
 		}
-		// hashPage.append("\n"); don't put this !
 		this.hashedPageKey.set(hashPage.toString());
 		output.collect(hashedPageKey, nullValue);
 	}
