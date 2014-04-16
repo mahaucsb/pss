@@ -92,12 +92,11 @@ public class PSS_Mapper extends SingleS_Mapper {
 			oWeight = hold.weight;
 			postingLen = posting.length;
 			for (k = 0; k < postingLen; k++){
-				System.out.println("check: idComparison = "+idComparison); //remove
 				if (idComparison) {
 					if (checkMultiply(posting[k], currentId, oWeight))
 						break;
 				} else
-					multiply(posting[k],currentId, oWeight);
+					multiply(posting[k],currentId, oWeight); //find ways to change function
 			}
 		}
 	}
