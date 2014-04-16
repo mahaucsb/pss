@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
 then
-  echo "Usage: `basename $0` <sign> <number of documents>"
+  echo "Usage: `basename $0` <number of documents>"
   exit 2
 fi
 
@@ -18,8 +18,7 @@ fi
 # Configuration Set
 ############################################################
 
-sign=$1
-numdocs=$2
+numdocs=$1
 gnewsdata=../../data/googlenews/500-gnews
 cluejar=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
@@ -45,16 +44,16 @@ fi
 
 echo "*****************************************************************************"
 echo "Load "$numdocs" vectors of Clueweb data into HDFS"
-$run_hadoop dfs -rmr textpages$sign
-$run_hadoop dfs -put $tmpdata textpages$sign
+$run_hadoop dfs -rmr textpages
+$run_hadoop dfs -put $tmpdata textpages
 
 echo "convert vectors into numeric text vectors ie (docid num1 num2 num3..)" ###not sure
-$run_hadoop jar $cluejar hash -conf $xmlconf $sign
+$run_hadoop jar $cluejar hash -conf $xmlconf
 
 echo "convert vectors into hadoop binray (ie.sequence) of class (Long id, FeatureWeight array)"
-$run_hadoop jar $cluejar seq write $sign
+$run_hadoop jar $cluejar seq write 
 
 echo "Optional: remove unecessary folders from HDFS."
-$run_hadoop dfs -rmr hashedvectors$sign
-$run_hadoop dfs -rmr features$sign
+$run_hadoop dfs -rmr hashedvectors
+$run_hadoop dfs -rmr features
 

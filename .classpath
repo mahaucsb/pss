@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="conf/lib/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="conf/lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="conf/lib/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="conf/lib/hadoop-core-0.20.2.jar"/>
+	<classpathentry kind="lib" path="conf/lib/hadoop-core-0.20.2.jar" sourcepath="/Users/omwewe/Projects/hadoop-1.2.1/src"/>
 	<classpathentry kind="lib" path="conf/lib/hadoop-core-1.0.4.jar"/>
 	<classpathentry kind="lib" path="conf/lib/ivory-0.6.0.jar"/>
 	<classpathentry kind="lib" path="conf/lib/jopt-simple-3.2.jar"/>

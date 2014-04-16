@@ -1,9 +1,9 @@
 #!/bin/bash
 
 
-if [ $# -ne 3 ]
+if [ $# -ne 2 ]
 then
-  echo "Usage: `basename $0` <sign> <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5,wiki=6>"
+  echo "Usage: `basename $0` <numDocuments> <cluedata=1,tweets=2,emails=3,ymusic=4,gnews=5,wiki=6>"
   exit 3
 fi
 
@@ -16,9 +16,8 @@ then
     exit 0
 fi
 ############################################################                                                                                                        
-sign=$1
-numdocs=$2
-benchmark=$3
+numdocs=$1
+benchmark=$2
 xmlconf=../../conf/partitioning/conf.xml
 partjar=../../target/partitioning.jar
 run_hadoop=${HADOOP_HOME}/bin/hadoop
@@ -33,21 +32,21 @@ then
 
     if [ $benchmark -eq 1 ] ##Clueweb
     then 
-	bash runc.sh $sign $numdocs 
+	bash runc.sh $numdocs 
     elif [ $benchmark -eq 2 ] ##Twitter
     then
-	bash runt.sh $sign $numdocs 
+	bash runt.sh $numdocs 
     elif [ $benchmark -eq 3 ]   ## emails
     then 
-        bash rune.sh $sign $numdocs 
+        bash rune.sh $numdocs 
     elif [ $benchmark -eq 4 ]  ## ymusic
     then
-	bash runym.sh $sign $numdocs 
+	bash runym.sh $numdocs 
     elif [ $benchmark -eq 5 ]  ## gnew
     then
-	bash rung.sh $sign $numdocs  
+	bash rung.sh $numdocs  
     else 
-	bash runw.sh $sign $numdocs  ##wiki
+	bash runw.sh $numdocs  ##wiki
     fi
 fi
 
@@ -55,6 +54,5 @@ fi
 # Run Partitioning
 ############################################################
 cd ../partition
-#$run_hadoop jar $partjar cpartitionn -conf $xmlconf $sign 
-$run_hadoop jar $partjar jpartition -conf $xmlconf $sign 
+$run_hadoop jar $partjar partition -conf $xmlconf
 
