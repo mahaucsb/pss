@@ -42,6 +42,7 @@ import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.mapred.lib.IdentityMapper;
 import org.apache.log4j.Logger;
 
+import edu.ucsb.cs.hybrid.Config;
 import edu.ucsb.cs.utilities.JobSubmitter;
 import edu.ucsb.cs.utilities.Properties;
 import edu.umd.cloud9.io.array.ArrayListOfFloatsWritable;
@@ -109,7 +110,7 @@ public class ProjectionsGenerator {
 		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(RandomVector.class);
 
-		JobSubmitter.run(job,"LSH");
+		JobSubmitter.run(job,"LSH",job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE));
 	}
 
 	public static int readCollectionFeatureCount(FileSystem hdfs, JobConf job) throws IOException {

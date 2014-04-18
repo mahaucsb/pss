@@ -37,8 +37,10 @@ import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.GenericOptionsParser;
 
+import edu.ucsb.cs.hybrid.Config;
 import edu.ucsb.cs.lsh.LshDriver;
 import edu.ucsb.cs.lsh.types.IntArrayWritable;
+import edu.ucsb.cs.utilities.JobSubmitter;
 
 /**
  * This class is responsible for filtering out dissimilar jaccard records by
@@ -112,7 +114,6 @@ public class MinHashLshDriver {
 
 		writeLsh(job, outputPath.getFileSystem(job), lshTable);
 
-		LshDriver.run(job);
-
+		JobSubmitter.run(job, "LSH", job.getFloat(THRESHOLD_PROPERTY, THRESHOLD_VALUE));
 	}
 }

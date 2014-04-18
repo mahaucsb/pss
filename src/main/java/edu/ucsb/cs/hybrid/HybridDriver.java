@@ -121,7 +121,7 @@ public class HybridDriver {
 			TwoStageLoadbalancing.main(job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE),
 					new Path(PartDriver.OUTPUT_DIR), job);
 		}
-		JobSubmitter.run(job,"SIMILARITY");//remove comment 
+		JobSubmitter.run(job,"SIMILARITY",job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE)); 
 		if(job.getBoolean(Config.CONVERT_TEXT_PROPERTY, Config.CONVERT_TEXT_VALUE))
 			IDMappingJob(args);
 	}
@@ -219,6 +219,6 @@ public class HybridDriver {
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(outputPath, true);
 		HashPagesDriver.prepareDistribCache(job, HashPagesDriver.IDS_FILE2); //remove not sure
-		JobSubmitter.run(job,"BINARY TO TEXT"); 
+		JobSubmitter.run(job,"BINARY TO TEXT",job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE)); 
 	}
 }

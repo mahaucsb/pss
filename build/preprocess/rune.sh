@@ -43,7 +43,7 @@ fi
 ###########################################################                                                                                               
 
 echo "*****************************************************************************"
-echo "Load "$numdocs" vectors of Twitter data into HDFS"
+echo "Load "$numdocs" vectors of Emails data into HDFS"
 $run_hadoop dfs -rmr textpages
 $run_hadoop dfs -put $tmpdata textpages
 

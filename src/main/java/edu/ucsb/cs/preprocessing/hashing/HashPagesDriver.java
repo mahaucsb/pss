@@ -134,7 +134,7 @@ public class HashPagesDriver {
 		Path outputPath = new Path(FEATURES_FILE);
 		FileSystem.get(job).delete(outputPath, true);
 		FileOutputFormat.setOutputPath(job, outputPath);
-		JobSubmitter.run(job,"PREPROCESS");
+		JobSubmitter.run(job,"PREPROCESS",-1);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class HashPagesDriver {
 		FileSystem.get(job).delete(outputPath, true);
 		FileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(new Path(IDS_FILE1), true);
-		JobSubmitter.run(job,"PREPROCESS");
+		JobSubmitter.run(job,"PREPROCESS",-1);
 	}
 
 

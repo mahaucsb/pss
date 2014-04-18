@@ -84,6 +84,6 @@ public class NormSortMain {
 		//
 		// run
 		//
-		JobSubmitter.run(job,"Sort By p-norm");
+		JobSubmitter.run(job,"Sort By p-norm",-1);
 	}
 }

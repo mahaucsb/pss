@@ -50,8 +50,4 @@ public class LshDriver {
 
 		System.exit(exitCode);
 	}
-
-	public static void run(JobConf job) {
-		JobSubmitter.run(job,"LSH");
-	}
 }

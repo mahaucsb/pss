@@ -34,7 +34,7 @@ import org.apache.hadoop.mapred.JobConf;
  */
 public class JobSubmitter {
 
-	public static void run(JobConf job,String title) {
+	public static void run(JobConf job,String title,float Threshold) {
 
 		String ret = stars() + "\n ["+title+"]\n"+stars()+"\n  Running job:  " + job.getJobName() + "\n  Input Path:   {";
 		Path inputs[] = FileInputFormat.getInputPaths(job);
@@ -48,6 +48,8 @@ public class JobSubmitter {
 		ret += "  Output Path:  " + FileOutputFormat.getOutputPath(job) + "\n"
 				+ "  Num. of mappers: " + job.getNumMapTasks() + "\n"
 				+ "  Num. of reducers: " + job.getNumReduceTasks() + "\n";
+		if(Threshold!=-1)
+			ret+= "  Threshold: " + Threshold + "\n";
 //		for (int ctr = 0; ctr < Properties.requiredParameters.size(); ctr++)//check
 //			ret += Properties.requiredParameters.get(ctr) + "\n";
 		System.out.println(ret);

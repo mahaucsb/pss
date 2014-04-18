@@ -38,7 +38,7 @@
 
   <property>
     <name>hybrid.S.size</name>
-    <value>80</value>
+    <value>2000</value>
     <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
   </property>
 

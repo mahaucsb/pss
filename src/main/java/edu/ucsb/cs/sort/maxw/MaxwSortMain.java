@@ -80,6 +80,6 @@ public class MaxwSortMain {
 		//
 		// run
 		//
-		JobSubmitter.run(job,"Sort By infinity-Norm");
+		JobSubmitter.run(job,"Sort By infinity-Norm",-1);
 	}
 }

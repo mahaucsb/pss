@@ -55,7 +55,6 @@ public class PSS_Mapper extends SingleS_Mapper {
 	@Override
 	public void compareWith(Reader reader, OutputCollector<DocDocWritable, FloatWritable> output,
 			Reporter reporter) throws IOException {
-		System.out.println("check: idComparison="+idComparison); //remove
 		Boolean fileNotEmpy = true;
 		IdFeatureWeightArrayWritable[] block;
 		int bSize, recordNo;
@@ -110,7 +109,6 @@ public class PSS_Mapper extends SingleS_Mapper {
 		if (IdMap[postingK.doc] == oId) return;
 		opCount++;
 		int kId = postingK.doc;
-		System.out.println("check: Multiply "+IdMap[kId]+" and "+oId); //remove
 		accumulator[kId] += (postingK.weight * oWeight);
 	}
 
@@ -125,7 +123,6 @@ public class PSS_Mapper extends SingleS_Mapper {
 	 */
 	public boolean checkMultiply(PostingDocWeight postingK, long oId, float oWeight) {
 		int kId = postingK.doc;
-		System.out.println("check: checkMultiply "+IdMap[kId]+" and "+oId); //remove
 		if (IdMap[kId] < oId) {
 			multiply(postingK,oId, oWeight);
 			return false;

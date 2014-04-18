@@ -88,6 +88,6 @@ public class SigSortMain {
 		//
 		// run
 		//
-		JobSubmitter.run(job,"Sort By Signature Bytes");
+		JobSubmitter.run(job,"Sort By Signature Bytes",-1);
 	}
 }

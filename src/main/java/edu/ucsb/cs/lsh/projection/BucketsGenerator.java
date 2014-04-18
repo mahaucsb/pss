@@ -27,6 +27,7 @@ import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.mapred.SequenceFileInputFormat;
 import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 
+import edu.ucsb.cs.hybrid.Config;
 import edu.ucsb.cs.lsh.types.BitSignature;
 import edu.ucsb.cs.types.FeatureWeightArrayWritable;
 import edu.ucsb.cs.utilities.JobSubmitter;
@@ -88,7 +89,7 @@ public class BucketsGenerator {
 		DistributedCache.addCacheFile(new URI(randomPermFile), job);
 		setParameters(nBits, numOfPermutations);
 
-		JobSubmitter.run(job,"LSH");
+		JobSubmitter.run(job,"LSH",-1);
 	}
 
 	public static void setParameters(int nBits, int numOfPermutations) {

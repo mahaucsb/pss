@@ -86,6 +86,6 @@ public class LengthSortMain {
 		//
 		// run
 		//
-		JobSubmitter.run(job, "Sort By Vector Lenghts");
+		JobSubmitter.run(job, "Sort By Vector Lenghts",-1);
 	}
 }

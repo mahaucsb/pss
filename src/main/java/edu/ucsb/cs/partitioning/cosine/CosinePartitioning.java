@@ -74,7 +74,7 @@ public abstract class CosinePartitioning {
 		job.setJobName(Partitioner.class.getSimpleName() + " + " + jobSpawner.getSimpleName());
 		job = setMapReduce(job, mapper, IdentityReducer.class);
 		job = setInputOutput(job, new Path(Partitioner.OUTPUT_DIR), interPath);
-		JobSubmitter.run(job,"Cosine Partitioning");
+		JobSubmitter.run(job,"Cosine Partitioning",job.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE));
 		// FileSystem.get(job).delete(new Path(Partitioner.OUTPUT_DIR), true);
 	}
 

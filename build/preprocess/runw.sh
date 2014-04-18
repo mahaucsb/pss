@@ -21,7 +21,7 @@ fi
 ############################################################
 
 numdocs=$1
-wikidata=../../data/wiki/500-wiki
+wikidata=../../data/wiki/10k_1304_A.txt #500-wiki
 jarfile=../../target/preprocessing.jar
 xmlconf=../../conf/preprocess/conf.xml
 tmpdata=input_dir
@@ -45,7 +45,7 @@ fi
 ###########################################################                                                                                               
 
 echo "*****************************************************************************"
-echo "Load "$numdocs" vectors of Clueweb data into HDFS"
+echo "Load "$numdocs" vectors of Wiki data into HDFS"
 $run_hadoop dfs -rmr textpages
 $run_hadoop dfs -put $tmpdata textpages
 

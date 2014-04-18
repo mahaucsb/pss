@@ -43,7 +43,7 @@ fi
 ###########################################################                                                                                               
 
 echo "*****************************************************************************"
-echo "Load "$numdocs" vectors of Clueweb data into HDFS"
+echo "Load "$numdocs" vectors of Google news data into HDFS"
 $run_hadoop dfs -rmr textpages
 $run_hadoop dfs -put $tmpdata textpages
 

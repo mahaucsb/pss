@@ -71,6 +71,6 @@ public class SeqWriter {
 		job.setOutputFormat(SequenceFileOutputFormat.class);
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 
-		JobSubmitter.run(job,"PREPROCESS");
+		JobSubmitter.run(job,"PREPROCESS",-1);
 	}
 }
