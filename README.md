@@ -27,7 +27,11 @@ Quick start:
 2) Setup the following environment variables:
    - HADOOP_HOME: to the location of your hadoop directory. Eg.$ export HADOOP_HOME=/home/maha/hadoop-1.0.1
    - JAVA_HOME: 
+   
+      For Linux: export JAVA_HOME=/usr/lib/jvm/java-openjdk //this is just an example
+
       For MAC: export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home
+
    - JAVA_VERSION:
    
       For MAC: export JAVA_VERSION=`java -version 2>&1 | head -n 1 | cut -d\" -f 2 | cut -f1 -f2 -d"."`
