@@ -9,7 +9,7 @@
   
   <property>
     <name>hybrid.sim.threshold</name>
-    <value>0.99</value>
+    <value>0.8</value>
     <description>this should be same as partitioning threshold
     </description>
   </property>

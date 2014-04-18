@@ -7,11 +7,11 @@
 	</property>
 	<property>
 	  <name>partition.similarity.threshold</name>
-	  <value>0.99</value>
+	  <value>0.8</value>
 	</property>
 	<property> 
 	  <name>partition.number.partitions</name>
-	  <value>10</value>
+	  <value>7</value>
 	  <description> number of initial partitions</description>
 	</property>
 	<property> 
