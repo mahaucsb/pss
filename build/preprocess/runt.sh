@@ -53,6 +53,7 @@ $run_hadoop dfs -put $tmpdata textpages
 echo "convert vectors into numeric text vectors ie (docid num1 num2 num3..)" ###check
 $run_hadoop jar $jarfile hash -conf $xmlconf
 
+exit 1
 echo "convert vectors into hadoop binray (ie.sequence) of class (Long id, FeatureWeight array)"
 $run_hadoop jar $jarfile seq  write  #remove comment
 
