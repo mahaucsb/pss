@@ -57,10 +57,10 @@ Mapper<Object, Text, Text, NullWritable> {
 	/** Used to do the df-cut described by Jimmy Lin */
 	private HashMap<String, Integer> featuresPostingLen = new HashMap<String, Integer>();
 	private float dfCut;
-	
+
 	/** This is used to convert back the hashed ids to actual in Hybrid */
 	protected BufferedWriter br=null;
-	
+
 	@Override
 	public void configure(JobConf job) {
 		maxFreq = job.getInt(Config.MAX_FEATURE_FREQ_PROPERTY,
@@ -100,8 +100,11 @@ Mapper<Object, Text, Text, NullWritable> {
 			while ((feature_postingLen = featuresReader.readLine()) != null) {
 				StringTokenizer tkz = new StringTokenizer(feature_postingLen);
 				String feature = tkz.nextToken();
-				int df = Integer.parseInt(tkz.nextToken());
-				featuresPostingLen.put(feature, df);
+				String weight = tkz.nextToken();
+				if(feature!=null && weight!=null){
+					int df = Integer.parseInt(weight);
+					featuresPostingLen.put(feature, df);
+				}
 			}
 		}catch(NumberFormatException e){
 			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS.");
@@ -142,7 +145,7 @@ Mapper<Object, Text, Text, NullWritable> {
 			featureHash.put(itr.next(), (++featureCount));
 		}
 	}	
-	
+
 	/**
 	 * Opens a text file to hold the mapping serial number "::" actual IDs per line to be used
 	 * for converting back to original IDs
@@ -158,7 +161,7 @@ Mapper<Object, Text, Text, NullWritable> {
 			System.err.println("Error: " + e.getMessage());
 		}
 	}
-	
+
 	public void close(){
 		closeIdsMapping();
 	}
