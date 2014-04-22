@@ -33,8 +33,9 @@ public class InvertedIndexMapper extends MapReduceBase implements Mapper<Object,
 			throws IOException {
 
 		pageCount++;
-		StringTokenizer words = new StringTokenizer(page.toString(), " ");
-
+		StringTokenizer words = new StringTokenizer(page.toString(), " :\t\r\n");
+		if(words.hasMoreTokens())
+			words.nextToken();//ignore title
 		while (words.hasMoreTokens()) {
 			word.set(words.nextToken());
 			postingId.set(pagePrefixID + pageCount);

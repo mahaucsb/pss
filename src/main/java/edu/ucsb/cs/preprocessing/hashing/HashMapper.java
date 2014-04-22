@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
@@ -74,7 +75,7 @@ Mapper<Object, Text, Text, NullWritable> {
 
 	public void readFeaturesIntoMemory(JobConf job) {
 		try {
-			Path[] localFiles = DistributedCache.getLocalCacheFiles(job);
+			Path[] localFiles = DistributedCache.getLocalCacheFiles(job); //cache files recall
 			if (null != localFiles && localFiles.length > 0) {
 				for (Path cachePath : localFiles) {
 					addFeaturesIntoIndex(cachePath);
@@ -87,8 +88,8 @@ Mapper<Object, Text, Text, NullWritable> {
 	}
 
 	/**
-	 * Reads in the features files produced in a previous job into memory along
-	 * with each feature's posting length.
+	 * Reads in the features files produced in a previous job into memory. The
+	 * files format is feature along with each feature's posting length per line.
 	 * 
 	 * @param cachePath : path to the features file added to Hadoop distributed cache.
 	 * @throws IOException
@@ -104,15 +105,11 @@ Mapper<Object, Text, Text, NullWritable> {
 				int df = Integer.parseInt(tkz.nextToken());
 				featuresPostingLen.put(feature, df);
 			}
+		}catch(NoSuchElementException e){ 
+			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS");
 		} finally {
 			featuresReader.close();
 		}
-
-		//		}catch(Exception e){ //could be NoSuchElementException or NumberFormatException
-		//			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS or weight="+weight+" and feature="+feature+" error.");
-		//		} finally {
-		//			featuresReader.close();
-		//		}
 	}
 
 	/**
