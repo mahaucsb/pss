@@ -93,24 +93,26 @@ Mapper<Object, Text, Text, NullWritable> {
 	 * @param cachePath : path to the features file added to Hadoop distributed cache.
 	 * @throws IOException
 	 */
+
 	public void addFeaturesIntoIndex(Path cachePath) throws IOException {
 		BufferedReader featuresReader = new BufferedReader(new FileReader(cachePath.toString()));
-			String feature_postingLen,feature = null,weight = null;
-			try {
+		String feature_postingLen;
+		try {
 			while ((feature_postingLen = featuresReader.readLine()) != null) {
 				StringTokenizer tkz = new StringTokenizer(feature_postingLen);
-				 feature = tkz.nextToken();
-				 weight = tkz.nextToken();
-				if(feature!=null && weight!=null){
-					int df = Integer.parseInt(weight);
-					featuresPostingLen.put(feature, df);
-				}
+				String feature = tkz.nextToken();
+				int df = Integer.parseInt(tkz.nextToken());
+				featuresPostingLen.put(feature, df);
 			}
-		}catch(Exception e){ //could be NoSuchElementException or NumberFormatException
-			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS or weight="+weight+" and feature="+feature+" error.");
 		} finally {
 			featuresReader.close();
 		}
+
+		//		}catch(Exception e){ //could be NoSuchElementException or NumberFormatException
+		//			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS or weight="+weight+" and feature="+feature+" error.");
+		//		} finally {
+		//			featuresReader.close();
+		//		}
 	}
 
 	/**
