@@ -106,7 +106,7 @@ Mapper<Object, Text, Text, NullWritable> {
 					featuresPostingLen.put(feature, df);
 				}
 			}
-		}catch(NumberFormatException e){
+		}catch(Exception e){ //could be NoSuchElementException or NumberFormatException
 			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS.");
 		} finally {
 			featuresReader.close();
