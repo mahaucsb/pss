@@ -95,19 +95,19 @@ Mapper<Object, Text, Text, NullWritable> {
 	 */
 	public void addFeaturesIntoIndex(Path cachePath) throws IOException {
 		BufferedReader featuresReader = new BufferedReader(new FileReader(cachePath.toString()));
-		try {
-			String feature_postingLen;
+			String feature_postingLen,feature = null,weight = null;
+			try {
 			while ((feature_postingLen = featuresReader.readLine()) != null) {
 				StringTokenizer tkz = new StringTokenizer(feature_postingLen);
-				String feature = tkz.nextToken();
-				String weight = tkz.nextToken();
+				 feature = tkz.nextToken();
+				 weight = tkz.nextToken();
 				if(feature!=null && weight!=null){
 					int df = Integer.parseInt(weight);
 					featuresPostingLen.put(feature, df);
 				}
 			}
 		}catch(Exception e){ //could be NoSuchElementException or NumberFormatException
-			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS.");
+			throw new UnsupportedOperationException("ERROR: features/ directory is not in HDFS or weight="+weight+" and feature="+feature+" error.");
 		} finally {
 			featuresReader.close();
 		}
