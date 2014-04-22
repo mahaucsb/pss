@@ -4,14 +4,13 @@
   <property>
     <name>hybrid.similarity.metric</name>
     <value>cosine</value>
-    <description> either "jaccard" which is only for partitioning or "cosine" </description>
+    <description> either jaccard which is only for partitioning or cosine </description>
   </property>
   
   <property>
     <name>hybrid.sim.threshold</name>
     <value>0.8</value>
-    <description>this should be same as partitioning threshold
-    </description>
+    <description>this should be same as partitioning threshold</description>
   </property>
 
   <property>
@@ -25,15 +24,13 @@
   <property>
     <name>hadoop.splitting.enabled</name>
     <value>false</value>
-    <description>hadoop splitting files into mapred.min.split.size
-    </description>
+    <description>hadoop splitting files into mapred.min.split.size</description>
   </property>
-
+  
   <property>
     <name>hadoop.split.size</name>
     <value>10</value>
-    <description>split size in MB per map if hybrid.hadoop.splitting is true
-    </description>
+    <description>split size in MB per map if hybrid.hadoop.splitting is true</description>
   </property>
 
   <property>
@@ -77,12 +74,6 @@
   </property>
   
   <!-- Filtering techniques -->
-  <property> <!--this is wrong-->
-    <name>partition.number.partitions </name>
-    <value>true</value>
-    <description>Static partitioning used from WSDM'13</description>
-  </property>
-  
   <property>
     <name>hybrid.dot.partitions</name>
     <value>false</value>
