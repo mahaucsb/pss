@@ -56,15 +56,15 @@ public class PartDriver {
 			JobConf job = new JobConf();
 			new GenericOptionsParser(job, args);
 			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE).toLowerCase();
-			if(metric.contains("j"))
+			if(metric.contains("j")){
 				JaccardCoarsePartitionMain.main(args);
-			else 
+			}else 
 				HolderCosinePartitionMain.main(args);
 			//			// pgd.addClass("cpartitionw", CosineWeightPartitionMain.class,
 			//			// "\tCosine static partitioning on weight sorted documents");
 			//			pgd.addClass("cpartitiona", CosineAllPartitionMain.class,
 			//					"\tCosine static partitioning on ALL sorted documents");
-			pgd.driver(args);
+			//pgd.driver(args);
 			exitCode = 0;
 		} catch (Throwable e) {
 			e.printStackTrace();

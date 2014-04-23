@@ -69,8 +69,7 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 
 		runSort(args, "lengthsort"); 
 		JobConf job = new JobConf();
-		GenericOptionsParser gop = new GenericOptionsParser(job, args);
-		args = gop.getRemainingArgs();
+		new GenericOptionsParser(job, args);
 		job.setJobName(JaccardCoarsePartitionMain.class.getSimpleName());
 		job.setJarByClass(JaccardCoarsePartitionMain.class);
 		//

@@ -43,8 +43,6 @@ public class HolderCosinePartitionMain extends CosinePartitioning {
 		JobConf job = runUniformPartition(args, 1);// remove comment
 		runCosinePartition(job, args, HolderCosinePartitionMain.class, CosineNormPartMapper.class);
 		rewritePartitions(job); // rename to job !! remove comment
-		// JobConf job = new JobConf();
-		// new GenericOptionsParser(job, args);
 		job.setJarByClass(HolderCosinePartitionMain.class);
 	}
 }
