@@ -57,11 +57,9 @@ public class PartDriver {
 			new GenericOptionsParser(job, args);
 			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE).toLowerCase();
 			if(metric.contains("j"))
-				pgd.addClass("partition", JaccardCoarsePartitionMain.class,
-						"\tJaccard static partitioning");
+				JaccardCoarsePartitionMain.main(args);
 			else 
-				pgd.addClass("partition", HolderCosinePartitionMain.class,
-						"\tCosine  static partitioning on p-norm sorted documents");
+				HolderCosinePartitionMain.main(args);
 			//			// pgd.addClass("cpartitionw", CosineWeightPartitionMain.class,
 			//			// "\tCosine static partitioning on weight sorted documents");
 			//			pgd.addClass("cpartitiona", CosineAllPartitionMain.class,
