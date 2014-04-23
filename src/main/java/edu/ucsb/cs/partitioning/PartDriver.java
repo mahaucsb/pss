@@ -29,6 +29,7 @@ import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.ProgramDriver;
 
 import edu.ucsb.cs.partitioning.cosine.CosineAllPartitionMain;
@@ -53,6 +54,7 @@ public class PartDriver {
 		ProgramDriver pgd = new ProgramDriver();
 		try {
 			JobConf job = new JobConf();
+			new GenericOptionsParser(job, args);
 			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE).toLowerCase();
 			if(metric.contains("j"))
 				pgd.addClass("partition", JaccardCoarsePartitionMain.class,
