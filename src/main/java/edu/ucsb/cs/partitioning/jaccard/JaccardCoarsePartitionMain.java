@@ -18,7 +18,9 @@
 
 package edu.ucsb.cs.partitioning.jaccard;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -257,20 +259,21 @@ public class JaccardCoarsePartitionMain extends CosinePartitioning{
 		MapFile.Writer skipWriter;
 		skipWriter = new MapFile.Writer(job, hdfs, JACCARD_SKIP_PARTITIONS, IntWritable.class,
 				Text.class);
-		FSDataOutputStream out = hdfs.create(new Path(JACCARD_SKIP_PARTITIONS+".txt"));
 		
+		BufferedWriter br=new BufferedWriter(new OutputStreamWriter(hdfs.create(new Path(JACCARD_SKIP_PARTITIONS+".txt"),true)));
+
 		String list="";
 		for (int i = 0; i < nPartitions; i++)
 			if (skipList.containsKey(i)) {
-				out.writeChars("\n" + i + ":");
+				br.write("\n" + i + ":");
 				int key = i;
 				for (int j = 0; j < skipList.get(i).size(); j++){
-					out.writeChars(skipList.get(i).get(j) + " ");
+					br.write(skipList.get(i).get(j) + " ");
 					list+=skipList.get(i).get(j)+" ";
 				}
 				skipWriter.append(new IntWritable(key), new Text(list));
 			}
-		out.close();
+		br.close();
 		skipWriter.close();
 	}
 

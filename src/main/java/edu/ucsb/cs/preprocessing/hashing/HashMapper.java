@@ -96,7 +96,7 @@ Mapper<Object, Text, Text, NullWritable> {
 	 */
 
 	public void addFeaturesIntoIndex(Path cachePath) throws IOException {
-		BufferedReader featuresReader = new BufferedReader(new FileReader(cachePath.toString()));
+		BufferedReader featuresReader = new BufferedReader(new FileReader(cachePath.toString())); //check Error if local
 		String feature_postingLen;
 		try {
 			while ((feature_postingLen = featuresReader.readLine()) != null) {
