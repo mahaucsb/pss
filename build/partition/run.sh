@@ -57,5 +57,5 @@ fi
 # Run Partitioning
 ############################################################
 cd ../partition
-$run_hadoop jar $partjar partition -conf $xmlconf
+$run_hadoop jar $partjar -conf $xmlconf
 
