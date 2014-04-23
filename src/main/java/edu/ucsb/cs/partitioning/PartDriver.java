@@ -54,7 +54,7 @@ public class PartDriver {
 		try {
 			JobConf job = new JobConf();
 			String metric = job.get(Config.METRIC_PROPERTY,Config.METRIC_VALUE).toLowerCase();
-			if(metric.contains("jaccard"))
+			if(metric.contains("j"))
 				pgd.addClass("partition", JaccardCoarsePartitionMain.class,
 						"\tJaccard static partitioning");
 			else 
