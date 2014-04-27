@@ -173,7 +173,8 @@ Mapper<Object, Text, LongWritable, FeatureWeightArrayWritable> {
 					StringTokenizer tkz = new StringTokenizer(strLine,":: ");
 					String key = tkz.nextToken();
 					String value = tkz.nextToken();
-					serialToIdMap.put(key.replace(" ", ""), value.replace(" ", ""));
+					if(value !=null)
+						serialToIdMap.put(key.replace(" ", ""), value.replace(" ", ""));
 				}
 				br.close();
 			}
