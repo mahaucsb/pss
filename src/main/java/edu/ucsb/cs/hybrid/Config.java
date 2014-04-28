@@ -75,5 +75,7 @@ public class Config {
 	public static boolean DEBUG_STAGES_VALUE = true;
 	public static final String CONVERT_TEXT_PROPERTY = NAMESPACE + ".text.back";
 	public static final boolean CONVERT_TEXT_VALUE = true;
+	public static final String COMPARE_DYNAMICALLY_PROPERTY = NAMESPACE + ".index.compare"; //add it to conf
+	public static final boolean COMPARE_DYNAMICALLY_VALUE = true;
 
 }

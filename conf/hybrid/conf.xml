@@ -9,7 +9,7 @@
   
   <property>
     <name>hybrid.sim.threshold</name>
-    <value>0.8</value>
+    <value>0.0</value>
     <description>this should be same as partitioning threshold</description>
   </property>
 
@@ -35,7 +35,7 @@
 
   <property>
     <name>hybrid.S.size</name>
-    <value>2000</value>
+    <value>5</value>
     <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
   </property>
 
@@ -75,6 +75,12 @@
   
   <!-- Filtering techniques -->
   <property>
+    <name>hybrid.static.partition</name>
+    <value>false</value>
+    <description>Apply static partition naming skip rule, input has to have partitions named Gij</description>
+  </property>
+
+  <property>
     <name>hybrid.dot.partitions</name>
     <value>false</value>
     <description>Enable partitions level dot product (not published)</description>
@@ -96,6 +102,12 @@
     <name>hybrid.partition.dot.vector</name>
     <value>false</value>
     <description>Enable partition vs. vector dot check for candidates.(not published)</description>
+  </property>
+
+  <property>
+    <name>hybrid.index.compare</name>
+    <value>true</value>
+    <description> compare myself dynamically while building inverted index (if exclude self is false)</description>
   </property>
 
   <!-- Properties for testing and debugging  -->

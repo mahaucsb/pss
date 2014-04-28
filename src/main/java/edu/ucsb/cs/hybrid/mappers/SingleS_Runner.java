@@ -51,13 +51,15 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 	protected JobConf conf;
 	protected SingleS_Mapper mapper;
 	/** Number of vectors assigned to each map task */
-	public int S_size = 0; //counted here while reading
-	protected long totalTerms = 0;
-	boolean googleDynSkip; // late
-	ArrayList<Float> dynamicSmaxw = null; // late
+	public int S_size = 0; //counts of actual read vectors
+	protected long totalTerms = 0; //count of number of features with duplicates
+	boolean googleDynSkip;//this should be removed later
+	ArrayList<Float> dynamicSmaxw = null;
+	float[] accumulator = null;
 
 	RecordReader<LongWritable, FeatureWeightArrayWritable> input;
-	private static final Logger LOG = Logger.getLogger(SingleS_Runner.class);
+	OutputCollector<DocDocWritable, FloatWritable> output;
+	//	private static final Logger LOG = Logger.getLogger(SingleS_Runner.class); //never used
 
 	/**
 	 * Responsible for instantiating and configuring a map class according to
@@ -91,31 +93,33 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 	public void run(RecordReader<LongWritable, FeatureWeightArrayWritable> input,
 			OutputCollector<DocDocWritable, FloatWritable> output, Reporter reporter)
 					throws IOException {
+		/* Setup configurations */
 		this.input = input;
+		this.output = output;
 		boolean log = conf.getBoolean(Config.LOG_PROPERTY, Config.LOG_VALUE);
 		boolean origIdComp, idComparison = !conf.getBoolean(Config.CIRCULAR_PROPERTY,
 				Config.CIRCULAR_VALUE);
-		googleDynSkip = conf.getBoolean(Config.BAYADRO_SKIP_PROPERTY, Config.BAYADRO_SKIP_VALUE); // late
+		boolean compareDynamically = conf.getBoolean(Config.COMPARE_DYNAMICALLY_PROPERTY, Config.COMPARE_DYNAMICALLY_VALUE)&&
+				!conf.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE);
 		HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex = null;
 
-		//
-		// Phase1: Build Index
-		//
-		long startTime = System.currentTimeMillis();
-		Object II = buildInvertedIndex(log);
+
+		/*  Phase1: Build Index */
+		//long startTime = System.currentTimeMillis();
+		if(compareDynamically){ //check re-initialize it in Multiple S
+			accumulator = new float[conf.getInt(Config.MAP_S_PROPERTY, Config.MAP_S_VALUE)];
+		}
+
+		Object II = buildInvertedIndex(log, compareDynamically);
 		if (II == null)
 			return;
 		initMapper(II, log, idComparison);
-		System.out.println("LOG: Inverted index building time in millisec:" + (System.currentTimeMillis() - startTime));
+		//System.out.println("LOG: Inverted index building time in millisec:" + (System.currentTimeMillis() - startTime));
 
-		//
-		// Phase2: Similarity Computations
-		//
+
+		/* Phase2: Similarity Computations */
 		Reader reader = getReader(conf);
-		if (log) {
-			System.out.println("LOG: Total files to compare with: " + reader.nFiles);//check
-		}
-		startTime = System.nanoTime();
+		// System.out.println("LOG: Total files to compare with: " + reader.nFiles);
 
 		for (int currentFile = 0; currentFile < reader.nFiles; currentFile++) {
 			if (!reader.setReader(currentFile)){
@@ -131,8 +135,6 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 				}
 			}
 		}
-		//		System.out.println("Similarity comparison time in millisec:"
-		//				+ (System.nanoTime() - startTime) / 1000000.0);
 		closeMapper();
 	}
 
@@ -159,30 +161,41 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		return false;
 	}
 
-	public Object buildInvertedIndex(boolean log) throws IOException {
+	public Object buildInvertedIndex(boolean log,boolean compareDynamically) throws IOException {
 		HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex = new HashMap<Long, ArrayList<PostingDocWeight>>();
 		ArrayList<Long> dynamicIdMap = null;
 		LongWritable doc = new LongWritable();
 		FeatureWeightArrayWritable vector = new FeatureWeightArrayWritable();
 		totalTerms = 0;
 		int nVectors = 0;
+		float threshold = Config.THRESHOLD_VALUE;
 		dynamicIdMap = new ArrayList<Long>();
-
+		googleDynSkip = conf.getBoolean(Config.BAYADRO_SKIP_PROPERTY, Config.BAYADRO_SKIP_VALUE); 
 		if (googleDynSkip) 
 			dynamicSmaxw = new ArrayList<Float>();
+		if(compareDynamically)
+			threshold = conf.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
 
 		long startTime = System.currentTimeMillis();
 		while (!splitLimitReached(nVectors) && input.next(doc, vector)) {
-			dynamicIdMap.add(doc.get()); // index 0,1,2...
+			/* Mapping docs IDs to serial numbers 0,1,2 ...S */
+			dynamicIdMap.add(doc.get()); 
 			if (googleDynSkip)
 				dynamicSmaxw.add(vector.getMaxWeight());
 			int numTerms = vector.getSize();
 			totalTerms += numTerms;
+			/* Adding one document into S inverted index */
 			for (int i = 0; i < numTerms; i++) {
-				ArrayList<PostingDocWeight> array = getPosting(dynSIndex, vector.getFeature(i));
+				ArrayList<PostingDocWeight> posting = getPosting(dynSIndex, vector.getFeature(i));
 				PostingDocWeight item = new PostingDocWeight(nVectors, vector.getWeight(i));
-				array.add(item);
+				if(compareDynamically && !posting.isEmpty()){ 
+					/* Compare document before adding it to index */
+					compareWithIndex(posting,item);
+				}
+				posting.add(item);
 			}
+			if(compareDynamically)
+				flushAccumulator(accumulator,dynamicIdMap,output,threshold); //check not sure about size for multipeS
 			nVectors++;
 		}
 		S_size += nVectors;
@@ -191,7 +204,7 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 			System.out.println("LOG: Build inverted index time in millisec:"
 					+ ((System.currentTimeMillis() - startTime))
 					+ "\nLOG: Number of distict features:" + distinctTerms
-					+ "\nLOG: Reduction in features storage:"
+					+ "\nLOG: Reduction in features storage via uniqeness:"
 					+ ((totalTerms - distinctTerms) / (float) totalTerms * 100)
 					+ "\nAvg posting length per feature:" + totalTerms / (float) distinctTerms);
 		}
@@ -201,6 +214,42 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 			return convertDynamicStatic(dynSIndex, dynamicIdMap);
 	}
 
+	/**
+	 * Flush accumulator of the dynamically compared inverted index after one document is added to S
+	 * @param accumulator
+	 * @param output: write the result of one-to-many comparisons into output stream
+	 * @throws IOException 
+	 */
+	void flushAccumulator(float[] accumulator, ArrayList<Long> dynamicIdMap, OutputCollector<DocDocWritable, FloatWritable> output,float threshold) throws IOException{
+		/* Exclude the document that is recently added */
+		int lastIndex = dynamicIdMap.size()-1; 
+		long accID,thisId = dynamicIdMap.get(lastIndex);
+		for(int i=0;i<lastIndex;i++){
+			float sim = accumulator[i];
+			if((sim > threshold) &&((accID= dynamicIdMap.get(i))!=thisId))
+				output.collect(new DocDocWritable(dynamicIdMap.get(i), thisId), new FloatWritable(sim));
+		}
+	}
+	/**
+	 * Dynamically compares a document with the existing documents in the inverted index. 
+	 * @param posting: inverted index posting of feature appearing in document
+	 * @param item:one feature/weight appearing in the newly added document.
+	 */
+	void compareWithIndex(ArrayList<PostingDocWeight> posting,PostingDocWeight item){
+		int i;
+		PostingDocWeight postingItem;
+		int currentId = item.getDoc();
+		for( i=0;i<posting.size();i++){
+			postingItem = posting.get(i);
+			accumulator[postingItem.doc]= accumulator[postingItem.doc]+postingItem.weight*item.weight;
+		}
+	}
+	/**
+	 * Returns the posting associated with feature t from the dynamically built inverted index
+	 * @param dynSIndex: Dynamic inverted index built from S vectors assigned to mapper
+	 * @param t: feature t to add to the index
+	 * @return posting of feature t from the inverted index
+	 */
 	public ArrayList<PostingDocWeight> getPosting(
 			HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex, long t) {
 		if (!dynSIndex.containsKey(t)) {
@@ -214,12 +263,6 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		boolean splittable = conf.getBoolean(Config.SPLITABLE_PROPERTY, Config.SPLITABLE_VALUE);
 
 		if (!oneMap || splittable)
-			// if (conf.getBoolean(Config.BALANCED_READER_PROPERTY,
-			// Config.BALANCED_READER_VALUE))
-			// return new BalancedReader(conf, new
-			// Path(conf.get("map.input.file")), conf.getInt(
-			// Config.COMP_BLOCK_PROPERTY, Config.COMP_BLOCK_VALUE));
-			// else
 			return new Reader(conf, new Path(conf.get("map.input.file")), conf.getInt(
 					Config.COMP_BLOCK_PROPERTY, Config.COMP_BLOCK_VALUE));
 		else
@@ -229,7 +272,7 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 
 	public HashMap<Long, PostingDocWeight[]> convertDynamicStatic(
 			HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex, ArrayList<Long> dynamicIdMap) {
-		//PART1: convert the dynamic list inverted index
+		/* PART1: convert the dynamic list inverted index */
 		int i = 0, s;
 		PostingDocWeight item;
 		long term;
@@ -241,7 +284,7 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		for (i = 0; i < terms_new.length; i++)
 			terms_new[i] = terms.next();
 
-		//PART2: convert the dynamic list of document IDs
+		/* PART2: convert the dynamic list of document IDs */
 		convertIdMap(dynamicIdMap);
 		if (googleDynSkip) {
 			convertSmaxw(dynamicSmaxw); 

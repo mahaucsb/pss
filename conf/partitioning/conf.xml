@@ -3,12 +3,12 @@
   <property>
     <name>partition.similarity.metric</name>
     <value>cosine</value>
-    <description> either jaccard or cosine </description>
+    <description> either jaccard or cosine, but jaccard has no PSS</description>
   </property>
 	
   <property>
     <name>partition.similarity.threshold</name>
-    <value>0.8</value>
+    <value>0.55</value>
   </property>
 	
   <property> 

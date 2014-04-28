@@ -82,9 +82,10 @@ public class Reader {
 		circular = job.getBoolean(Config.CIRCULAR_PROPERTY, Config.CIRCULAR_VALUE);
 		partitionsDot = job.getBoolean(Config.PARTITIONS_DOT_PROPERTY, Config.PARTITIONS_DOT_VALUE);
 		partVecDot = job.getBoolean(Config.PART_DOT_VECTOR_PROPERTY, Config.PART_DOT_VECTOR_VALUE);
-		excludeMyself = job.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE);
+		excludeMyself = (job.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE)||
+				(conf.getBoolean(Config.COMPARE_DYNAMICALLY_PROPERTY, Config.COMPARE_DYNAMICALLY_VALUE)&&
+						!conf.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE)));
 		loadbalance = job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE);// not fully implemneted
-
 		ioBlockSize = job.getInt(Config.BLOCK_SIZE_PROPERTY, Config.BLOCK_SIZE_VALUE);
 		ioBlock = new IdFeatureWeightArrayWritable[ioBlockSize];
 		compBlock = new IdFeatureWeightArrayWritable[blockSize];
@@ -335,7 +336,7 @@ public class Reader {
 		try {
 			return Integer.parseInt(fileName.substring(1, fileName.indexOf("_")));
 		} catch (Exception e) {
-			System.out.println("Files are not named Gi_j !!");
+			System.out.println("Error: Files are not named Gi_j !! Plsease set hybrid.static.partition=false in conf/hybrid/conf.xml ");
 			System.exit(0);
 		}
 		return 0;

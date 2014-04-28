@@ -82,11 +82,11 @@ public class MultipleS_Runner extends SingleS_Runner {
 	 * Builds "nSplits" inverted indexes specified by the configuration hybrid.number.splits.
 	 */
 	@Override
-	public Object buildInvertedIndex(boolean log) throws IOException {
+	public Object buildInvertedIndex(boolean log,boolean compareDynamically) throws IOException {
 		ArrayList<HashMap<Long, PostingDocWeight[]>> invertedIndexes = new ArrayList<HashMap<Long, PostingDocWeight[]>>();
 		for (splitNum = 0; splitNum < nSplits; splitNum++) {
 			invertedIndexes.add(splitNum,
-					(HashMap<Long, PostingDocWeight[]>) super.buildInvertedIndex(log));
+					(HashMap<Long, PostingDocWeight[]>) super.buildInvertedIndex(log, compareDynamically));
 		}
 		return invertedIndexes;
 	}
