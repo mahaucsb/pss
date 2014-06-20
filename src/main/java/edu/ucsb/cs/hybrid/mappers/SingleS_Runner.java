@@ -55,10 +55,9 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 	protected long totalTerms = 0; //count of number of features with duplicates
 	boolean googleDynSkip;//this should be removed later
 	ArrayList<Float> dynamicSmaxw = null;
-	float[] accumulator = null;
 
 	RecordReader<LongWritable, FeatureWeightArrayWritable> input;
-	OutputCollector<DocDocWritable, FloatWritable> output;
+	//OutputCollector<DocDocWritable, FloatWritable> output;
 	//	private static final Logger LOG = Logger.getLogger(SingleS_Runner.class); //never used
 
 	/**
@@ -95,25 +94,15 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 					throws IOException {
 		/* Setup configurations */
 		this.input = input;
-		this.output = output;
 		boolean log = conf.getBoolean(Config.LOG_PROPERTY, Config.LOG_VALUE);
 		boolean origIdComp, idComparison = !conf.getBoolean(Config.CIRCULAR_PROPERTY,
 				Config.CIRCULAR_VALUE);
-		boolean compareDynamically = conf.getBoolean(Config.COMPARE_DYNAMICALLY_PROPERTY, Config.COMPARE_DYNAMICALLY_VALUE)&&
-				!conf.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE);
 		HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex = null;
 
 
 		/*  Phase1: Build Index */
 		//long startTime = System.currentTimeMillis();
-		if(compareDynamically){ //check re-initialize it in Multiple S
-			accumulator = new float[conf.getInt(Config.MAP_S_PROPERTY, Config.MAP_S_VALUE)];
-		}
-
-		Object II = buildInvertedIndex(log, compareDynamically);
-		if (II == null)
-			return;
-		initMapper(II, log, idComparison);
+		initMapper(buildInvertedIndex(log), log, idComparison);
 		//System.out.println("LOG: Inverted index building time in millisec:" + (System.currentTimeMillis() - startTime));
 
 
@@ -127,9 +116,9 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 			}else {
 				if (reader.readMyPartition) {
 					origIdComp = idComparison;
-					mapper.idComparison = true;
+					idComparison = true;//mapper.idComparison = true;
 					comparePartition(reader, output, reporter);
-					mapper.idComparison = origIdComp;
+					idComparison = origIdComp;//mapper.idComparison = origIdComp;
 				} else {
 					comparePartition(reader, output, reporter);
 				}
@@ -161,7 +150,7 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		return false;
 	}
 
-	public Object buildInvertedIndex(boolean log,boolean compareDynamically) throws IOException {
+	public Object buildInvertedIndex(boolean log) throws IOException {
 		HashMap<Long, ArrayList<PostingDocWeight>> dynSIndex = new HashMap<Long, ArrayList<PostingDocWeight>>();
 		ArrayList<Long> dynamicIdMap = null;
 		LongWritable doc = new LongWritable();
@@ -173,8 +162,8 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		googleDynSkip = conf.getBoolean(Config.BAYADRO_SKIP_PROPERTY, Config.BAYADRO_SKIP_VALUE); 
 		if (googleDynSkip) 
 			dynamicSmaxw = new ArrayList<Float>();
-		if(compareDynamically)
-			threshold = conf.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
+//		if(compareDynamically)
+//			threshold = conf.getFloat(Config.THRESHOLD_PROPERTY, Config.THRESHOLD_VALUE);
 
 		long startTime = System.currentTimeMillis();
 		while (!splitLimitReached(nVectors) && input.next(doc, vector)) {
@@ -188,14 +177,8 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 			for (int i = 0; i < numTerms; i++) {
 				ArrayList<PostingDocWeight> posting = getPosting(dynSIndex, vector.getFeature(i));
 				PostingDocWeight item = new PostingDocWeight(nVectors, vector.getWeight(i));
-				if(compareDynamically && !posting.isEmpty()){ 
-					/* Compare document before adding it to index */
-					compareWithIndex(posting,item);
-				}
 				posting.add(item);
 			}
-			if(compareDynamically)
-				flushAccumulator(accumulator,dynamicIdMap,output,threshold); //check not sure about size for multipeS
 			nVectors++;
 		}
 		S_size += nVectors;
@@ -228,20 +211,6 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 			float sim = accumulator[i];
 			if((sim > threshold) &&((accID= dynamicIdMap.get(i))!=thisId))
 				output.collect(new DocDocWritable(dynamicIdMap.get(i), thisId), new FloatWritable(sim));
-		}
-	}
-	/**
-	 * Dynamically compares a document with the existing documents in the inverted index. 
-	 * @param posting: inverted index posting of feature appearing in document
-	 * @param item:one feature/weight appearing in the newly added document.
-	 */
-	void compareWithIndex(ArrayList<PostingDocWeight> posting,PostingDocWeight item){
-		int i;
-		PostingDocWeight postingItem;
-		int currentId = item.getDoc();
-		for( i=0;i<posting.size();i++){
-			postingItem = posting.get(i);
-			accumulator[postingItem.doc]= accumulator[postingItem.doc]+postingItem.weight*item.weight;
 		}
 	}
 	/**
@@ -360,8 +329,9 @@ MapRunner<LongWritable, FeatureWeightArrayWritable, DocDocWritable, FloatWritabl
 		public int compare(PostingDocWeight o1, PostingDocWeight o2) {
 			if (getIdMap()[o1.doc] < getIdMap()[o2.doc])
 				return -1;
-			else
+			else if (getIdMap()[o1.doc] > getIdMap()[o2.doc])
 				return 1;
+			else return 0;
 		}
 	}
 

@@ -66,7 +66,7 @@ import edu.ucsb.cs.utilities.JobSubmitter;
 
 /*
  * IGNORE: block-1 doesn't have google dynamic.  
- */
+ */	
 /**
  * The HybridDriver runs hybrid cosine similarity computations among documents of
  * the format: <code>KEY:docID , VALUE: feature weight</code>. It performs
@@ -214,7 +214,7 @@ public class HybridDriver {
 		Path inputPath = new Path(OUTPUT_DIR);
 		job.setInputFormat(SequenceFileInputFormat.class);
 		SequenceFileInputFormat.setInputPaths(job, inputPath);
-		Path outputPath = new Path("READIT"); //CHANGE
+		Path outputPath = new Path("SimilarityScores"); 
 		job.setOutputFormat(TextOutputFormat.class);
 		SequenceFileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(outputPath, true);

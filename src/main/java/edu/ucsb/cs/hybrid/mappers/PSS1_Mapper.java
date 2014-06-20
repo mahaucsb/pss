@@ -52,6 +52,8 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 		int bSize, recordNo;
 		IdFeatureWeightArrayWritable currentRecord;
 
+		if(IdMap==null)
+		System.out.println("check IdMap in pss1 mapper is null"); //remove
 		while (fileNotEmpy) {
 			block = reader.getNextbVectors(blockSize);
 			bSize = reader.nbVectors;
@@ -67,6 +69,7 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 	public void processRecord(IdFeatureWeightArrayWritable currentRecord,
 			OutputCollector<DocDocWritable, FloatWritable> output) throws IOException {
 
+		
 		int traverseSize, traverse, postingLen;
 		long minTerm;
 		float oWeight;
@@ -105,6 +108,7 @@ public class PSS1_Mapper extends MultipleS_Mapper {
 	 * {@link PSS_Mapper#multiply(PostingDocWeight, float)}
 	 */
 	public void multiply(PostingDocWeight postingK,long oId, float oWeight) {
+		if(IdMap == null)return; //remove
 		if (IdMap[postingK.doc] == oId) return;
 		opCount++;
 		int kId = postingK.doc;

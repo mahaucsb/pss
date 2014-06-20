@@ -21,6 +21,7 @@ public class NormRangePartitioner implements
 	public int getPartition(FloatWritable key, IdFeatureWeightArrayWritable value,
 			int numReduceTasks) {
 		int range = (int) maxDocNorm / numReduceTasks;
+		if(range==0)range = 1;
 		int reduceNo = (int) key.get() / range;
 		if (reduceNo >= numReduceTasks)
 			return (numReduceTasks - 1);

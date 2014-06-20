@@ -68,6 +68,7 @@ public class Reader {
 	public int i, myRow, myCol;
 	public boolean staticPart, circular, partitionsDot, partVecDot, excludeMyself;
 	public java.util.TreeSet<Integer> circularFiles;
+	public MapFile.Reader jaccardFiles=null;//new
 	public java.util.TreeSet<String> loadbalanceFiles;
 	public FeatureWeightArrayWritable myBaragliaVector;
 	public float threshold;
@@ -82,9 +83,7 @@ public class Reader {
 		circular = job.getBoolean(Config.CIRCULAR_PROPERTY, Config.CIRCULAR_VALUE);
 		partitionsDot = job.getBoolean(Config.PARTITIONS_DOT_PROPERTY, Config.PARTITIONS_DOT_VALUE);
 		partVecDot = job.getBoolean(Config.PART_DOT_VECTOR_PROPERTY, Config.PART_DOT_VECTOR_VALUE);
-		excludeMyself = (job.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE)||
-				(conf.getBoolean(Config.COMPARE_DYNAMICALLY_PROPERTY, Config.COMPARE_DYNAMICALLY_VALUE)&&
-						!conf.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE)));
+		excludeMyself = job.getBoolean(Config.EXCLUDE_MYSELF_PROPERTY, Config.EXCLUDE_MYSELF_VALUE);
 		loadbalance = job.getInt(Config.LOAD_BALANCE_PROPERTY, Config.LOAD_BALANCE_VALUE);// not fully implemneted
 		ioBlockSize = job.getInt(Config.BLOCK_SIZE_PROPERTY, Config.BLOCK_SIZE_VALUE);
 		ioBlock = new IdFeatureWeightArrayWritable[ioBlockSize];
@@ -116,7 +115,18 @@ public class Reader {
 			}
 			loadbalanceFiles.add(myPath);
 		} else {
-			if ((staticPart)&&(metric.equalsIgnoreCase("cosine"))) {
+			if(metric.toLowerCase().contains("jac")){
+				 String inDir = JaccardCoarsePartitionMain.JACCARD_SKIP_PARTITIONS;
+				 getJaccardFiles(job, new Path(inDir));
+				 System.out.println("check: my path is "+myPath); //remove
+				 IntWritable partitionKey = new IntWritable(Integer.parseInt(myPath));
+				 Text skipListVal = new Text();
+				 jaccardFiles.get(partitionKey, skipListVal);
+				 if(skipListVal!= null)
+					 System.out.println("check: yaaay "+skipListVal.toString());//remove
+				 else
+					 System.out.println("check: boooo"); //remove
+			}else if ((staticPart)&&(metric.toLowerCase().contains("cos"))) {
 				myRow = getRow(inputPath.getName());
 				myCol = getCol(inputPath.getName());
 			}
@@ -167,6 +177,19 @@ public class Reader {
 			}
 			cachedFiles = hdfs.listStatus(inputPath);
 			nFiles = cachedFiles.length;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+//new
+	public void getJaccardFiles(JobConf job, Path inputPath) {
+		try {
+			hdfs = FileSystem.get(job);
+			if (!hdfs.exists(inputPath)) {
+				throw new UnsupportedEncodingException(inputPath.toString()+" doesn't exists in hdfs !");
+			}
+			jaccardFiles = new MapFile.Reader(hdfs,inputPath.getName(), job);
+			System.out.println("check: reading jaccard files");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

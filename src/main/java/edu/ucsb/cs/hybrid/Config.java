@@ -58,13 +58,13 @@ public class Config {
 	public static final String PARTITIONS_DOT_PROPERTY = NAMESPACE + ".dot.partitions";
 	public static final boolean PARTITIONS_DOT_VALUE = true;
 	public static final String BLOCK_CHOICE_PROPERTY = NAMESPACE + ".block.number";
-	public static final Integer BLOCK_CHOICE_VALUE = 0;
+	public static final Integer BLOCK_CHOICE_VALUE = 1;//1 or 2
 	public static final String SINGLE_MAP_PROPERTY = NAMESPACE + ".single.map";
 	public static final boolean SINGLE_MAP_VALUE = true;
 //	public static final String MULTIPLE_S_PROPERTY = NAMESPACE + ".multiple.s";
 //	public static final boolean MULTIPLE_S_VALUE = true;
 	public static final String NUMBER_SPLITS_PROPERTY = NAMESPACE + ".number.splits";
-	public static final Integer NUMBER_SPLITS_VALUE = 5;
+	public static final Integer NUMBER_SPLITS_VALUE = 1;
 	public static final String LOAD_BALANCE_PROPERTY = NAMESPACE + ".load.balancing";
 	public static final Integer LOAD_BALANCE_VALUE = 0;
 //	public static final String P_NORM_PROPERTY = NAMESPACE + ".p.norm";
@@ -75,7 +75,5 @@ public class Config {
 	public static boolean DEBUG_STAGES_VALUE = true;
 	public static final String CONVERT_TEXT_PROPERTY = NAMESPACE + ".text.back";
 	public static final boolean CONVERT_TEXT_VALUE = true;
-	public static final String COMPARE_DYNAMICALLY_PROPERTY = NAMESPACE + ".index.compare"; //add it to conf
-	public static final boolean COMPARE_DYNAMICALLY_VALUE = true;
 
 }
