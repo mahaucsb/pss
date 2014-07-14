@@ -10,19 +10,19 @@
   <property>
     <name>hashing.binary.weights</name>
     <value>false</value>
-    <description>Ignore features frequencies and assume they all occured once (ie. all have same wight within each document)</description>
+    <description>true = ignore features frequencies and assume they all occured once in a document (ie. all have same wight within each document)</description>
   </property>
 
   <property>
     <name>hashing.lonely.features</name>
     <value>true</value>
-    <description>Hash features appearing in one document across the corpse (but keep its weight effect on that document).</description>
+    <description>true = hash features appearing in only one document across the corpse (but keep its weight effect on that document).</description>
   </property>
 
   <property>
     <name>hashing.md5.hash</name>
     <value>false</value>
-    <description>md5 hash features instead of sequential</description>
+    <description>true = md5 hash features instead of serial numbering</description>
   </property>
 
   <property>
@@ -43,10 +43,4 @@
     <description>Options: (1)collect features (2) featureVectors (3) featureWeightVectors (5) bag of hashed words.DEFAULT:3</description>
   </property> 
 
-  <!--<property>
-      <name>hashing.tf.cut</name>
-      <value>25</value>
-      <description>Consider only top k documents in postings, can be used dynamically inside maps</description>
-      </property>
-    -->
 </configuration>

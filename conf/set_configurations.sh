@@ -1,39 +1,38 @@
 #!/bin/bash
 
-#############################################
-# To setup your configrations change the 
-# values in this file then run it as:
-# ./setConfigurations.sh
-# Then run APSS. 
-#############################################
+##################################################################
+# Set up the default configurations to run 500 documents for
+# any of the given datasets. Please check conf.xml files for
+# the meaning of each variable.
+##################################################################
 
-INSTAL_PATH=~/projects/cpc7
-CONF_PATH=$INSTAL_PATH/src/main/resources
-
+CONF_PATH=./
 
 #PREPROCESSING
-pre_maxfreq_feature=1000
-pre_option_num=3  #(1)collect features (2) featureVectors (3) featureWeightVectors (5) bag of hashed words
-pre_binary_weights=false #ignore feature frequency
+pre_maxfreq_feature=1000           
+pre_option_num=3  
+pre_binary_weights=false 
 pre_lonely_features=false
 pre_md5_hash=false
-        pre_dfcut_ratio=0
+pre_dfcut_ratio=0
 
 #PARTITIONING
-        part_sim_threshold=0.9
-part_num_partitions=3
+part_sim_threshold=0.9
+part_sim_metric=cosine
+part_num_layers=3
 part_uniform=true
 sort_num_reducers=5
 sort_p_norm=1
 max_doc_length=1200
 max_doc_norm=10
 max_doc_weight=0.2
-        part_load_balance=0 # 1, 2 , 12 or none=0
+#part_load_balance=0 # xun: not fully done
 
 #HYBRID
+hybrid_sim_metric=cosine
 similarity_threshold=$part_sim_threshold
-alg_number=0 #0,1,3
-hybrid_split_size=1000
+alg_number=1
+hybrid_S_size=1000
 hybrid_io_block_size=100
 hybrid_comp_block_size=100
 hybrid_number_multiple_s=7 
@@ -45,74 +44,76 @@ hybrid_print_log=false
 hybrid_load_balance=$part_load_balance
 hybrid_debug_load_balance=false
 
+
+##################################################################
+
 #PREPROCESSING
-xmlconf=$CONF_PATH/preprocess/conf.xml
+xmlconf=./preprocess/conf.xml
 cp $xmlconf x
-sed -e '5 c\
+sed -e '6 c\
   <value>'$pre_maxfreq_feature'</value>' x > y
-sed -e '10 c\
+sed -e '12 c\
+  <value>'$pre_binary_weights'</value>' y > x
+sed -e '18 c\
+  <value>'$pre_lonely_features'</value>' x > y
+sed -e '24 c\
+  <value>'$pre_md5_hash'</value>' y > x
+sed -e '30 c\
+  <value>'$pre_dfcut_ratio'</value>' x > y
+sed -e '42 c\
   <value>'$pre_option_num'</value>' y > x
-sed -e '16 c\
-  <value>'$pre_binary_weights'</value>' x > y
-sed -e '21 c\
-  <value>'$pre_lonely_features'</value>' y > x
-sed -e '31 c\
-  <value>'$pre_md5_hash'</value>' x > y
-sed -e '36 c\
-  <value>'$pre_dfcut_ratio'</value>' y > x
 mv x $xmlconf
 
 #PARTITIONING
-xmlconf=$CONF_PATH/partitioning/conf.xml
+xmlconf=./partitioning/conf.xml
 cp $xmlconf x
 sed -e '5 c\
-  <value>'$part_sim_threshold'</value>' x > y
-sed -e '9 c\
-  <value>'$part_num_partitions'</value>' y > x
-sed -e '14 c\
-  <value>'$part_uniform'</value>' x > y
-sed -e '20 c\
-  <value>'$sort_num_reducers'</value>' y > x
-sed -e '24 c\
-  <value>'$sort_p_norm'</value>' x > y
-sed -e '28 c\
-  <value>'$max_doc_length'</value>' y > x
-sed -e '33 c\
-  <value>'$max_doc_norm'</value>' x > y
-sed -e '38 c\
-  <value>'$max_doc_weight'</value>' y > x
-sed -e '49 c\
-  <value>'$part_load_balance'</value>' x > y
+  <value>'$part_sim_metric'</value>' x > y
+sed -e '11 c\
+  <value>'$part_sim_threshold'</value>' y > x
+sed -e '16 c\
+  <value>'$part_num_partitions'</value>' x > y
+sed -e '22 c\
+  <value>'$part_uniform'</value>' y > x
+sed -e '29 c\
+  <value>'$sort_num_reducers'</value>' x > y
+sed -e '34 c\
+  <value>'$sort_p_norm'</value>' y > x
+sed -e '39 c\
+  <value>'$max_doc_length'</value>' x > y
+sed -e '45 c\
+  <value>'$max_doc_norm'</value>' y > x
+sed -e '51 c\
+  <value>'$max_doc_weight'</value>' x > y
 mv y $xmlconf
 
-
 #Hybrid
-xmlconf=$CONF_PATH/hybrid/conf.xml
+xmlconf=./hybrid/conf.xml
 cp $xmlconf x
-sed -e '5 c\
-  <value>'$similarity_threshold'</value>' x > y
-sed -e '11 c\
-  <value>'$alg_number'</value>' y > x
-sed -e '29 c\
-  <value>'$hybrid_split_size'</value>' x > y
-sed -e '36 c\
-  <value>'$hybrid_io_block_size'</value>' y > x
-sed -e '41 c\
-  <value>'$hybrid_comp_block_size'</value>' x > y
-sed -e '53 c\
+sed -e '6 c\
+  <value>'$hybrid_sim_metric'</value>' x > y  
+sed -e '12 c\
+  <value>'$similarity_threshold'</value>' y > x
+sed -e '18 c\
+  <value>'$alg_number'</value>' x > y
+sed -e '38 c\
+  <value>'$hybrid_S_size'</value>' y > x
+sed -e '46 c\
   <value>'$hybrid_number_multiple_s'</value>' x > y
+sed -e '53 c\
+  <value>'$hybrid_io_block_size'</value>' y > x
 sed -e '59 c\
-  <value>'$hybrid_enable_static_partition'</value>' y > x
-sed -e '70 c\
-  <value>'$hybrid_circular_enabled'</value>' x > y
-sed -e '104 c\
-  <value>'$hybrid_exclude_myself'</value>' y > x
-sed -e '109 c\
-  <value>'$hybrid_single_map'</value>' x > y
-sed -e '114 c\
-  <value>'$hybrid_print_log'</value>' y > x
-sed -e '119 c\
-  <value>'$hybrid_load_balance'</value>' x > y
-sed -e '128 c\
-  <value>'$hybrid_debug_load_balance'</value>' y > x
-mv x $xmlconf
+  <value>'$hybrid_comp_block_size'</value>' x > y
+sed -e '67 c\
+  <value>'$hybrid_load_balance'</value>' y > x
+sed -e '79 c\
+  <value>'$hybrid_enable_static_partition'</value>' x > y
+sed -e '91 c\
+  <value>'$hybrid_circular_enabled'</value>' y > x
+sed -e '124 c\
+  <value>'$hybrid_exclude_myself'</value>' x > y
+sed -e '130 c\
+  <value>'$hybrid_single_map'</value>' y > x
+sed -e '142 c\
+  <value>'$hybrid_print_log'</value>' x > y
+mv y $xmlconf

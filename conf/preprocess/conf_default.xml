@@ -3,50 +3,44 @@
 
   <property>
     <name>hashing.max.freq</name>
-    <value>hashing.max.freq</value>
+    <value>1000</value>
     <description>Max frequency of a feature in each document to allow adding it to the hashed document.</description>
   </property> 
 
   <property>
     <name>hashing.binary.weights</name>
-    <value>hashing.binary.weights</value>
-    <description>Ignore features frequencies and assume they all occured once (ie. all have same wight within each document)</description>
+    <value>false</value>
+    <description>true = ignore features frequencies and assume they all occured once in a document (ie. all have same wight within each document)</description>
   </property>
 
   <property>
     <name>hashing.lonely.features</name>
-    <value>hashing.lonely.features</value>
-    <description>Hash features appearing in one document across the corpse (but keep its weight effect on that document).</description>
+    <value>true</value>
+    <description>true = hash features appearing in only one document across the corpse (but keep its weight effect on that document).</description>
   </property>
 
   <property>
     <name>hashing.md5.hash</name>
-    <value>hashing.md5.hash</value>
-    <description>md5 hash features instead of sequential</description>
+    <value>false</value>
+    <description>true = md5 hash features instead of serial numbering</description>
   </property>
 
   <property>
     <name>hashing.df.cut</name>
-    <value>hashing.df.cut</value>
+    <value>0.0</value>
     <description>fraction removed from popular features after sorting by popularity in HashMapper.java (eg.0.05 is top 5% popular features) [Elsayed ACL'08].</description>
   </property>
 
   <property>
     <name>hashing.num.reducers</name>
-    <value>hashing.num.reducers</value>
+    <value>5</value>
     <description>Default number of reducers in the job to hash vectors.</description>
   </property>
 
   <property>    
     <name>hashing.option.num</name>
-    <value>hashing.option.num</value>
+    <value>3</value>
     <description>Options: (1)collect features (2) featureVectors (3) featureWeightVectors (5) bag of hashed words.DEFAULT:3</description>
   </property> 
 
-  <!--<property>
-      <name>hashing.tf.cut</name>
-      <value>25</value>
-      <description>Consider only top k documents in postings, can be used dynamically inside maps</description>
-      </property>
-    -->
 </configuration>

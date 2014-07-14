@@ -3,39 +3,39 @@
 
   <property>
     <name>hybrid.similarity.metric</name>
-    <value>cosine</value>
+    <value>hybrid.similarity.metric</value>
     <description> either jaccard which is only for partitioning or cosine </description>
   </property>
   
   <property>
     <name>hybrid.sim.threshold</name>
-    <value>0.01</value>
+    <value>hybrid.sim.threshold</value>
     <description>this should be same as partitioning threshold</description>
   </property>
 
   <property>
     <name>hybrid.block.number</name>
-    <value>1</value>
-    <description>either '1' for PSS1 or '2' PSS2. Note: PSS is PSS1 with hybrid.number.splits=1 </description>
+    <value>hybrid.block.number</value>
+    <description>PSS1,PSS2 note: PSS is PSS1 with hybrid.number.splits=1 </description>
   </property>
   
   <!-- S properties -->
   
   <property>
     <name>hadoop.splitting.enabled</name>
-    <value>false</value>
+    <value>hadoop.splitting.enabled</value>
     <description>hadoop splitting files into mapred.min.split.size</description>
   </property>
-
+  
   <property>
     <name>hadoop.split.size</name>
-    <value>10</value>
+    <value>hadoop.split.size</value>
     <description>split size in MB per map if hybrid.hadoop.splitting is true</description>
   </property>
 
   <property>
     <name>hybrid.S.size</name>
-    <value>5</value>
+    <value>hybrid.S.size</value>
     <description>number of vectors assigned to each map (aka.big S) if hadoop.splitting.enabled = false</description>
   </property>
 
@@ -43,20 +43,20 @@
   
   <property>
     <name>hybrid.number.splits</name>
-    <value>2</value>
+    <value>hybrid.number.splits</value>
     <description>Split S into this number of indexes (PSS1) otherwise 1=PSS.</description>
   </property>
   
   <!-- B properties -->
   <property>
     <name>hybrid.io.block</name>
-    <value>100</value>
+    <value>hybrid.io.block</value>
     <description>read other block size into B</description>
   </property>
   
   <property>
     <name>hybrid.comp.block</name>
-    <value>100</value>
+    <value>hybrid.comp.block</value>
     <description>process this number of vectors out of hybrid.io.block aka. b in SIGIR'13</description>
   </property>
 	
@@ -64,13 +64,13 @@
   
   <property>
     <name>hybrid.load.balancing</name>
-    <value>0</value>
+    <value>hybrid.load.balancing</value>
     <description>SIGIR'14 loadbalancing technique,0=none(ie.circular if set),1=step1,2=step2,3=step3,12=step1and2,13=step1and3,23=step2and3</description>
   </property>
   
   <property>
     <name>load.balance.debug</name>
-    <value>false</value>
+    <value>load.balance.debug</value>
   </property>
   
   <!-- Filtering techniques -->
@@ -104,6 +104,11 @@
     <description>Enable partition vs. vector dot check for candidates.(not published)</description>
   </property>
 
+  <property>
+    <name>hybrid.index.compare</name>
+    <value>true</value>
+    <description> compare myself dynamically while building inverted index (if exclude self is false)</description>
+  </property>
 
   <!-- Properties for testing and debugging  -->
   
@@ -133,7 +138,7 @@
 
   <property>
     <name>hybrid.text.back</name>
-    <value>false</value>
+    <value>true</value>
     <description>Convert binary final similarity results to readable text</description>
   </property>
 	
